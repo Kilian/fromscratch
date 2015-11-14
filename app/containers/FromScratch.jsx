@@ -1,6 +1,8 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
 
+var ipc = require('ipc');
+
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
 var remote = require('remote');
 var handleContent = remote.getGlobal('handleContent');
@@ -22,9 +24,8 @@ export default class FromScratch extends React.Component {
   }
 
   componentDidUpdate() {
-    // the following line, for some reason, causes pastes, tabs and newlines to appear double
-    // this saves the data to disk, so we do need it.
-    handleContent.write(this.state.content);
+    // https://github.com/atom/electron/blob/master/docs/api/ipc-renderer.md
+    ipc.send('asynchronous-message', this.state.content);
   }
 
   handleChange(newcontent) {
