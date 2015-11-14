@@ -3,6 +3,7 @@ var app = require('app');
 var BrowserWindow = require('browser-window');
 var fs = require('fs');
 var ipc = require('ipc');
+var gsc = require('global-shortcut');
 var JSONStorage = require('node-localstorage').JSONStorage;
 
 require('electron-debug')();
@@ -10,7 +11,7 @@ require('crash-reporter').start();
 
 // data saving
 var storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch';
-var nodeStorage = new JSONStorage(storageLocation);
+global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
   filename: storageLocation + '/content.txt',
@@ -29,7 +30,7 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
-  var windowState = nodeStorage.getItem('windowstate') || {};
+  var windowState = global.nodeStorage.getItem('windowstate') || {};
 
   ipc.on('writeContent', function(event, arg) {
     global.handleContent.write(arg);
@@ -61,13 +62,34 @@ app.on('ready', function() {
     mainWindow.loadUrl('file://' + __dirname + '/app/app.html');
   }
 
+  var dispatchShortcutEvent = function(ev) {
+    var string = "window.executeShortCut('" + ev + "')";
+    mainWindow.webContents.executeJavaScript(string);
+  };
+
+  var registerShortcuts = function() {
+    gsc.register('CmdOrCtrl+-', function() { dispatchShortcutEvent('decrease-font'); } );
+    gsc.register('CmdOrCtrl+=', function() { dispatchShortcutEvent('increase-font'); } );
+    gsc.register('CmdOrCtrl+s', function() { dispatchShortcutEvent('save'); } );
+  };
+
+  registerShortcuts();
+
+  mainWindow.on('focus', function() {
+    registerShortcuts();
+  });
+
+  mainWindow.on('blur', function() {
+    gsc.unregisterAll();
+  });
+
   var storeWindowState = function() {
     windowState.isMaximized = mainWindow.isMaximized();
     if (!windowState.isMaximized) {
       // only update bounds if the window isn't currently maximized
       windowState.bounds = mainWindow.getBounds();
     }
-    nodeStorage.setItem('windowstate', windowState);
+    global.nodeStorage.setItem('windowstate', windowState);
   };
 
   ['resize', 'move', 'close'].forEach(function(e) {

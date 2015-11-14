@@ -5,6 +5,7 @@ require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/subl
 var ipc = require('ipc');
 var remote = require('remote');
 var handleContent = remote.getGlobal('handleContent');
+var nodeStorage = remote.getGlobal('nodeStorage');
 
 export default class FromScratch extends React.Component {
   static defaultProps = {
@@ -19,10 +20,36 @@ export default class FromScratch extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      content: handleContent.read() || props.content
+      content: handleContent.read() || props.content,
+      fontSize: nodeStorage.getItem('fontSize') || 1
     }
   }
 
+  componentDidMount() {
+    var ref = this;
+    window.executeShortCut = function(shortcut) {
+      switch (shortcut) {
+        case 'save':
+          ref.showMockMessage()
+          break
+        case 'increase-font':
+          ref.updateFont(.1);
+          break
+        case 'decrease-font':
+          ref.updateFont(-.1);
+          break
+      }
+    }
+  }
+  showMockMessage() {
+    console.log("no need to save!");
+  }
+  updateFont(diff) {
+    const newFontsize = Math.min(Math.max(this.state.fontSize + diff, .5), 2.5);
+    nodeStorage.setItem('fontSize', newFontsize);
+    this.setState({fontSize: newFontsize});
+
+  }
   componentDidUpdate() {
     ipc.send('writeContent', this.state.content);
   }
@@ -32,6 +59,9 @@ export default class FromScratch extends React.Component {
   }
 
   render() {
+    var style = {
+      fontSize: this.state.fontSize + "rem"
+    }
     var options = {
       mode: 'text',
       lineNumbers: false,
@@ -46,7 +76,9 @@ export default class FromScratch extends React.Component {
       }
     };
     return (
-      <Codemirror value={this.state.content} onChange={this.handleChange.bind(this)} options={options} />
+      <div style={style}>
+        <Codemirror value={this.state.content} onChange={this.handleChange.bind(this)} options={options} />
+      </div>
     );
   }
 }
