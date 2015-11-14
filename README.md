@@ -2,9 +2,7 @@
 
 A simple autosaving scratchpad using Fira code. Built with Electron, React and Webpack using https://github.com/chentsulin/electron-react-boilerplate
 
-## Currently broken :(
-
-* Writing the file to disk on change somehow triggers a second paste, tab and newline (Problem in React/Electron)
+## Currently broken :
 * When built, the Fira Code font isn't loaded correctly. (Problem in ...Webpack?)
 
 ### Usage
@@ -25,3 +23,6 @@ npm run hot-server
 #in a different terminal:
 npm run start-hot
 ```
+### Credits
+
+Thanks to @bittersweet for helping me set up IPC to work around a particularly nasty bug, and @chentsulin for the electron-react-boilerplate.
