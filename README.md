@@ -2,9 +2,6 @@
 
 A simple autosaving scratchpad using Fira code. Built with Electron, React and Webpack using https://github.com/chentsulin/electron-react-boilerplate
 
-## Currently broken :
-* When built, the Fira Code font isn't loaded correctly. (Problem in ...Webpack?)
-
 ### Usage
 ```sh
 # Download from git
