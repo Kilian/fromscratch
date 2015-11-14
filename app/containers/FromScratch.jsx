@@ -11,7 +11,7 @@ export default class FromScratch extends React.Component {
     content:  '|> Welcome to FromScratch.\n\n'
             + 'This app saves everything you type automatically, there\'s no need to save.'
             + '\n\nOh, and you can type neat arrows like these: '
-            + '->, -->. ->> and =>, courtesy of the font "Fira Code".\n\n'
+            + '->, -->, ->> and =>, courtesy of the font "Fira Code".\n\n'
             + 'FromScratch also does automatic indenting and more. So delete this text and let\'s go!',
   }
 
