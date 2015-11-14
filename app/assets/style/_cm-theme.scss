@@ -1,0 +1,25 @@
+.cm-s-fromscratch {
+	&.CodeMirror {
+		background: $bgColor;
+		color: $textColor;
+	}
+	div.CodeMirror-selected {
+		background: lighten($bgColor, 6%);
+	  color: lighten($textColor, 15%);
+	}
+	.CodeMirror-line::selection,
+	.CodeMirror-line > span::selection,
+	.CodeMirror-line > span > span::selection {
+		background: lighten($bgColor, 6%);
+	  color: lighten($textColor, 15%);
+	}
+	.CodeMirror-cursor {
+		border-left: 1px solid darken($textColor,5%);
+	}
+	.CodeMirror-activeline-background {
+		background: lighten($bgColor, 6%);
+	}
+}
+
+
+.CodeMirror-measure {display:none !important;}
