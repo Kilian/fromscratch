@@ -2,8 +2,8 @@
 var app = require('app');
 var BrowserWindow = require('browser-window');
 var fs = require('fs');
+var ipc = require('ipc');
 var JSONStorage = require('node-localstorage').JSONStorage;
-var ipc = require('ipc')
 
 require('electron-debug')();
 require('crash-reporter').start();
@@ -31,12 +31,8 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
   var windowState = nodeStorage.getItem('windowstate') || {};
 
-  // https://github.com/atom/electron/blob/master/docs/api/ipc-main.md
-  // latest docs seem to mention require('electron') which I couldn't get to work
-  // http://electron.atom.io/docs/v0.27.0/api/ipc-main-process/
-  ipc.on('asynchronous-message', function(event, arg) {
-    console.log('got message', arg);  // prints "ping"
-    handleContent.write(arg);
+  ipc.on('writeContent', function(event, arg) {
+    global.handleContent.write(arg);
   });
 
   var windowSettings = {

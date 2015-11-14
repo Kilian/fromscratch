@@ -1,9 +1,8 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
 
-var ipc = require('ipc');
-
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
+var ipc = require('ipc');
 var remote = require('remote');
 var handleContent = remote.getGlobal('handleContent');
 
@@ -24,8 +23,7 @@ export default class FromScratch extends React.Component {
   }
 
   componentDidUpdate() {
-    // https://github.com/atom/electron/blob/master/docs/api/ipc-renderer.md
-    ipc.send('asynchronous-message', this.state.content);
+    ipc.send('writeContent', this.state.content);
   }
 
   handleChange(newcontent) {
