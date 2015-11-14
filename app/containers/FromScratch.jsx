@@ -8,11 +8,12 @@ var handleContent = remote.getGlobal('handleContent');
 
 export default class FromScratch extends React.Component {
   static defaultProps = {
-    content:  '|> Welcome to FromScratch.\n\n'
-            + 'This app saves everything you type automatically, there\'s no need to save.'
-            + '\n\nOh, and you can type neat arrows like these: '
+    content:  '|> Welcome to FromScratch.\n\n\n'
+            + 'This app saves everything you type automatically, there\'s no need to save manually.'
+            + '\n\nYou can type neat arrows like these: '
             + '->, -->, ->> and =>, courtesy of the font "Fira Code".\n\n'
-            + 'FromScratch also does automatic indenting and more. So delete this text and let\'s go!',
+            + '\tFromScratch also does automatic indenting'
+            + '\tand more. So delete this text & let\'s go!',
   }
 
   constructor(props) {
