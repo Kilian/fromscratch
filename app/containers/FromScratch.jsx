@@ -21,7 +21,8 @@ export default class FromScratch extends React.Component {
     super();
     this.state = {
       content: handleContent.read() || props.content,
-      fontSize: nodeStorage.getItem('fontSize') || 1
+      fontSize: nodeStorage.getItem('fontSize') || 1,
+      mock: 'nosave',
     }
   }
 
@@ -42,7 +43,11 @@ export default class FromScratch extends React.Component {
     }
   }
   showMockMessage() {
-    console.log("no need to save!");
+    clearTimeout(window.hideSaveMessage);
+    this.setState({mock: 'nosave active'});
+    window.hideSaveMessage = setTimeout(() => {
+      this.setState({mock: 'nosave'});
+    }, 1000)
   }
   updateFont(diff) {
     const newFontsize = Math.min(Math.max(this.state.fontSize + diff, .5), 2.5);
@@ -78,6 +83,7 @@ export default class FromScratch extends React.Component {
     return (
       <div style={style}>
         <Codemirror value={this.state.content} onChange={this.handleChange.bind(this)} options={options} />
+        <div className={this.state.mock}>Already saved! ;)</div>
       </div>
     );
   }
