@@ -68,6 +68,7 @@ app.on('ready', function() {
   };
 
   var registerShortcuts = function() {
+    gsc.register('CmdOrCtrl+0', function() { dispatchShortcutEvent('reset-font'); } );
     gsc.register('CmdOrCtrl+-', function() { dispatchShortcutEvent('decrease-font'); } );
     gsc.register('CmdOrCtrl+=', function() { dispatchShortcutEvent('increase-font'); } );
     gsc.register('CmdOrCtrl+s', function() { dispatchShortcutEvent('save'); } );

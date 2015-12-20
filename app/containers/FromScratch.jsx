@@ -33,6 +33,9 @@ export default class FromScratch extends React.Component {
         case 'save':
           ref.showMockMessage()
           break
+        case 'reset-font':
+          ref.updateFont(0, true);
+          break
         case 'increase-font':
           ref.updateFont(.1);
           break
@@ -49,11 +52,10 @@ export default class FromScratch extends React.Component {
       this.setState({mock: 'nosave'});
     }, 1000)
   }
-  updateFont(diff) {
-    const newFontsize = Math.min(Math.max(this.state.fontSize + diff, .5), 2.5);
+  updateFont(diff, reset) {
+    const newFontsize = reset ? 1 : Math.min(Math.max(this.state.fontSize + diff, .5), 2.5);
     nodeStorage.setItem('fontSize', newFontsize);
     this.setState({fontSize: newFontsize});
-
   }
   componentDidUpdate() {
     ipc.send('writeContent', this.state.content);
