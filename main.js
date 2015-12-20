@@ -2,12 +2,11 @@
 var app = require('app');
 var BrowserWindow = require('browser-window');
 var fs = require('fs');
-var ipc = require('ipc');
+var ipc = require('electron').ipcMain;
 var gsc = require('global-shortcut');
 var JSONStorage = require('node-localstorage').JSONStorage;
 
 require('electron-debug')();
-require('crash-reporter').start();
 
 // data saving
 var storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch';
@@ -57,14 +56,13 @@ app.on('ready', function() {
   }
 
   if (process.env.HOT) {
-    mainWindow.loadUrl('file://' + __dirname + '/app/hot-dev-app.html');
+    mainWindow.loadURL('file://' + __dirname + '/app/hot-dev-app.html');
   } else {
-    mainWindow.loadUrl('file://' + __dirname + '/app/app.html');
+    mainWindow.loadURL('file://' + __dirname + '/app/app.html');
   }
 
   var dispatchShortcutEvent = function(ev) {
-    var string = "window.executeShortCut('" + ev + "')";
-    mainWindow.webContents.executeJavaScript(string);
+    mainWindow.webContents.send('executeShortCut', ev);
   };
 
   var registerShortcuts = function() {

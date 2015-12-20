@@ -2,8 +2,8 @@ import React from 'react';
 import Codemirror from 'react-codemirror';
 
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
-var ipc = require('ipc');
-var remote = require('remote');
+var ipc = require('electron').ipcRenderer;
+var remote = require('electron').remote;
 var handleContent = remote.getGlobal('handleContent');
 var nodeStorage = remote.getGlobal('nodeStorage');
 
@@ -28,7 +28,8 @@ export default class FromScratch extends React.Component {
 
   componentDidMount() {
     var ref = this;
-    window.executeShortCut = function(shortcut) {
+
+    ipc.on('executeShortCut', function(event, shortcut) {
       switch (shortcut) {
         case 'save':
           ref.showMockMessage()
@@ -43,7 +44,7 @@ export default class FromScratch extends React.Component {
           ref.updateFont(-.1);
           break
       }
-    }
+    });
   }
   showMockMessage() {
     clearTimeout(window.hideSaveMessage);
