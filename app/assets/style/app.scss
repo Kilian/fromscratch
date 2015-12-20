@@ -48,7 +48,8 @@ body {
 }
 
 .CodeMirror {
-   margin:3rem;
+   margin:0 3rem;
+   padding:3rem 0;
    width:calc(100% - 6rem);
    height:100%;
    background:inherit;
