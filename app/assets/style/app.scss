@@ -78,4 +78,6 @@ body {
 
 
 @import "../../../node_modules/react-codemirror/node_modules/codemirror/lib/codemirror.css";
-@import "_cm-theme.scss"
+@import "_cm-theme.scss";
+
+.CodeMirror-scroll { overflow-x:hidden !important;}
