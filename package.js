@@ -26,7 +26,7 @@ var DEFAULT_OPTS = {
   ].concat(devDeps.map(function(name) { return '/node_modules/' + name + '($|/)'; }))
 };
 
-var icon = argv.icon || argv.i || 'app/assets/img/icon.png';
+var icon = argv.icon || argv.i || 'app/assets/img/icon';
 
 if (icon) {
   DEFAULT_OPTS.icon = icon;
@@ -81,7 +81,19 @@ function pack(plat, arch, cb) {
   // there is no darwin ia32 electron
   if (plat === 'darwin' && arch === 'ia32') return;
 
-  var opts = assign({}, DEFAULT_OPTS, {
+  var iconObj = {
+    icon: DEFAULT_OPTS.icon + (() => {
+      var extension = '.png';
+      if (plat === 'darwin') {
+        extension = '.icns';
+      } else if (plat === 'win32') {
+        extension = '.ico';
+      }
+      return extension;
+    })()
+  };
+
+  var opts = assign({}, DEFAULT_OPTS, iconObj, {
     platform: plat,
     arch: arch,
     out: 'release/' + plat + '-' + arch
