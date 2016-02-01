@@ -1,4 +1,4 @@
-<img src="https://fromscratch.rocks/assets/img/icon.png" style="width:100px;float:left;margin-right:10px;">
+<img src="https://fromscratch.rocks/assets/img/icon.png">
 # FromScratch
 
 ## A simple but smart note-taking app
