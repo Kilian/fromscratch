@@ -1,24 +1,22 @@
-<img src="https://fromscratch.rocks/assets/img/icon.png">
+<img src="https://fromscratch.rocks/assets/img/icon.png?">
 # FromScratch
 
 ## A simple but smart note-taking app
 
 FromScratch is a little app that you can use as a quick note taking or todo app.</p>
 
-	* small and simple, the only UI is the text you type
-	* saves on-the-fly, no need to manually save
-	* automatic indenting
-	* replaces common syntax with symbols, such as arrows
+* small and simple, the only UI is the text you type
+* saves on-the-fly, no need to manually save
+* automatic indenting
+* replaces common syntax with symbols, such as arrows
 
 ### Shortcuts
 
-<ul>
-	<li><kbd>cmd/ctrl+up</kbd> - move current line up</li>
-	<li><kbd>cmd/ctrl+down</kbd> - move current line down</li>
-	<li><kbd>cmd/ctrl+d</kbd> - delete current line</li>
-	<li><kbd>cmd/ctrl+w/q</kbd> - close application</li>
-	<li><kbd>cmd/ctrl+s</kbd> - ...this does nothing.</li>
-</ul>
+* <kbd>cmd/ctrl+up</kbd> - move current line up
+* <kbd>cmd/ctrl+down</kbd> - move current line down
+* <kbd>cmd/ctrl+d</kbd> - delete current line
+* <kbd>cmd/ctrl+w/q</kbd> - close application
+* <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
 ## Download
 Recent downloads for OS X, Windows and Linux available on https://fromscratch.rocks
