@@ -44,7 +44,7 @@ app.on('ready', function() {
     width: windowState.bounds && windowState.bounds.width || 550,
     height: windowState.bounds && windowState.bounds.height || 450,
     'dark-theme': true,
-    backgroundColor: "#002b36",
+    backgroundColor: '#002b36',
     'web-preferences': {
       'overlayScrollbars': true,
     }
