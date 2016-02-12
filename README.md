@@ -16,7 +16,8 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * <kbd>cmd/ctrl+down</kbd> - move current line down
 * <kbd>cmd/ctrl+d</kbd> - delete current line
 * <kbd>cmd/ctrl+w/q</kbd> - close application
-* <kbd>cmd/crl +/-</kbd> - zoom text in or out
+* <kbd>cmd/ctrl +/=</kbd> - zoom text in
+* <kbd>cmd/ctrl -</kbd> - zoom text out
 * <kbd>cmd/ctrl+0</kbd> - reset text size
 * <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
