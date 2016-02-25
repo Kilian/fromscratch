@@ -14,7 +14,7 @@ var storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE'
 global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
-  filename: storageLocation + '/content.txt',
+  filename: storageLocation + '/' + (process.env.NODE_ENV === 'development' ? 'dev' : 'content') + '.txt',
   write: function(content) {
     fs.writeFileSync(this.filename, content, 'utf8');
   },
