@@ -80,6 +80,7 @@ export default class FromScratch extends React.Component {
       indentUnit: 4,
       tabSize: 4,
       indentWithTabs: true,
+      cursorScrollMargin: 40,
       extraKeys: {
         // from the sublime.js package
         'Ctrl-Up': 'swapLineUp',
