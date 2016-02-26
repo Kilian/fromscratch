@@ -30,7 +30,12 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
-  var windowState = global.nodeStorage.getItem('windowstate') || {};
+  var windowState = {};
+  try {
+    windowState = global.nodeStorage.getItem('windowstate');
+  } catch (err) {
+    console.log('empty window state file, creating new one.');
+  }
 
   ipc.on('writeContent', function(event, arg) {
     global.handleContent.write(arg);
