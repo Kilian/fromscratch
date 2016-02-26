@@ -7,7 +7,9 @@ var menu = require('electron').Menu;
 var gsc = require('global-shortcut');
 var JSONStorage = require('node-localstorage').JSONStorage;
 
-require('electron-debug')();
+if (process.env.NODE_ENV === 'development') {
+  require('electron-debug')();
+}
 
 // data saving
 var storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch';
@@ -80,6 +82,7 @@ app.on('ready', function() {
     gsc.register('CmdOrCtrl+s', function() { dispatchShortcutEvent('save'); } );
     gsc.register('CmdOrCtrl+w', function() { app.quit(); } );
     gsc.register('CmdOrCtrl+q ', function() { app.quit(); } );
+    gsc.register('CmdOrCtrl+r ', function() { } );
   };
 
   registerShortcuts();
