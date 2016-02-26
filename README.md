@@ -24,6 +24,8 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 ## Download
 Recent downloads for OS X, Windows and Linux available on https://fromscratch.rocks
 
+For Arch users, [FromScratch is available on AUR](https://aur.archlinux.org/packages/fromscratch-bin/)
+
 ### Installation
 ```sh
 # Download from git
