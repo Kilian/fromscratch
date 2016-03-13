@@ -35,7 +35,7 @@
     "react",
     "webpack",
     "scratchpad",
-    "coidemirror"
+    "codemirror"
   ],
   "homepage": "https://github.com/kilian/fromscratch",
   "devDependencies": {
