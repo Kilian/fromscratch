@@ -23,6 +23,18 @@
 	.CodeMirror-activeline-background {
 		background: lighten($bgColor, 1.5%) linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1.5%) 10%, lighten($bgColor, 1.5%) 60%, $bgColor 100%);
 	}
+
+
+	.CodeMirror-overlayscroll-vertical div {
+		background:lighten($bgColor, 3%);
+		border-radius:0;
+		transition:0.3s ease background, 0.3s ease width;
+
+		&:hover {
+			width:8px;
+			background:lighten($bgColor, 6%);
+		}
+	}
 }
 
 .CodeMirror-scroll { overflow-x:hidden !important;}

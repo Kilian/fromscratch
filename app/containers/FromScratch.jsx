@@ -1,6 +1,8 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
 
+require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.css');
+require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
 var ipc = require('electron').ipcRenderer;
@@ -77,7 +79,7 @@ export default class FromScratch extends React.Component {
       lineWrapping: true,
       theme: 'fromscratch',
       autofocus: true,
-      scrollbarStyle: null,
+      scrollbarStyle: 'overlay',
       indentUnit: 4,
       tabSize: 4,
       indentWithTabs: true,
