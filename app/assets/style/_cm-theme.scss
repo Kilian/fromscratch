@@ -21,7 +21,7 @@
 		border-left: 1px solid darken($textColor,5%);
 	}
 	.CodeMirror-activeline-background {
-		background: lighten($bgColor, 1.5%) linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1.5%) 10%, lighten($bgColor, 1.5%) 60%, $bgColor 100%);
+		background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 10%, lighten($bgColor, 1%) 60%, $bgColor 100%);
 	}
 
 
