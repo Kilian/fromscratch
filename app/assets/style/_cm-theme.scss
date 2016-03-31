@@ -24,6 +24,29 @@
 		background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 4%, lighten($bgColor, 1%) 60%, $bgColor 100%);
 	}
 
+	.CodeMirror-gutters {
+		background:transparent;
+		border:0;
+		left:2.8rem !important;
+	}
+	.CodeMirror-guttermarker-subtle,
+	.CodeMirror-foldmarker {
+		color:lighten($bgColor, 10%);
+		cursor:pointer;
+	}
+	.CodeMirror-foldmarker {
+		color:lighten($bgColor, 30%);
+		text-shadow:0 0 rgba(0,0,0,0);
+	}
+
+	.CodeMirror-foldgutter-open:after {
+		margin-left:-1px;
+	}
+
+	.CodeMirror-gutter-elt {
+		left:2.8rem !important;
+	}
+
 
 	.CodeMirror-overlayscroll-vertical div {
 		background:lighten($bgColor, 4%);

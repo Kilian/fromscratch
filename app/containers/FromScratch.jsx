@@ -1,8 +1,14 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
+import CodeMirror from '../../node_modules/react-codemirror/node_modules/codemirror/';
 
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/selection/active-line.js');
+require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/indent-fold.js');
+require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldcode.js');
+require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldgutter.css');
+require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldgutter.js');
+
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
 
 const electron = require('electron');
@@ -89,11 +95,20 @@ export default class FromScratch extends React.Component {
       tabSize: 4,
       indentWithTabs: true,
       cursorScrollMargin: 40,
+      foldOptions: {
+        rangeFinder: CodeMirror.fold.indent,
+        scanUp: true,
+        widget: " …",
+      },
+      foldGutter: true,
+      gutters: ["CodeMirror-foldgutter" ],
       extraKeys: {
         // from the sublime.js package
         'Ctrl-Up': 'swapLineUp',
         'Ctrl-Down': 'swapLineDown',
-        'Shift-Tab': 'indentLess'
+        'Shift-Tab': 'indentLess',
+        'Ctrl-Alt-[': function(cm) {cm.foldCode(cm.getCursor());},
+        'Ctrl-Alt-]': function(cm) {cm.foldCode(cm.getCursor());}
       }
     };
     return (
