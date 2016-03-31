@@ -1,6 +1,7 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
 
+require('../../node_modules/react-codemirror/node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
 var ipc = require('electron').ipcRenderer;
 var remote = require('electron').remote;
@@ -71,7 +72,7 @@ export default class FromScratch extends React.Component {
       fontSize: this.state.fontSize + "rem"
     }
     var options = {
-      mode: 'text',
+      styleActiveLine: true,
       lineNumbers: false,
       lineWrapping: true,
       theme: 'fromscratch',
