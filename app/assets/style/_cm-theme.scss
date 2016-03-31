@@ -8,8 +8,8 @@
 	  color: lighten($textColor, 15%);
 	}
 	.CodeMirror-line {
-		padding-left:4rem;
-		padding-right:4rem;
+		padding-left:3rem;
+		padding-right:3rem;
 	}
 	.CodeMirror-line::selection,
 	.CodeMirror-line > span::selection,
@@ -21,7 +21,7 @@
 		border-left: 1px solid darken($textColor,5%);
 	}
 	.CodeMirror-activeline-background {
-		background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 10%, lighten($bgColor, 1%) 60%, $bgColor 100%);
+		background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 4%, lighten($bgColor, 1%) 60%, $bgColor 100%);
 	}
 
 
