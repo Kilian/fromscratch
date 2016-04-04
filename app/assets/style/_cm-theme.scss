@@ -31,12 +31,31 @@
 	}
 	.CodeMirror-guttermarker-subtle,
 	.CodeMirror-foldmarker {
-		color:lighten($bgColor, 10%);
+		color:lighten($bgColor, 8%);
 		cursor:pointer;
 	}
 	.CodeMirror-foldmarker {
-		color:lighten($bgColor, 30%);
+		color:lighten($bgColor, 20%);
 		text-shadow:0 0 rgba(0,0,0,0);
+		background:lighten($bgColor, 3%);
+		border-radius:0.25em;
+		line-height:0.125em;
+		height:0.625em;
+		margin-top:0.3125em;
+		margin-left:0.3125em;
+
+		display:inline-block;
+		vertical-align:top;
+	}
+
+	.CodeMirror-guttermarker-subtle {
+		opacity:0;
+		transition:0.3s ease opacity;
+
+		&:hover,
+		&.CodeMirror-foldgutter-folded {
+			opacity:1
+		}
 	}
 
 	.CodeMirror-foldgutter-open:after {
