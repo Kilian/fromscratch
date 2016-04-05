@@ -98,7 +98,7 @@ export default class FromScratch extends React.Component {
       foldOptions: {
         rangeFinder: CodeMirror.fold.indent,
         scanUp: true,
-        widget: " …",
+        widget: " … ",
       },
       foldGutter: true,
       gutters: ["CodeMirror-foldgutter" ],
