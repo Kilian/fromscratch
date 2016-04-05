@@ -6,6 +6,8 @@ var ipc = require('electron').ipcMain;
 var menu = require('electron').Menu;
 var gsc = require('global-shortcut');
 var JSONStorage = require('node-localstorage').JSONStorage;
+var shell = require('electron').shell;
+var APPVERSION = require('./package.json').version;
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
@@ -110,15 +112,33 @@ app.on('ready', function() {
     });
   });
 
-  if (process.platform === 'darwin') {
-    var template = [{
-      label: 'FromScratch',
-      submenu: [{
+  var template = [{
+    label: 'FromScratch',
+    submenu: [
+      {
+        label: 'Website',
+        click: function() { shell.openExternal('https://fromscratch.rocks'); }
+      },
+      {
+        label: 'Support',
+        click: function() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
+      },
+      {
+        label: 'Check for updates (current: ' + APPVERSION + ')',
+        click: function() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Quit',
         accelerator: 'CmdOrCtrl+Q',
         click: function() { app.quit(); }
       }]
-    }, {
+  }];
+
+  if (process.platform === 'darwin') {
+    template.push({
       label: 'Edit',
       submenu: [{
         label: 'Undo',
@@ -147,11 +167,11 @@ app.on('ready', function() {
         accelerator: 'CmdOrCtrl+A',
         selector: 'selectAll:'
       }]
-    }];
-
-    var osxMenu = menu.buildFromTemplate(template);
-    menu.setApplicationMenu(osxMenu);
+    });
   }
+
+  var menuBar = menu.buildFromTemplate(template);
+  menu.setApplicationMenu(menuBar);
 
   mainWindow.on('closed', function() {
     mainWindow = null;
