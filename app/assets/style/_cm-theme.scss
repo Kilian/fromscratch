@@ -26,13 +26,13 @@
 
 
 	.CodeMirror-overlayscroll-vertical div {
-		background:lighten($bgColor, 3%);
+		background:lighten($bgColor, 4%);
 		border-radius:0;
 		transition:0.3s ease background, 0.3s ease width;
 
 		&:hover {
 			width:8px;
-			background:lighten($bgColor, 6%);
+			background:lighten($bgColor, 8%);
 		}
 	}
 }
