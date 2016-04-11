@@ -76,8 +76,8 @@
     "keymirror": "^0.1.1",
     "node-localstorage": "^1.1.2",
     "object-assign": "^4.0.1",
-    "react": "^0.14.2",
-    "react-codemirror": "^0.2.0",
-    "react-dom": "^0.14.2"
+    "react": "^15.0.1",
+    "react-codemirror": "^0.2.6",
+    "react-dom": "^15.0.1"
   }
 }
