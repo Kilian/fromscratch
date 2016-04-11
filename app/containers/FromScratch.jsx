@@ -1,10 +1,10 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
 
-require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.css');
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
+
 var ipc = require('electron').ipcRenderer;
 var remote = require('electron').remote;
 var handleContent = remote.getGlobal('handleContent');
