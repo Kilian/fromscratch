@@ -46,6 +46,7 @@ app.on('ready', function() {
   });
 
   var windowSettings = {
+    show: false,
     title: 'FromScratch',
     icon: __dirname + '/app/assets/img/icon.png',
     x: windowState.bounds && windowState.bounds.x || undefined,
@@ -71,6 +72,11 @@ app.on('ready', function() {
   } else {
     mainWindow.loadURL('file://' + __dirname + '/app/app.html');
   }
+
+  mainWindow.webContents.on('did-finish-load', function() {
+    mainWindow.show();
+    mainWindow.focus();
+  });
 
   var dispatchShortcutEvent = function(ev) {
     mainWindow.webContents.send('executeShortCut', ev);
