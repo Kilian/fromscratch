@@ -20,21 +20,21 @@ global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
   filename: storageLocation + '/' + (process.env.NODE_ENV === 'development' ? 'dev' : 'content') + '.txt',
-  write: function(content) {
+  write(content) {
     fs.writeFileSync(this.filename, content, 'utf8');
   },
-  read: function() {
+  read() {
     return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
   }
 };
 
 // app init
 let mainWindow = null;
-app.on('window-all-closed', function() {
+app.on('window-all-closed', () => {
   app.quit();
 });
 
-app.on('ready', function() {
+app.on('ready', () => {
   let windowState = {};
   try {
     windowState = global.nodeStorage.getItem('windowstate');
@@ -42,7 +42,7 @@ app.on('ready', function() {
     console.log('empty window state file, creating new one.');
   }
 
-  ipc.on('writeContent', function(event, arg) {
+  ipc.on('writeContent', (event, arg) => {
     global.handleContent.write(arg);
   });
 
@@ -62,45 +62,43 @@ app.on('ready', function() {
   };
 
   mainWindow = new BrowserWindow(windowSettings);
-
-  // Restore maximised state if it is set. not possible via options so we do it here
-  if (windowState.isMaximized) {
-    mainWindow.maximize();
-  }
-
   mainWindow.loadURL('file://' + __dirname + '/app/app.html');
 
-  mainWindow.webContents.on('did-finish-load', function() {
+  mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();
+    // Restore maximised state if it is set. not possible via options so we do it here
+    if (windowState.isMaximized) {
+      mainWindow.maximize();
+    }
     mainWindow.focus();
   });
 
-  const dispatchShortcutEvent = function(ev) {
+  const dispatchShortcutEvent = (ev) => {
     mainWindow.webContents.send('executeShortCut', ev);
   };
 
-  const registerShortcuts = function() {
-    gsc.register('CmdOrCtrl+0', function() { dispatchShortcutEvent('reset-font'); } );
-    gsc.register('CmdOrCtrl+-', function() { dispatchShortcutEvent('decrease-font'); } );
-    gsc.register('CmdOrCtrl+=', function() { dispatchShortcutEvent('increase-font'); } );
-    gsc.register('CmdOrCtrl+Plus', function() { dispatchShortcutEvent('increase-font'); } );
-    gsc.register('CmdOrCtrl+s', function() { dispatchShortcutEvent('save'); } );
-    gsc.register('CmdOrCtrl+w', function() { app.quit(); } );
-    gsc.register('CmdOrCtrl+q ', function() { app.quit(); } );
-    gsc.register('CmdOrCtrl+r ', function() { } );
+  const registerShortcuts = () => {
+    gsc.register('CmdOrCtrl+0', () =>{ dispatchShortcutEvent('reset-font'); } );
+    gsc.register('CmdOrCtrl+-', () =>{ dispatchShortcutEvent('decrease-font'); } );
+    gsc.register('CmdOrCtrl+=', () =>{ dispatchShortcutEvent('increase-font'); } );
+    gsc.register('CmdOrCtrl+Plus', () =>{ dispatchShortcutEvent('increase-font'); } );
+    gsc.register('CmdOrCtrl+s', () =>{ dispatchShortcutEvent('save'); } );
+    gsc.register('CmdOrCtrl+w', () =>{ app.quit(); } );
+    gsc.register('CmdOrCtrl+q ', () =>{ app.quit(); } );
+    gsc.register('CmdOrCtrl+r ', () => { } );
   };
 
   registerShortcuts();
 
-  mainWindow.on('focus', function() {
+  mainWindow.on('focus', () => {
     registerShortcuts();
   });
 
-  mainWindow.on('blur', function() {
+  mainWindow.on('blur', () => {
     gsc.unregisterAll();
   });
 
-  const storeWindowState = function() {
+  const storeWindowState = () => {
     windowState.isMaximized = mainWindow.isMaximized();
     if (!windowState.isMaximized) {
       // only update bounds if the window isn't currently maximized
@@ -109,8 +107,8 @@ app.on('ready', function() {
     global.nodeStorage.setItem('windowstate', windowState);
   };
 
-  ['resize', 'move', 'close'].forEach(function(e) {
-    mainWindow.on(e, function() {
+  ['resize', 'move', 'close'].forEach((e) => {
+    mainWindow.on(e, () => {
       storeWindowState();
     });
   });
@@ -120,15 +118,15 @@ app.on('ready', function() {
     submenu: [
       {
         label: 'Website',
-        click: function() { shell.openExternal('https://fromscratch.rocks'); }
+        click() { shell.openExternal('https://fromscratch.rocks'); }
       },
       {
         label: 'Support',
-        click: function() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
+        click() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
       },
       {
         label: 'Check for updates (current: ' + APPVERSION + ')',
-        click: function() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
+        click() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
       },
       {
         type: 'separator'
@@ -136,7 +134,7 @@ app.on('ready', function() {
       {
         label: 'Quit',
         accelerator: 'CmdOrCtrl+Q',
-        click: function() { app.quit(); }
+        click() { app.quit(); }
       }]
   }];
 
@@ -176,7 +174,7 @@ app.on('ready', function() {
   const menuBar = menu.buildFromTemplate(template);
   menu.setApplicationMenu(menuBar);
 
-  mainWindow.on('closed', function() {
+  mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
