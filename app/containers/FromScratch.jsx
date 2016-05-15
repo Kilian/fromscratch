@@ -29,9 +29,14 @@ export default class FromScratch extends React.Component {
 
   constructor(props) {
     super();
+
     this.state = {
       content: handleContent.read() || props.content,
       fontSize: nodeStorage.getItem('fontSize') || 1,
+      folds: function () {
+        var foldItem = nodeStorage.getItem('folds');
+        return (foldItem && foldItem.folds) ? foldItem.folds : [];
+      }(),
       mock: 'nosave',
     };
   }
@@ -54,6 +59,32 @@ export default class FromScratch extends React.Component {
         default:
           break;
       }
+    });
+
+    const cm = this.refs.editor.getCodeMirror();
+    this.applyFolds(cm);
+    cm.on("fold", (cm, from) => {
+      const newFolds = this.state.folds.concat([[from.line, from.ch]]);
+      this.updateFolds(newFolds);
+    });
+
+    cm.on("unfold", (cm, from) => {
+      this.updateFolds(this.state.folds.filter((fold) => {
+        return fold[0] !== from.line && fold[1] !== from.ch;
+      }));
+    });
+  }
+
+  applyFolds(cm) {
+    this.state.folds.forEach((fold) => {
+      cm.foldCode(CodeMirror.Pos.apply(this, fold));
+    })
+  }
+
+  updateFolds(newFolds) {
+    nodeStorage.setItem('folds', {folds:newFolds});
+    this.setState({
+      "folds": newFolds
     });
   }
 
@@ -101,7 +132,7 @@ export default class FromScratch extends React.Component {
         widget: " … ",
       },
       foldGutter: true,
-      gutters: ["CodeMirror-foldgutter" ],
+      gutters: ["CodeMirror-foldgutter"],
       extraKeys: {
         // from the sublime.js package
         'Ctrl-Up': 'swapLineUp',
@@ -113,7 +144,7 @@ export default class FromScratch extends React.Component {
     };
     return (
       <div style={style}>
-        <Codemirror value={this.state.content} onChange={this.handleChange.bind(this)} options={options} />
+        <Codemirror value={this.state.content} ref="editor" onChange={this.handleChange.bind(this)} options={options} />
         <div className={this.state.mock}>Already saved! ;)</div>
       </div>
     );
