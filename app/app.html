@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -6,6 +6,12 @@
   </head>
   <body>
     <div id="react-root"></div>
-    <script src="../dist/bundle.js"></script>
+    <script>
+      (function() {
+        const script = document.createElement('script');
+        script.src = (process.env.HOT) ? 'http://localhost:3000/dist/bundle.js' : '../dist/bundle.js';
+        document.write(script.outerHTML);
+      }());
+    </script>
   </body>
 </html>

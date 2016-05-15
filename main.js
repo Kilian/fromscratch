@@ -67,11 +67,7 @@ app.on('ready', function() {
     mainWindow.maximize();
   }
 
-  if (process.env.HOT) {
-    mainWindow.loadURL('file://' + __dirname + '/app/hot-dev-app.html');
-  } else {
-    mainWindow.loadURL('file://' + __dirname + '/app/app.html');
-  }
+  mainWindow.loadURL('file://' + __dirname + '/app/app.html');
 
   mainWindow.webContents.on('did-finish-load', function() {
     mainWindow.show();
