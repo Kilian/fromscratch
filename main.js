@@ -1,20 +1,21 @@
 /* eslint no-path-concat: 0, func-names:0 */
-var app = require('app');
-var BrowserWindow = require('browser-window');
-var fs = require('fs');
-var ipc = require('electron').ipcMain;
-var menu = require('electron').Menu;
-var gsc = require('global-shortcut');
-var JSONStorage = require('node-localstorage').JSONStorage;
-var shell = require('electron').shell;
-var APPVERSION = require('./package.json').version;
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const fs = require('fs');
+const ipc = electron.ipcMain;
+const menu = electron.Menu;
+const gsc = electron.globalShortcut;
+const JSONStorage = require('node-localstorage').JSONStorage;
+const shell = electron.shell;
+const APPVERSION = require('./package.json').version;
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
 }
 
 // data saving
-var storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch';
+const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch';
 global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
@@ -28,13 +29,13 @@ global.handleContent = {
 };
 
 // app init
-var mainWindow = null;
+let mainWindow = null;
 app.on('window-all-closed', function() {
   app.quit();
 });
 
 app.on('ready', function() {
-  var windowState = {};
+  let windowState = {};
   try {
     windowState = global.nodeStorage.getItem('windowstate');
   } catch (err) {
@@ -45,7 +46,7 @@ app.on('ready', function() {
     global.handleContent.write(arg);
   });
 
-  var windowSettings = {
+  const windowSettings = {
     show: false,
     title: 'FromScratch',
     icon: __dirname + '/app/assets/img/icon.png',
@@ -74,11 +75,11 @@ app.on('ready', function() {
     mainWindow.focus();
   });
 
-  var dispatchShortcutEvent = function(ev) {
+  const dispatchShortcutEvent = function(ev) {
     mainWindow.webContents.send('executeShortCut', ev);
   };
 
-  var registerShortcuts = function() {
+  const registerShortcuts = function() {
     gsc.register('CmdOrCtrl+0', function() { dispatchShortcutEvent('reset-font'); } );
     gsc.register('CmdOrCtrl+-', function() { dispatchShortcutEvent('decrease-font'); } );
     gsc.register('CmdOrCtrl+=', function() { dispatchShortcutEvent('increase-font'); } );
@@ -99,7 +100,7 @@ app.on('ready', function() {
     gsc.unregisterAll();
   });
 
-  var storeWindowState = function() {
+  const storeWindowState = function() {
     windowState.isMaximized = mainWindow.isMaximized();
     if (!windowState.isMaximized) {
       // only update bounds if the window isn't currently maximized
@@ -114,7 +115,7 @@ app.on('ready', function() {
     });
   });
 
-  var template = [{
+  const template = [{
     label: 'FromScratch',
     submenu: [
       {
@@ -172,7 +173,7 @@ app.on('ready', function() {
     });
   }
 
-  var menuBar = menu.buildFromTemplate(template);
+  const menuBar = menu.buildFromTemplate(template);
   menu.setApplicationMenu(menuBar);
 
   mainWindow.on('closed', function() {

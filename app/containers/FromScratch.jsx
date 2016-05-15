@@ -5,10 +5,11 @@ require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scrol
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
 
-var ipc = require('electron').ipcRenderer;
-var remote = require('electron').remote;
-var handleContent = remote.getGlobal('handleContent');
-var nodeStorage = remote.getGlobal('nodeStorage');
+const electron = require('electron');
+const ipc = electron.ipcRenderer;
+const remote = electron.remote;
+const handleContent = remote.getGlobal('handleContent');
+const nodeStorage = remote.getGlobal('nodeStorage');
 
 export default class FromScratch extends React.Component {
   static defaultProps = {
