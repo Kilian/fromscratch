@@ -15,11 +15,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // data saving
-const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch';
+const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch' + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+
 global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
-  filename: storageLocation + '/' + (process.env.NODE_ENV === 'development' ? 'dev' : 'content') + '.txt',
+  filename: storageLocation + '/content.txt',
   write(content) {
     fs.writeFileSync(this.filename, content, 'utf8');
   },
@@ -37,7 +38,7 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
   let windowState = {};
   try {
-    windowState = global.nodeStorage.getItem('windowstate');
+    windowState = global.nodeStorage.getItem('windowstate') || {};
   } catch (err) {
     console.log('empty window state file, creating new one.');
   }
