@@ -13,7 +13,7 @@ const nodeStorage = remote.getGlobal('nodeStorage');
 
 export default class FromScratch extends React.Component {
   static defaultProps = {
-    content:  '|> Welcome to FromScratch.\n\n\n'
+    content: '|> Welcome to FromScratch.\n\n\n'
             + 'This app saves everything you type automatically, there\'s no need to save manually.'
             + '\n\nYou can type neat arrows like these: '
             + '->, -->, ->> and =>, courtesy of the font "Fira Code".\n\n'
@@ -27,54 +27,58 @@ export default class FromScratch extends React.Component {
       content: handleContent.read() || props.content,
       fontSize: nodeStorage.getItem('fontSize') || 1,
       mock: 'nosave',
-    }
+    };
   }
 
   componentDidMount() {
-    var ref = this;
-
-    ipc.on('executeShortCut', function(event, shortcut) {
+    ipc.on('executeShortCut', (event, shortcut) => {
       switch (shortcut) {
-        case 'save':
-          ref.showMockMessage()
-          break
-        case 'reset-font':
-          ref.updateFont(0, true);
-          break
-        case 'increase-font':
-          ref.updateFont(.1);
-          break
-        case 'decrease-font':
-          ref.updateFont(-.1);
-          break
+      case 'save':
+        this.showMockMessage();
+        break;
+      case 'reset-font':
+        this.updateFont(0, true);
+        break;
+      case 'increase-font':
+        this.updateFont(0.1);
+        break;
+      case 'decrease-font':
+        this.updateFont(-0.1);
+        break;
+      default:
+        break;
       }
     });
   }
+
+  componentDidUpdate() {
+    ipc.send('writeContent', this.state.content);
+  }
+
   showMockMessage() {
     clearTimeout(window.hideSaveMessage);
     this.setState({mock: 'nosave active'});
     window.hideSaveMessage = setTimeout(() => {
       this.setState({mock: 'nosave'});
-    }, 1000)
+    }, 1000);
   }
   updateFont(diff, reset) {
-    const newFontsize = reset ? 1 : Math.min(Math.max(this.state.fontSize + diff, .5), 2.5);
+    const newFontsize = reset ? 1 : Math.min(Math.max(this.state.fontSize + diff, 0.5), 2.5);
     nodeStorage.setItem('fontSize', newFontsize);
     this.setState({fontSize: newFontsize});
   }
-  componentDidUpdate() {
-    ipc.send('writeContent', this.state.content);
-  }
+
 
   handleChange(newcontent) {
     this.setState({content: newcontent});
   }
 
   render() {
-    var style = {
-      fontSize: this.state.fontSize + "rem"
-    }
-    var options = {
+    const style = {
+      fontSize: this.state.fontSize + 'rem'
+    };
+
+    const options = {
       styleActiveLine: true,
       lineNumbers: false,
       lineWrapping: true,
