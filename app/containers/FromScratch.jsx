@@ -6,9 +6,7 @@ require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scrol
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/indent-fold.js');
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldcode.js');
-require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldgutter.css');
 require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldgutter.js');
-
 require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
 
 const electron = require('electron');
