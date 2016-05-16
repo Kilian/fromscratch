@@ -31,10 +31,10 @@ export default class FromScratch extends React.Component {
     this.state = {
       content: handleContent.read() || props.content,
       fontSize: nodeStorage.getItem('fontSize') || 1,
-      folds: function () {
-        var foldItem = nodeStorage.getItem('folds');
+      folds: (() => {
+        const foldItem = nodeStorage.getItem('folds');
         return (foldItem && foldItem.folds) ? foldItem.folds : [];
-      }(),
+      })(),
       mock: 'nosave',
     };
   }
@@ -59,35 +59,34 @@ export default class FromScratch extends React.Component {
       }
     });
 
-    const cm = this.refs.editor.getCodeMirror();
-    this.applyFolds(cm);
-    cm.on("fold", (cm, from) => {
+    const cmInstance = this.refs.editor.getCodeMirror();
+    this.applyFolds(cmInstance);
+    cmInstance.on('fold', (cm, from) => {
       const newFolds = this.state.folds.concat([[from.line, from.ch]]);
       this.updateFolds(newFolds);
     });
 
-    cm.on("unfold", (cm, from) => {
+    cmInstance.on('unfold', (cm, from) => {
       this.updateFolds(this.state.folds.filter((fold) => {
         return fold[0] !== from.line && fold[1] !== from.ch;
       }));
     });
   }
 
+  componentDidUpdate() {
+    ipc.send('writeContent', this.state.content);
+  }
   applyFolds(cm) {
     this.state.folds.forEach((fold) => {
       cm.foldCode(CodeMirror.Pos.apply(this, fold));
-    })
-  }
-
-  updateFolds(newFolds) {
-    nodeStorage.setItem('folds', {folds:newFolds});
-    this.setState({
-      "folds": newFolds
     });
   }
 
-  componentDidUpdate() {
-    ipc.send('writeContent', this.state.content);
+  updateFolds(newFolds) {
+    nodeStorage.setItem('folds', {folds: newFolds});
+    this.setState({
+      'folds': newFolds
+    });
   }
 
   showMockMessage() {
@@ -127,17 +126,17 @@ export default class FromScratch extends React.Component {
       foldOptions: {
         rangeFinder: CodeMirror.fold.indent,
         scanUp: true,
-        widget: " … ",
+        widget: ' … ',
       },
       foldGutter: true,
-      gutters: ["CodeMirror-foldgutter"],
+      gutters: ['CodeMirror-foldgutter'],
       extraKeys: {
         // from the sublime.js package
         'Ctrl-Up': 'swapLineUp',
         'Ctrl-Down': 'swapLineDown',
         'Shift-Tab': 'indentLess',
-        'Ctrl-Alt-[': function(cm) {cm.foldCode(cm.getCursor());},
-        'Ctrl-Alt-]': function(cm) {cm.foldCode(cm.getCursor());}
+        'Ctrl-Alt-[': (cm) => {cm.foldCode(cm.getCursor());},
+        'Ctrl-Alt-]': (cm) => {cm.foldCode(cm.getCursor());}
       }
     };
     return (
