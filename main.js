@@ -79,14 +79,14 @@ app.on('ready', () => {
   };
 
   const registerShortcuts = () => {
-    gsc.register('CmdOrCtrl+0', () =>{ dispatchShortcutEvent('reset-font'); } );
-    gsc.register('CmdOrCtrl+-', () =>{ dispatchShortcutEvent('decrease-font'); } );
-    gsc.register('CmdOrCtrl+=', () =>{ dispatchShortcutEvent('increase-font'); } );
-    gsc.register('CmdOrCtrl+Plus', () =>{ dispatchShortcutEvent('increase-font'); } );
-    gsc.register('CmdOrCtrl+s', () =>{ dispatchShortcutEvent('save'); } );
-    gsc.register('CmdOrCtrl+w', () =>{ app.quit(); } );
-    gsc.register('CmdOrCtrl+q ', () =>{ app.quit(); } );
-    gsc.register('CmdOrCtrl+r ', () => { } );
+    gsc.register('CmdOrCtrl+0', () => { dispatchShortcutEvent('reset-font'); });
+    gsc.register('CmdOrCtrl+-', () => { dispatchShortcutEvent('decrease-font'); });
+    gsc.register('CmdOrCtrl+=', () => { dispatchShortcutEvent('increase-font'); });
+    gsc.register('CmdOrCtrl+Plus', () => { dispatchShortcutEvent('increase-font'); });
+    gsc.register('CmdOrCtrl+s', () => { dispatchShortcutEvent('save'); });
+    gsc.register('CmdOrCtrl+w', () => { app.quit(); });
+    gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
+    gsc.register('CmdOrCtrl+r ', () => { });
   };
 
   registerShortcuts();

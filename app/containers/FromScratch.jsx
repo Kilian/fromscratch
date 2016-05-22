@@ -33,20 +33,20 @@ export default class FromScratch extends React.Component {
   componentDidMount() {
     ipc.on('executeShortCut', (event, shortcut) => {
       switch (shortcut) {
-      case 'save':
-        this.showMockMessage();
-        break;
-      case 'reset-font':
-        this.updateFont(0, true);
-        break;
-      case 'increase-font':
-        this.updateFont(0.1);
-        break;
-      case 'decrease-font':
-        this.updateFont(-0.1);
-        break;
-      default:
-        break;
+        case 'save':
+          this.showMockMessage();
+          break;
+        case 'reset-font':
+          this.updateFont(0, true);
+          break;
+        case 'increase-font':
+          this.updateFont(0.1);
+          break;
+        case 'decrease-font':
+          this.updateFont(-0.1);
+          break;
+        default:
+          break;
       }
     });
   }
@@ -57,25 +57,25 @@ export default class FromScratch extends React.Component {
 
   showMockMessage() {
     clearTimeout(window.hideSaveMessage);
-    this.setState({mock: 'nosave active'});
+    this.setState({ mock: 'nosave active' });
     window.hideSaveMessage = setTimeout(() => {
-      this.setState({mock: 'nosave'});
+      this.setState({ mock: 'nosave' });
     }, 1000);
   }
   updateFont(diff, reset) {
     const newFontsize = reset ? 1 : Math.min(Math.max(this.state.fontSize + diff, 0.5), 2.5);
     nodeStorage.setItem('fontSize', newFontsize);
-    this.setState({fontSize: newFontsize});
+    this.setState({ fontSize: newFontsize });
   }
 
 
   handleChange(newcontent) {
-    this.setState({content: newcontent});
+    this.setState({ content: newcontent });
   }
 
   render() {
     const style = {
-      fontSize: this.state.fontSize + 'rem'
+      fontSize: `${this.state.fontSize}rem`
     };
 
     const options = {
