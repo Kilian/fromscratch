@@ -12,6 +12,7 @@ require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/subl
 const electron = require('electron');
 const ipc = electron.ipcRenderer;
 const remote = electron.remote;
+const shell = electron.shell;
 const handleContent = remote.getGlobal('handleContent');
 const nodeStorage = remote.getGlobal('nodeStorage');
 
@@ -36,6 +37,7 @@ export default class FromScratch extends React.Component {
         return (foldItem && foldItem.folds) ? foldItem.folds : [];
       })(),
       mock: 'nosave',
+      update: 'updater'
     };
   }
 
@@ -53,6 +55,9 @@ export default class FromScratch extends React.Component {
           break;
         case 'decrease-font':
           this.updateFont(-0.1);
+          break;
+        case 'show-update-msg':
+          this.showUpdateMessage();
           break;
         default:
           break;
@@ -101,6 +106,17 @@ export default class FromScratch extends React.Component {
       this.setState({ mock: 'nosave' });
     }, 1000);
   }
+
+  showUpdateMessage() {
+    const hideMessageFor = nodeStorage.getItem('hideUpdateMessage');
+    const hideVersion = hideMessageFor ? hideMessageFor.version : false;
+    const latestVersion = remote.getGlobal('latestVersion');
+
+    if (latestVersion !== hideVersion) {
+      this.setState({ update: 'updater active' });
+    }
+  }
+
   updateFont(diff, reset) {
     const newFontsize = reset ? 1 : Math.min(Math.max(this.state.fontSize + diff, 0.5), 2.5);
     nodeStorage.setItem('fontSize', newFontsize);
@@ -112,10 +128,23 @@ export default class FromScratch extends React.Component {
     this.setState({ content: newcontent });
   }
 
+  openDownloadPage(e) {
+    shell.openExternal('https://fromscratch.rocks');
+    this.setState({ update: 'updater' });
+  }
+
+  hideUpdateMessage(e) {
+    e.stopPropagation();
+    const latestVersion = remote.getGlobal('latestVersion');
+    nodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
+    this.setState({ update: 'updater' });
+  }
+
   render() {
     const style = {
       fontSize: `${this.state.fontSize}rem`
     };
+    const latestVersion = remote.getGlobal('latestVersion');
 
     const options = {
       styleActiveLine: true,
@@ -140,14 +169,18 @@ export default class FromScratch extends React.Component {
         'Ctrl-Up': 'swapLineUp',
         'Ctrl-Down': 'swapLineDown',
         'Shift-Tab': 'indentLess',
-        'Ctrl-Alt-[': (cm) => {cm.foldCode(cm.getCursor());},
-        'Ctrl-Alt-]': (cm) => {cm.foldCode(cm.getCursor());}
+        'Ctrl-Alt-[': (cm) => { cm.foldCode(cm.getCursor()); },
+        'Ctrl-Alt-]': (cm) => { cm.foldCode(cm.getCursor()); }
       }
     };
     return (
       <div style={style}>
         <Codemirror value={this.state.content} ref="editor" onChange={this.handleChange.bind(this)} options={options} />
         <div className={this.state.mock}>Already saved! ;)</div>
+        <div onClick={this.openDownloadPage.bind(this)} className={this.state.update}>
+          There's an update available! Get version {latestVersion}
+          <span title="Don't show this again until next available update" onClick={this.hideUpdateMessage.bind(this)}>x</span>
+        </div>
       </div>
     );
   }

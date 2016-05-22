@@ -9,6 +9,8 @@ const gsc = electron.globalShortcut;
 const JSONStorage = require('node-localstorage').JSONStorage;
 const shell = electron.shell;
 const APPVERSION = require('./package.json').version;
+const https = require('https');
+const compareVersions = require('compare-versions');
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
@@ -72,6 +74,7 @@ app.on('ready', () => {
       mainWindow.maximize();
     }
     mainWindow.focus();
+    checkForUpdates();
   });
 
   const dispatchShortcutEvent = (ev) => {
@@ -113,6 +116,25 @@ app.on('ready', () => {
       storeWindowState();
     });
   });
+
+  const checkForUpdates = () => {
+    https.get('https://fromscratch.rocks/latest.json?current=' + APPVERSION, (res) => {
+      let json = '';
+      res.on('data', (d) => {
+        json += d;
+      });
+
+      res.on('end', () => {
+        const latestVersion = JSON.parse(json).version;
+        if (compareVersions(latestVersion, APPVERSION) === 1) {
+          global.latestVersion = latestVersion;
+          dispatchShortcutEvent('show-update-msg');
+        }
+      });
+    }).on('error', (e) => {
+      console.error(e);
+    });
+  };
 
   const template = [{
     label: 'FromScratch',

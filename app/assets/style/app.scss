@@ -76,6 +76,45 @@ body {
   }
 }
 
+.updater {
+  display:block;
+  background:rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.4);
+  width:100%;
+  text-align:center;
+  line-height:2rem;
+  padding:1rem 0.5rem 0;
+  position:fixed;
+  transition:0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
+  top:-4em;
+  text-decoration:none;
+  box-shadow:0 0 10px rgba(0,0,0,0.3);
+  cursor:pointer;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  padding-right:2.5rem;
+
+  &.active {
+    top:-1rem;
+  }
+
+  span {
+    line-height:1.5rem;
+    width:1.5rem;
+    height:1.5rem;
+    display:block;
+    position:absolute;
+    right:0.5rem;
+    bottom:0.25rem;
+    border-radius:1.5rem;
+    background:rgba(0,0,0,0.1);
+    color:rgba(255,255,255,0.5);
+    font-weight:bold;
+    font-size:1.2rem;
+    vertical-align:middle;
+  }
+}
 
 @import "../../../node_modules/react-codemirror/node_modules/codemirror/lib/codemirror.css";
 @import "../../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.css";
