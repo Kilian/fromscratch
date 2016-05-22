@@ -61,32 +61,36 @@ export default class FromScratch extends React.Component {
 
     const cmInstance = this.refs.editor.getCodeMirror();
     this.applyFolds(cmInstance);
-    cmInstance.on('fold', (cm, from) => {
-      const newFolds = this.state.folds.concat([[from.line, from.ch]]);
-      this.updateFolds(newFolds);
+
+    cmInstance.on('fold', () => {
+      this.updateFolds();
     });
 
-    cmInstance.on('unfold', (cm, from) => {
-      this.updateFolds(this.state.folds.filter((fold) => {
-        return fold[0] !== from.line && fold[1] !== from.ch;
-      }));
+    cmInstance.on('unfold', () => {
+      this.updateFolds();
     });
   }
 
   componentDidUpdate() {
     ipc.send('writeContent', this.state.content);
+    this.updateFolds();
   }
+
   applyFolds(cm) {
     this.state.folds.forEach((fold) => {
       cm.foldCode(CodeMirror.Pos.apply(this, fold));
     });
   }
 
-  updateFolds(newFolds) {
-    nodeStorage.setItem('folds', {folds: newFolds});
-    this.setState({
-      'folds': newFolds
-    });
+  updateFolds() {
+    const newFolds = this.refs.editor.getCodeMirror().getAllMarks()
+      .filter((mark) => mark.collapsed && mark.type === 'range')
+      .map((mark) => {
+        const pos = mark.find().from;
+        return [pos.line, pos.ch];
+      });
+
+    nodeStorage.setItem('folds', { folds: newFolds });
   }
 
   showMockMessage() {
