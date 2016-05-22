@@ -85,6 +85,7 @@ export default class FromScratch extends React.Component {
   updateFolds() {
     const newFolds = this.refs.editor.getCodeMirror().getAllMarks()
       .filter((mark) => mark.collapsed && mark.type === 'range')
+      .reverse()
       .map((mark) => {
         const pos = mark.find().from;
         return [pos.line, pos.ch];
