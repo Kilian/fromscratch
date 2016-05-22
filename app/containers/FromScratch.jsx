@@ -179,7 +179,9 @@ export default class FromScratch extends React.Component {
         <div className={this.state.mock}>Already saved! ;)</div>
         <div onClick={this.openDownloadPage.bind(this)} className={this.state.update}>
           There's an update available! Get version {latestVersion}
-          <span title="Don't show this again until next available update" onClick={this.hideUpdateMessage.bind(this)}>x</span>
+          <span title="Don't show this again until next available update" onClick={this.hideUpdateMessage.bind(this)}>
+            x
+          </span>
         </div>
       </div>
     );
