@@ -169,8 +169,8 @@ export default class FromScratch extends React.Component {
         'Ctrl-Up': 'swapLineUp',
         'Ctrl-Down': 'swapLineDown',
         'Shift-Tab': 'indentLess',
-        'Ctrl-Alt-[': (cm) => { cm.foldCode(cm.getCursor()); },
-        'Ctrl-Alt-]': (cm) => { cm.foldCode(cm.getCursor()); }
+        'Ctrl-[': (cm) => { cm.foldCode(cm.getCursor()); },
+        'Ctrl-]': (cm) => { cm.foldCode(cm.getCursor()); }
       }
     };
     return (
