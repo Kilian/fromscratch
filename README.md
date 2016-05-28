@@ -5,10 +5,13 @@
 
 FromScratch is a little app that you can use as a quick note taking or todo app.</p>
 
-* small and simple, the only UI is the text you type
-* saves on-the-fly, no need to manually save
-* automatic indenting
-* replaces common syntax with symbols, such as arrows
+* Small and simple, the only UI is the text you type
+* Saves on-the-fly, no need to manually save
+* Automatic indenting
+* Note-folding
+* Replaces common syntax with symbols, such as arrows
+* Free
+
 
 ### Shortcuts
 
@@ -19,6 +22,7 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * <kbd>cmd/ctrl +/=</kbd> - zoom text in
 * <kbd>cmd/ctrl -</kbd> - zoom text out
 * <kbd>cmd/ctrl+0</kbd> - reset text size
+* <kbd>cmd/ctrl+]/[</kbd> - fold note collapsing
 * <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
 ## Download
