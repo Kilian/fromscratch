@@ -4,9 +4,6 @@
   "description": "simple autosaving scratchpad",
   "main": "main.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --compilers js:babel/register --recursive",
-    "test-watch": "npm test -- --watch",
-    "lint": "eslint .",
     "hot-server": "node server.js",
     "build": "NODE_ENV=production webpack --config webpack.config.production.js --progress --profile --colors",
     "start": "electron .",
@@ -54,7 +51,7 @@
     "css-loader": "^0.23.0",
     "del": "^2.0.1",
     "electron-packager": "^7.0.1",
-    "electron-prebuilt": "^1.1.1",
+    "electron-prebuilt": "^1.2.2",
     "electron-rebuild": "^1.0.0",
     "eslint": "^2.10.1",
     "eslint-config-airbnb": "^9.0.1",
