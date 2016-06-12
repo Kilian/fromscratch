@@ -57,9 +57,9 @@ app.on('ready', () => {
     y: windowState.bounds && windowState.bounds.y || undefined,
     width: windowState.bounds && windowState.bounds.width || 550,
     height: windowState.bounds && windowState.bounds.height || 450,
-    'dark-theme': true,
+    darkTheme: true,
     backgroundColor: '#002b36',
-    'web-preferences': {
+    webPreferences: {
       'overlayScrollbars': true,
     }
   };
@@ -195,7 +195,10 @@ app.on('ready', () => {
   }
 
   const menuBar = menu.buildFromTemplate(template);
-  menu.setApplicationMenu(menuBar);
+  // windows has a menu inside the app, so hide it
+  if (process.platform !== 'win32') {
+    menu.setApplicationMenu(menuBar);
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null;
