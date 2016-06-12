@@ -49,7 +49,7 @@ body {
 }
 
 .CodeMirror {
-   padding:3rem 0;
+   padding:3rem 0 4rem;
    width:100%;
    height:100%;
    background:inherit;
@@ -57,9 +57,30 @@ body {
    font-family:inherit;
    font-size:inherit;
    line-height:inherit;
+
+   &::before,
+   &::after {
+     pointer-events: none;
+     position:absolute;
+     z-index:3;
+     display:block;
+     content:" ";
+     left:0;
+     top:0;
+     width:100%;
+     height:3rem;
+     background:linear-gradient(to top, transparentize($bgColor, 1), $bgColor 10%);
+   }
+
+   &::after {
+     top:auto;
+     bottom:0;
+     background:linear-gradient(to bottom, transparentize($bgColor, 1), $bgColor 10%);
+   }
  }
 
 .nosave {
+  z-index:4;
   background:rgba(255,255,255,0.1);
   color:rgba(255,255,255,0.4);
   line-height:2rem;
@@ -77,6 +98,7 @@ body {
 }
 
 .updater {
+  z-index:5;
   display:block;
   background:rgba(255,255,255,0.1);
   color:rgba(255,255,255,0.4);
