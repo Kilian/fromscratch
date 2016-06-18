@@ -68,15 +68,15 @@ body {
      left:0;
      top:0;
      width:100%;
-     height:50px;
-     background:linear-gradient(to top, rgba(0, 43, 54, 0), rgba(0, 43, 54, 1) 10%);
+     height:54px;
+     background:linear-gradient(to top, rgba(0, 43, 54, 0), rgba(0, 43, 54, 1) 5%);
    }
 
    &::after {
      top:auto;
      bottom:0;
      height:3rem;
-     background:linear-gradient(to bottom, rgba(0, 43, 54, 0), rgba(0, 43, 54, 1) 10%);
+     background:linear-gradient(to bottom, rgba(0, 43, 54, 0), rgba(0, 43, 54, 1) 5%);
    }
  }
 

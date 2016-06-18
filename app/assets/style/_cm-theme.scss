@@ -4,18 +4,12 @@
 		color: $textColor;
 	}
 	div.CodeMirror-selected {
-		background: lighten($bgColor, 6%);
+		background: lighten($bgColor, 5%);
 	  color: lighten($textColor, 15%);
 	}
 	.CodeMirror-line {
 		padding-left:3rem;
 		padding-right:3rem;
-	}
-	.CodeMirror-line::selection,
-	.CodeMirror-line > span::selection,
-	.CodeMirror-line > span > span::selection {
-		background: lighten($bgColor, 6%);
-	  color: lighten($textColor, 15%);
 	}
 	.CodeMirror-cursor {
 		border-left: 1px solid darken($textColor,5%);
