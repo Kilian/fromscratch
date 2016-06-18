@@ -98,6 +98,16 @@ body {
   }
 }
 
+[data-platform=darwin] .titlebar {
+  z-index:10;
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:1.3rem;
+  -webkit-app-region:drag;
+}
+
 .updater {
   z-index:5;
   display:block;
@@ -137,6 +147,7 @@ body {
     vertical-align:middle;
   }
 }
+[data-platform=darwin] .updater {padding-top:2rem;}
 
 @import "../../../node_modules/react-codemirror/node_modules/codemirror/lib/codemirror.css";
 @import "../../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.css";

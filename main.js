@@ -59,9 +59,7 @@ app.on('ready', () => {
     height: windowState.bounds && windowState.bounds.height || 450,
     darkTheme: true,
     backgroundColor: '#002b36',
-    webPreferences: {
-      overlayScrollbars: true,
-    }
+    titleBarStyle: 'hidden'
   };
 
   mainWindow = new BrowserWindow(windowSettings);
