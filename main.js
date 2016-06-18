@@ -51,7 +51,7 @@ app.on('ready', () => {
 
   const windowSettings = {
     show: false,
-    title: 'FromScratch',
+    title: app.getName(),
     icon: __dirname + '/app/assets/img/icon.png',
     x: windowState.bounds && windowState.bounds.x || undefined,
     y: windowState.bounds && windowState.bounds.y || undefined,
@@ -136,8 +136,8 @@ app.on('ready', () => {
     });
   };
 
-  const template = [{
-    label: 'FromScratch',
+  let template = [{
+    label: app.getName(),
     submenu: [
       {
         label: 'Website',
@@ -162,19 +162,26 @@ app.on('ready', () => {
   }];
 
   if (process.platform === 'darwin') {
-    const name = electron.remote.app.getName();
-    template.unshift({
-      label: name,
+    template = [{
+      label: app.getName(),
       submenu: [
         {
-          label: 'About ' + name,
+          label: 'About ' + app.getName(),
           click() { shell.openExternal('https://fromscratch.rocks'); }
+        },
+        {
+          label: 'Support',
+          click() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
+        },
+        {
+          label: 'Check for updates (current: ' + APPVERSION + ')',
+          click() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
         },
         {
           type: 'separator'
         },
         {
-          label: 'Hide ' + name,
+          label: 'Hide ' + app.getName(),
           accelerator: 'Command+H',
           role: 'hide'
         },
@@ -196,8 +203,7 @@ app.on('ready', () => {
           click() { app.quit(); }
         },
       ]
-    });
-    template.push({
+    },{
       label: 'Edit',
       submenu: [{
         label: 'Undo',
@@ -226,7 +232,7 @@ app.on('ready', () => {
         accelerator: 'CmdOrCtrl+A',
         selector: 'selectAll:'
       }]
-    });
+    }];
   }
 
   const menuBar = menu.buildFromTemplate(template);
