@@ -162,6 +162,41 @@ app.on('ready', () => {
   }];
 
   if (process.platform === 'darwin') {
+    const name = electron.remote.app.getName();
+    template.unshift({
+      label: name,
+      submenu: [
+        {
+          label: 'About ' + name,
+          click() { shell.openExternal('https://fromscratch.rocks'); }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Hide ' + name,
+          accelerator: 'Command+H',
+          role: 'hide'
+        },
+        {
+          label: 'Hide Others',
+          accelerator: 'Command+Alt+H',
+          role: 'hideothers'
+        },
+        {
+          label: 'Show All',
+          role: 'unhide'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click() { app.quit(); }
+        },
+      ]
+    });
     template.push({
       label: 'Edit',
       submenu: [{
