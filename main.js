@@ -60,14 +60,14 @@ app.on('ready', () => {
     darkTheme: true,
     backgroundColor: '#002b36',
     webPreferences: {
-      'overlayScrollbars': true,
+      overlayScrollbars: true,
     }
   };
 
   mainWindow = new BrowserWindow(windowSettings);
   mainWindow.loadURL('file://' + __dirname + '/app/app.html');
 
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.on('ready-to-show', () => {
     mainWindow.show();
     // Restore maximised state if it is set. not possible via options so we do it here
     if (windowState.isMaximized) {
