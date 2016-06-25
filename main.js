@@ -59,7 +59,8 @@ app.on('ready', () => {
     height: windowState.bounds && windowState.bounds.height || 450,
     darkTheme: true,
     backgroundColor: '#002b36',
-    titleBarStyle: 'hidden'
+    titleBarStyle: 'hidden',
+    autoHideMenuBar: true,
   };
 
   mainWindow = new BrowserWindow(windowSettings);
@@ -234,10 +235,7 @@ app.on('ready', () => {
   }
 
   const menuBar = menu.buildFromTemplate(template);
-  // windows has a menu inside the app, so hide it
-  if (process.platform !== 'win32') {
-    menu.setApplicationMenu(menuBar);
-  }
+  menu.setApplicationMenu(menuBar);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
