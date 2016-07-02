@@ -15,24 +15,10 @@ config.entry = './app/mainApp';
 
 config.output.publicPath = '/dist/';
 
-config.module.loaders.push({
-  test: /^((?!\.module).)*\.css$/,
-  loader: ExtractTextPlugin.extract(
-    'style-loader',
-    'css-loader'
-  )
-}, {
-  test: /\.module\.css$/,
-  loader: ExtractTextPlugin.extract(
-    'style-loader',
-    'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
-  )
-});
-
 config.plugins.push(
-  new webpack.optimize.OccurenceOrderPlugin(),
+  new webpack.optimize.OccurrenceOrderPlugin(),
   new webpack.DefinePlugin({
-    '__DEV__': false,
+    __DEV__: false,
     'process.env': JSON.stringify('production')
   }),
   new webpack.optimize.UglifyJsPlugin({
