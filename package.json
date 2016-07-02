@@ -56,6 +56,8 @@
     "concurrently": "^2.1.0",
     "css-loader": "^0.23.0",
     "del": "^2.0.1",
+    "devtron": "^1.2.1",
+    "electron-devtools-installer": "^1.1.5",
     "electron-packager": "^7.0.4",
     "electron-prebuilt": "^1.2.5",
     "electron-rebuild": "^1.0.0",

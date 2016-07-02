@@ -13,11 +13,13 @@ const https = require('https');
 const compareVersions = require('compare-versions');
 
 if (process.env.NODE_ENV === 'development') {
-  require('electron-debug')();
+  require('electron-debug')(); // eslint-disable-line global-require
 }
 
 // data saving
-const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch' + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] +
+                        '/.fromscratch' +
+                        (process.env.NODE_ENV === 'development' ? '/dev' : '');
 
 global.nodeStorage = new JSONStorage(storageLocation);
 
@@ -31,6 +33,21 @@ global.handleContent = {
   }
 };
 
+const installExtensions = () => {
+  if (process.env.NODE_ENV === 'development') {
+    const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
+    const extensions = [
+      'REACT_DEVELOPER_TOOLS'
+    ];
+    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+    for (const name of extensions) {
+      try {
+        installer.default(installer[name], forceDownload);
+      } catch (e) {} // eslint-disable-line
+    }
+  }
+};
+
 // app init
 let mainWindow = null;
 app.on('window-all-closed', () => {
@@ -38,6 +55,8 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
+  installExtensions();
+
   let windowState = {};
   try {
     windowState = global.nodeStorage.getItem('windowstate') || {};
@@ -202,7 +221,7 @@ app.on('ready', () => {
           click() { app.quit(); }
         },
       ]
-    },{
+    }, {
       label: 'Edit',
       submenu: [{
         label: 'Undo',
