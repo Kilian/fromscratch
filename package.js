@@ -32,22 +32,9 @@ if (icon) {
   DEFAULT_OPTS.icon = icon;
 }
 
-var version = argv.version || argv.v;
-
-if (version) {
-  DEFAULT_OPTS.version = version;
-  startPack();
-} else {
-  // use the same version as the currently-installed electron-prebuilt
-  exec('npm list | grep electron-prebuilt', function(err, stdout, stderr) {
-    if (err) {
-      DEFAULT_OPTS.version = '1.2.5';
-    } else {
-      DEFAULT_OPTS.version = stdout.split('@')[1].replace(/\s/g, '');
-    }
-    startPack();
-  });
-}
+var version = argv.version || argv.v || "1.3.5";
+DEFAULT_OPTS.version = version;
+startPack();
 
 
 function startPack() {

@@ -1,13 +1,13 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
-import CodeMirror from '../../node_modules/react-codemirror/node_modules/codemirror/';
+import CodeMirror from '../../node_modules/codemirror/';
 
-require('../../node_modules/react-codemirror/node_modules/codemirror/addon/scroll/simplescrollbars.js');
-require('../../node_modules/react-codemirror/node_modules/codemirror/addon/selection/active-line.js');
-require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/indent-fold.js');
-require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldcode.js');
-require('../../node_modules/react-codemirror/node_modules/codemirror/addon/fold/foldgutter.js');
-require('../../node_modules/react-codemirror/node_modules/codemirror/keymap/sublime.js');
+require('../../node_modules/codemirror/addon/scroll/simplescrollbars.js');
+require('../../node_modules/codemirror/addon/selection/active-line.js');
+require('../../node_modules/codemirror/addon/fold/indent-fold.js');
+require('../../node_modules/codemirror/addon/fold/foldcode.js');
+require('../../node_modules/codemirror/addon/fold/foldgutter.js');
+require('../../node_modules/codemirror/keymap/sublime.js');
 
 const electron = require('electron');
 const ipc = electron.ipcRenderer;
