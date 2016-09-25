@@ -74,3 +74,61 @@
 }
 
 .CodeMirror-scroll { overflow-x:hidden !important;}
+
+.CodeMirror-search-match {
+  background: lighten($bgColor, 20%);
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  opacity: .5;
+}
+.cm-searching {
+  background: lighten($bgColor, 4%);
+  outline:2px solid lighten($bgColor, 4%);
+  color: lighten($textColor, 20%);
+}
+
+.CodeMirror-dialog {
+  background:rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.4);
+  width:100%;
+  line-height:2rem;
+  padding:1rem calc(11px + 3rem) 0;
+  position:fixed;
+  top:-1rem;
+}
+
+.CodeMirror-dialog-top {
+  border-bottom: 0;
+  top:-1rem;
+}
+
+.CodeMirror-dialog input {
+  border: none;
+  outline: none;
+  display:inline-block;
+  width:calc(100% - 9rem) !important;
+  color: inherit;
+  font-family: inherit;
+  font-size:inherit;
+}
+
+.CodeMirror-dialog button {
+  border:0;
+  font-size:inherit;
+  font-family:inherit;
+  background:none;
+  display:inline-block;
+  padding:0 5px;
+  margin:0 5px;
+  color:darken($textColor,5%);
+  cursor:pointer;
+}
+.CodeMirror-dialog button:focus,
+.CodeMirror-dialog button:active {
+  color:lighten($textColor,15%);
+  outline:0;
+}
+
+.CodeMirror-search-hint {
+  display:none;
+}
