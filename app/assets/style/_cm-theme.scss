@@ -88,7 +88,9 @@
 }
 
 .CodeMirror-dialog {
+  z-index:6;
   background:rgba(255,255,255,0.1);
+  background:rgb(25,64,74); /* no transparancy so overlapping the updater looks correct */
   color:rgba(255,255,255,0.4);
   width:100%;
   line-height:2rem;
