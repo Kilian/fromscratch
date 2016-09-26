@@ -9,6 +9,7 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * Saves on-the-fly, no need to manually save
 * Automatic indenting
 * Note-folding
+* Powerful keyboard control
 * Replaces common syntax with symbols, such as arrows
 * Free
 
@@ -23,6 +24,10 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * <kbd>cmd/ctrl -</kbd> - zoom text out
 * <kbd>cmd/ctrl+0</kbd> - reset text size
 * <kbd>cmd/ctrl+]/[</kbd> - fold note collapsing
+* <kbd>cmd/ctrl+f</kbd> - search (you can also use regular expressions, by starting and ending with a /)
+* <kbd>shift+cmd/ctrl+f</kbd> - replace
+* <kbd>shift+cmd/ctrl+r</kbd> - replace all
+* <kbd>alt+g</kbd> - jump to line (you can also use <line>:<character> notation, or go relative lines with +<line> and -<line>)
 * <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
 ## Download
