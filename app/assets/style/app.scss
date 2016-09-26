@@ -121,7 +121,7 @@ body {
   transition:0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) all;
   top:-4rem;
   text-decoration:none;
-  cursor:pointer;
+  cursor:default;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -129,6 +129,11 @@ body {
 
   &.active {
     top:-1rem;
+  }
+  &:hover,
+  &:focus {
+    background:rgba(255,255,255,0.15);
+    color:rgba(255,255,255,0.7);
   }
 
   span {
@@ -140,11 +145,16 @@ body {
     right:0.5rem;
     bottom:0.25rem;
     border-radius:1.5rem;
-    background:rgba(0,0,0,0.1);
+    background:rgba(0,0,0,0.3);
     color:rgba(255,255,255,0.5);
-    font-weight:bold;
-    font-size:1.2rem;
+    font-size:1.5rem;
     vertical-align:middle;
+
+    &:hover,
+    &:focus {
+      background:rgba(0,0,0,0.5);
+      color:rgba(255,255,255,0.7);
+    }
   }
 }
 [data-platform=darwin] .updater {padding-top:2rem;}

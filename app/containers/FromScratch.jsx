@@ -191,7 +191,7 @@ export default class FromScratch extends React.Component {
         <div onClick={this.openDownloadPage.bind(this)} className={this.state.update}>
           There's an update available! Get version {latestVersion}
           <span title="Don't show this again until next available update" onClick={this.hideUpdateMessage.bind(this)}>
-            x
+            ×
           </span>
         </div>
         <div className="titlebar"></div>
