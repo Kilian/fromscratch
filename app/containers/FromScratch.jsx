@@ -5,14 +5,11 @@ import CodeMirror from '../../node_modules/codemirror/';
 require('../../node_modules/codemirror/addon/scroll/simplescrollbars.js');
 require('../../node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/codemirror/addon/fold/indent-fold.js');
-require('../../node_modules/codemirror/addon/fold/foldcode.js');
 require('../../node_modules/codemirror/addon/fold/foldgutter.js');
 
 require('../../node_modules/codemirror/addon/search/search.js');
-require('../../node_modules/codemirror/addon/search/searchcursor.js');
 require('../../node_modules/codemirror/addon/search/jump-to-line.js');
 require('../../node_modules/codemirror/addon/search/matchesonscrollbar.js');
-require('../../node_modules/codemirror/addon/dialog/dialog.js');
 
 require('../../node_modules/codemirror/keymap/sublime.js');
 
