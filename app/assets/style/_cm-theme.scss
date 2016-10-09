@@ -99,6 +99,8 @@
   top:-1rem;
 }
 
+[data-platform=darwin] .CodeMirror-dialog {padding-top:2rem}
+
 .CodeMirror-dialog-top {
   border-bottom: 0;
   top:-1rem;
