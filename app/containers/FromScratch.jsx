@@ -152,6 +152,22 @@ export default class FromScratch extends React.Component {
       fontSize: `${this.state.fontSize}rem`
     };
     const latestVersion = remote.getGlobal('latestVersion');
+    const extraKeys = {
+        'Shift-Tab': 'indentLess',
+        'Esc': 'clearSearch',
+        'Alt-G': false,
+    };
+
+    const CmdOrCtrl = process.platform === "darwin" ? "Cmd-" : "Ctrl-";
+    // from sublime.js package
+    extraKeys[CmdOrCtrl + "Up"] = 'swapLineUp';
+    extraKeys[CmdOrCtrl + "Down"] = 'swapLineDown';
+    extraKeys[CmdOrCtrl + "["] = (cm) => { cm.foldCode(cm.getCursor()); };
+    extraKeys[CmdOrCtrl + "]"] = (cm) => { cm.foldCode(cm.getCursor()); };
+    extraKeys[CmdOrCtrl + "F"] = 'findPersistent';
+    extraKeys["Shift-" + CmdOrCtrl + "F"] = 'replace';
+    extraKeys["Shift-" + CmdOrCtrl + "R"] = 'replaceAll';
+    extraKeys[CmdOrCtrl + "G"] = 'jumpToLine';
 
     const options = {
       styleActiveLine: true,
@@ -171,18 +187,7 @@ export default class FromScratch extends React.Component {
       },
       foldGutter: true,
       gutters: ['CodeMirror-foldgutter'],
-      extraKeys: {
-        // from the sublime.js package
-        'Ctrl-Up': 'swapLineUp',
-        'Ctrl-Down': 'swapLineDown',
-        'Shift-Tab': 'indentLess',
-        'Ctrl-[': (cm) => { cm.foldCode(cm.getCursor()); },
-        'Ctrl-]': (cm) => { cm.foldCode(cm.getCursor()); },
-        'Esc': 'clearSearch',
-        'Ctrl-F': 'findPersistent',
-        'Shift-Ctrl-F': 'replace',
-        'Shift-Ctrl-R': 'replaceAll',
-      }
+      extraKeys,
     };
     return (
       <div style={style} data-platform={process.platform}>
