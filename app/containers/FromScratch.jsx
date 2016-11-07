@@ -93,7 +93,7 @@ export default class FromScratch extends React.Component {
 
   updateFolds() {
     const newFolds = this.refs.editor.getCodeMirror().getAllMarks()
-      .filter((mark) => mark.collapsed && mark.type === 'range')
+      .filter(mark => mark.collapsed && mark.type === 'range')
       .reverse()
       .map((mark) => {
         const pos = mark.find().from;
@@ -132,7 +132,7 @@ export default class FromScratch extends React.Component {
     this.setState({ content: newcontent });
   }
 
-  openDownloadPage(e) {
+  openDownloadPage() {
     shell.openExternal('https://fromscratch.rocks');
     this.setState({ update: 'updater' });
   }
@@ -150,21 +150,21 @@ export default class FromScratch extends React.Component {
     };
     const latestVersion = remote.getGlobal('latestVersion');
     const extraKeys = {
-        'Shift-Tab': 'indentLess',
-        'Esc': 'clearSearch',
-        'Alt-G': false,
+      'Shift-Tab': 'indentLess',
+      Esc: 'clearSearch',
+      'Alt-G': false,
     };
 
-    const CmdOrCtrl = process.platform === "darwin" ? "Cmd-" : "Ctrl-";
+    const CmdOrCtrl = process.platform === 'darwin' ? 'Cmd-' : 'Ctrl-';
     // from sublime.js package
-    extraKeys[CmdOrCtrl + "Up"] = 'swapLineUp';
-    extraKeys[CmdOrCtrl + "Down"] = 'swapLineDown';
-    extraKeys[CmdOrCtrl + "["] = (cm) => { cm.foldCode(cm.getCursor()); };
-    extraKeys[CmdOrCtrl + "]"] = (cm) => { cm.foldCode(cm.getCursor()); };
-    extraKeys[CmdOrCtrl + "F"] = 'findPersistent';
-    extraKeys["Shift-" + CmdOrCtrl + "F"] = 'replace';
-    extraKeys["Shift-" + CmdOrCtrl + "R"] = 'replaceAll';
-    extraKeys[CmdOrCtrl + "G"] = 'jumpToLine';
+    extraKeys[CmdOrCtrl + 'Up'] = 'swapLineUp';
+    extraKeys[CmdOrCtrl + 'Down'] = 'swapLineDown';
+    extraKeys[CmdOrCtrl + '['] = (cm) => { cm.foldCode(cm.getCursor()); };
+    extraKeys[CmdOrCtrl + ']'] = (cm) => { cm.foldCode(cm.getCursor()); };
+    extraKeys[CmdOrCtrl + 'F'] = 'findPersistent';
+    extraKeys['Shift-' + CmdOrCtrl + 'F'] = 'replace';
+    extraKeys['Shift-' + CmdOrCtrl + 'R'] = 'replaceAll';
+    extraKeys[CmdOrCtrl + 'G'] = 'jumpToLine';
 
     const options = {
       styleActiveLine: true,
@@ -196,7 +196,7 @@ export default class FromScratch extends React.Component {
             ×
           </span>
         </div>
-        <div className="titlebar"></div>
+        <div className="titlebar" />
       </div>
     );
   }
