@@ -144,6 +144,40 @@ export default class FromScratch extends React.Component {
     this.setState({ update: 'updater' });
   }
 
+  checkboxSupport(cm) {
+    const currentLineNumber = cm.getCursor().line;
+    const currentLine = cm.getLine(currentLineNumber);
+    const stringPadding = currentLine.search(/\S/);
+    const trimmedLine = currentLine.trimLeft();
+
+    const checkbox = {
+      checked: '[x] ',
+      unchecked: '[ ] '
+    };
+
+    const pos = {
+      from: {
+        line: currentLineNumber,
+        ch: 0 + stringPadding
+      },
+      to: {
+        line: currentLineNumber,
+        ch: 4 + stringPadding
+      }
+    };
+
+    if (trimmedLine.startsWith(checkbox.checked)) {
+      // make it unchecked
+      cm.replaceRange(checkbox.unchecked, pos.from, pos.to);
+    } else if (trimmedLine.startsWith(checkbox.unchecked)) {
+      // make it checked
+      cm.replaceRange(checkbox.checked, pos.from, pos.to);
+    } else {
+      // add a checkbox!
+      cm.replaceRange(checkbox.unchecked, pos.from);
+    }
+  }
+
   render() {
     const style = {
       fontSize: `${this.state.fontSize}rem`
@@ -165,6 +199,7 @@ export default class FromScratch extends React.Component {
     extraKeys['Shift-' + CmdOrCtrl + 'F'] = 'replace';
     extraKeys['Shift-' + CmdOrCtrl + 'R'] = 'replaceAll';
     extraKeys[CmdOrCtrl + 'G'] = 'jumpToLine';
+    extraKeys[CmdOrCtrl + '/'] = (cm) => { this.checkboxSupport(cm); };
 
     const options = {
       styleActiveLine: true,
