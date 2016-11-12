@@ -147,37 +147,44 @@ export default class FromScratch extends React.Component {
   }
 
   checkboxSupport(cm) {
-    const currentLineNumber = cm.getCursor().line;
-    const currentLine = cm.getLine(currentLineNumber);
-    const stringPadding = currentLine.search(/\S/);
-    const trimmedLine = currentLine.trimLeft();
+    cm.listSelections().forEach((selection) => {
+      const firstLine = Math.min(selection.anchor.line, selection.head.line);
+      const lastLine = Math.max(selection.anchor.line, selection.head.line);
+      let currentLineNumber;
 
-    const checkbox = {
-      checked: '[x] ',
-      unchecked: '[ ] '
-    };
+      for (currentLineNumber = firstLine; currentLineNumber <= lastLine; currentLineNumber += 1) {
+        const currentLine = cm.getLine(currentLineNumber);
+        const stringPadding = Math.max(currentLine.search(/\S/), 0);
+        const trimmedLine = currentLine.trimLeft();
 
-    const pos = {
-      from: {
-        line: currentLineNumber,
-        ch: 0 + stringPadding
-      },
-      to: {
-        line: currentLineNumber,
-        ch: 4 + stringPadding
+        const checkbox = {
+          checked: '[x] ',
+          unchecked: '[ ] '
+        };
+
+        const pos = {
+          from: {
+            line: currentLineNumber,
+            ch: 0 + stringPadding
+          },
+          to: {
+            line: currentLineNumber,
+            ch: 4 + stringPadding
+          }
+        };
+
+        if (trimmedLine.startsWith(checkbox.checked)) {
+          // make it unchecked
+          cm.replaceRange(checkbox.unchecked, pos.from, pos.to);
+        } else if (trimmedLine.startsWith(checkbox.unchecked)) {
+          // make it checked
+          cm.replaceRange(checkbox.checked, pos.from, pos.to);
+        } else {
+          // add a checkbox!
+          cm.replaceRange(checkbox.unchecked, pos.from);
+        }
       }
-    };
-
-    if (trimmedLine.startsWith(checkbox.checked)) {
-      // make it unchecked
-      cm.replaceRange(checkbox.unchecked, pos.from, pos.to);
-    } else if (trimmedLine.startsWith(checkbox.unchecked)) {
-      // make it checked
-      cm.replaceRange(checkbox.checked, pos.from, pos.to);
-    } else {
-      // add a checkbox!
-      cm.replaceRange(checkbox.unchecked, pos.from);
-    }
+    });
   }
 
   render() {
