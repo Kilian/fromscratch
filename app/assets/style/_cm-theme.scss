@@ -74,7 +74,7 @@
 }
 
 .CodeMirror-scroll { overflow-x:hidden !important;}
-
+.CodeMirror-sizer {padding-right:0 !important; /* prevent scrollbar from changing width of contents */}
 .CodeMirror-search-match {
   background: lighten($bgColor, 20%);
   -moz-box-sizing: border-box;
