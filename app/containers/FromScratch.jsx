@@ -46,6 +46,7 @@ export default class FromScratch extends React.Component {
   }
 
   componentDidMount() {
+    const editor = this.editor;
     ipc.on('executeShortCut', (event, shortcut) => {
       switch (shortcut) {
         case 'save':
@@ -68,7 +69,7 @@ export default class FromScratch extends React.Component {
       }
     });
 
-    const cmInstance = this.refs.editor.getCodeMirror();
+    const cmInstance = editor.getCodeMirror();
     this.applyFolds(cmInstance);
 
     cmInstance.on('fold', () => {
@@ -92,7 +93,8 @@ export default class FromScratch extends React.Component {
   }
 
   updateFolds() {
-    const newFolds = this.refs.editor.getCodeMirror().getAllMarks()
+    const editor = this.editor;
+    const newFolds = editor.getCodeMirror().getAllMarks()
       .filter(mark => mark.collapsed && mark.type === 'range')
       .reverse()
       .map((mark) => {
@@ -223,7 +225,12 @@ export default class FromScratch extends React.Component {
     };
     return (
       <div style={style} data-platform={process.platform}>
-        <Codemirror value={this.state.content} ref="editor" onChange={this.handleChange.bind(this)} options={options} />
+        <Codemirror
+          value={this.state.content}
+          ref={(c) => { this.editor = c; }}
+          onChange={this.handleChange.bind(this)}
+          options={options}
+        />
         <div className={this.state.mock}>Already saved! ;)</div>
         <div onClick={this.openDownloadPage.bind(this)} className={this.state.update}>
           There's an update available! Get version {latestVersion}
