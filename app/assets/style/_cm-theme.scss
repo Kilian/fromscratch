@@ -1,10 +1,10 @@
 .cm-s-fromscratch {
 	&.CodeMirror {
-		background: $bgColor;
+		background: transparent;//transparentize($bgColor, 0.8);
 		color: $textColor;
 	}
 	div.CodeMirror-selected {
-		background: lighten($bgColor, 5%);
+		background: transparentize(lighten($bgColor, 5%),0.5);
 	  color: lighten($textColor, 15%);
 	}
 	.CodeMirror-line {
@@ -15,7 +15,11 @@
 		border-left: 1px solid darken($textColor,5%);
 	}
 	.CodeMirror-activeline-background {
-		background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 4%, lighten($bgColor, 1%) 60%, $bgColor 100%);
+		background: linear-gradient(
+			90deg, transparentize($bgColor, 0.5) 0%,
+						transparentize(lighten($bgColor, 1%), 0.5) 4%,
+						transparentize(lighten($bgColor, 1%),0.5) 60%,
+						transparentize($bgColor,0.5) 100%);
 	}
 
 	.CodeMirror-gutters {
@@ -82,7 +86,7 @@
   opacity: .5;
 }
 .cm-searching {
-  background: lighten($bgColor, 4%);
+  background: transparentize(lighten($bgColor, 4%), 0.5);
   outline:2px solid lighten($bgColor, 4%);
   color: lighten($textColor, 20%);
 }
@@ -90,7 +94,7 @@
 .CodeMirror-dialog {
   z-index:6;
   background:rgba(255,255,255,0.1);
-  background:rgb(25,64,74); /* no transparancy so overlapping the updater looks correct */
+  //background:rgb(25,64,74); /* no transparancy so overlapping the updater looks correct */
   color:rgba(255,255,255,0.4);
   width:100%;
   line-height:2rem;
