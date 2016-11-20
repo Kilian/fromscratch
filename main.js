@@ -1,16 +1,12 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
 const fs = require('fs');
-const ipc = electron.ipcMain;
-const menu = electron.Menu;
-const gsc = electron.globalShortcut;
 const JSONStorage = require('node-localstorage').JSONStorage;
-const shell = electron.shell;
 const APPVERSION = require('./package.json').version;
 const https = require('https');
 const compareVersions = require('compare-versions');
+
+const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
