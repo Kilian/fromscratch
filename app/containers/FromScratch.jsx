@@ -173,7 +173,10 @@ export default class FromScratch extends React.Component {
           }
         };
 
-        if (trimmedLine.startsWith(checkbox.checked)) {
+        if (trimmedLine.trim() === '') {
+          // append checkbox to empty line
+          cm.replaceRange(checkbox.unchecked, { line: currentLineNumber, ch: currentLine.length });
+        } else if (trimmedLine.startsWith(checkbox.checked)) {
           // make it unchecked
           cm.replaceRange(checkbox.unchecked, pos.from, pos.to);
         } else if (trimmedLine.startsWith(checkbox.unchecked)) {
