@@ -20,13 +20,14 @@ var DEFAULT_OPTS = {
   name: appName,
   asar: shouldUseAsar,
   ignore: [
+    '/build($|/)',
     '/test($|/)',
     '/tools($|/)',
     '/release($|/)'
   ].concat(devDeps.map(function(name) { return '/node_modules/' + name + '($|/)'; }))
 };
 
-var icon = argv.icon || argv.i || 'app/assets/img/icon';
+var icon = argv.icon || argv.i || 'build/icon';
 
 if (icon) {
   DEFAULT_OPTS.icon = icon;
