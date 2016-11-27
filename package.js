@@ -20,6 +20,12 @@ var DEFAULT_OPTS = {
   name: appName,
   asar: shouldUseAsar,
   ignore: [
+    '/README.md',
+    '/server.js',
+    '/webpack.*',
+    '/app/mainApp.jsx',
+    '/app/containers($|/)',
+    '/app/assets/style($|/)',
     '/build($|/)',
     '/test($|/)',
     '/tools($|/)',
