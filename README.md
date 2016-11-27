@@ -29,7 +29,7 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * <kbd>shift+cmd/ctrl+f</kbd> - replace
 * <kbd>shift+cmd/ctrl+r</kbd> - replace all
 * <kbd>cmd/ctrl+g</kbd> - jump to line (you can also use <line>:<character> notation, or go relative lines with +<line> and -<line>)
-* <kbd>cmd/ctrl+ / </kbd> - Add or toggle a checkbox
+* <kbd>cmd/ctrl+/</kbd> - Add or toggle a checkbox
 * <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
 ## Download
