@@ -53,7 +53,7 @@ electron main.js
 
 # or run dev version
 npm run dev
-
+```
 ### FAQ
 *Where is my data saved?*
 
