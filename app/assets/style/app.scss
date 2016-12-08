@@ -31,8 +31,6 @@ body {
   line-height:1.25;
   background:$bgColor;
   color:$textColor;
-  -webkit-font-feature-settings:"liga", "dlig";
-  font-feature-settings:"liga", "dlig";
   padding:0;
   margin:0;
   -webkit-overflow-scrolling: touch;
@@ -78,7 +76,8 @@ body {
      height:3rem;
      background:linear-gradient(to bottom, rgba(0, 43, 54, 0), rgba(0, 43, 54, 1) 5%);
    }
- }
+   pre { font-variant-ligatures: common-ligatures; }
+}
 
 .nosave {
   z-index:4;
