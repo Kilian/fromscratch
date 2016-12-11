@@ -16,7 +16,7 @@
 	}
 	.CodeMirror-activeline-background {
 		background: linear-gradient(
-			90deg, transparentize($bgColor, 0.5) 0%,
+			90deg, transparentize($textColor, 1) 0%,
 						transparentize(lighten($bgColor, 1%), 0.5) 4%,
 						transparentize(lighten($bgColor, 1%),0.5) 60%,
 						transparentize($bgColor,0.5) 100%);
