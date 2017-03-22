@@ -18,6 +18,9 @@ var shouldBuildAll = argv.all || false;
 var DEFAULT_OPTS = {
   dir: './',
   name: appName,
+  'version-string': {
+    FileDescription: appName,
+  },
   asar: shouldUseAsar,
   ignore: [
     '/README.md',
