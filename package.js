@@ -18,8 +18,9 @@ var shouldBuildAll = argv.all || false;
 var DEFAULT_OPTS = {
   dir: './',
   name: appName,
-  'version-string': {
+  win32metadata: {
     FileDescription: appName,
+    ProductName: appName
   },
   asar: shouldUseAsar,
   ignore: [
