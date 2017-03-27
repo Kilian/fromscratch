@@ -18,6 +18,10 @@ var shouldBuildAll = argv.all || false;
 var DEFAULT_OPTS = {
   dir: './',
   name: appName,
+  win32metadata: {
+    FileDescription: appName,
+    ProductName: appName
+  },
   asar: shouldUseAsar,
   ignore: [
     '/README.md',
