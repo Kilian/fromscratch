@@ -19,6 +19,69 @@ const remote = electron.remote;
 const shell = electron.shell;
 const handleContent = remote.getGlobal('handleContent');
 const nodeStorage = remote.getGlobal('nodeStorage');
+let latestVersion;
+
+const CmdOrCtrl = process.platform === 'darwin' ? 'Cmd-' : 'Ctrl-';
+const extraKeys = {
+  'Shift-Tab': 'indentLess',
+  Esc: 'clearSearch',
+  'Alt-G': false,
+
+  // from sublime.js package
+  [CmdOrCtrl + 'Up']: 'swapLineUp',
+  [CmdOrCtrl + 'Down']: 'swapLineDown',
+
+  [CmdOrCtrl + '[']: (cm) => { cm.foldCode(cm.getCursor()); },
+  [CmdOrCtrl + ']']: (cm) => { cm.foldCode(cm.getCursor()); },
+  [CmdOrCtrl + 'F']: 'findPersistent',
+  ['Shift-' + CmdOrCtrl + 'F']: 'replace',
+  ['Shift-' + CmdOrCtrl + 'R']: 'replaceAll',
+  [CmdOrCtrl + 'G']: 'jumpToLine',
+  [CmdOrCtrl + '/']: (cm) => { checkboxSupport(cm); },
+};
+const checkboxSupport = (cm) => {
+  cm.listSelections().forEach((selection) => {
+    const firstLine = Math.min(selection.anchor.line, selection.head.line);
+    const lastLine = Math.max(selection.anchor.line, selection.head.line);
+    let currentLineNumber;
+
+    for (currentLineNumber = firstLine; currentLineNumber <= lastLine; currentLineNumber += 1) {
+      const currentLine = cm.getLine(currentLineNumber);
+      const stringPadding = Math.max(currentLine.search(/\S/), 0);
+      const trimmedLine = currentLine.trimLeft();
+
+      const checkbox = {
+        checked: '[x] ',
+        unchecked: '[ ] '
+      };
+
+      const pos = {
+        from: {
+          line: currentLineNumber,
+          ch: 0 + stringPadding
+        },
+        to: {
+          line: currentLineNumber,
+          ch: 4 + stringPadding
+        }
+      };
+
+      if (trimmedLine.trim() === '') {
+        // append checkbox to empty line
+        cm.replaceRange(checkbox.unchecked, { line: currentLineNumber, ch: currentLine.length });
+      } else if (trimmedLine.startsWith(checkbox.checked)) {
+        // make it unchecked
+        cm.replaceRange(checkbox.unchecked, pos.from, pos.to);
+      } else if (trimmedLine.startsWith(checkbox.unchecked)) {
+        // make it checked
+        cm.replaceRange(checkbox.checked, pos.from, pos.to);
+      } else {
+        // add a checkbox!
+        cm.replaceRange(checkbox.unchecked, pos.from);
+      }
+    }
+  });
+};
 
 export default class FromScratch extends React.Component {
   static defaultProps = {
@@ -62,6 +125,7 @@ export default class FromScratch extends React.Component {
           this.updateFont(-0.1);
           break;
         case 'show-update-msg':
+          latestVersion = remote.getGlobal('latestVersion');
           this.showUpdateMessage();
           break;
         default:
@@ -116,7 +180,6 @@ export default class FromScratch extends React.Component {
   showUpdateMessage() {
     const hideMessageFor = nodeStorage.getItem('hideUpdateMessage');
     const hideVersion = hideMessageFor ? hideMessageFor.version : false;
-    const latestVersion = remote.getGlobal('latestVersion');
 
     if (latestVersion !== hideVersion) {
       this.setState({ update: 'updater active' });
@@ -141,78 +204,14 @@ export default class FromScratch extends React.Component {
 
   hideUpdateMessage(e) {
     e.stopPropagation();
-    const latestVersion = remote.getGlobal('latestVersion');
     nodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
     this.setState({ update: 'updater' });
-  }
-
-  checkboxSupport(cm) {
-    cm.listSelections().forEach((selection) => {
-      const firstLine = Math.min(selection.anchor.line, selection.head.line);
-      const lastLine = Math.max(selection.anchor.line, selection.head.line);
-      let currentLineNumber;
-
-      for (currentLineNumber = firstLine; currentLineNumber <= lastLine; currentLineNumber += 1) {
-        const currentLine = cm.getLine(currentLineNumber);
-        const stringPadding = Math.max(currentLine.search(/\S/), 0);
-        const trimmedLine = currentLine.trimLeft();
-
-        const checkbox = {
-          checked: '[x] ',
-          unchecked: '[ ] '
-        };
-
-        const pos = {
-          from: {
-            line: currentLineNumber,
-            ch: 0 + stringPadding
-          },
-          to: {
-            line: currentLineNumber,
-            ch: 4 + stringPadding
-          }
-        };
-
-        if (trimmedLine.trim() === '') {
-          // append checkbox to empty line
-          cm.replaceRange(checkbox.unchecked, { line: currentLineNumber, ch: currentLine.length });
-        } else if (trimmedLine.startsWith(checkbox.checked)) {
-          // make it unchecked
-          cm.replaceRange(checkbox.unchecked, pos.from, pos.to);
-        } else if (trimmedLine.startsWith(checkbox.unchecked)) {
-          // make it checked
-          cm.replaceRange(checkbox.checked, pos.from, pos.to);
-        } else {
-          // add a checkbox!
-          cm.replaceRange(checkbox.unchecked, pos.from);
-        }
-      }
-    });
   }
 
   render() {
     const style = {
       fontSize: `${this.state.fontSize}rem`
     };
-    const latestVersion = remote.getGlobal('latestVersion');
-    const extraKeys = {
-      'Shift-Tab': 'indentLess',
-      Esc: 'clearSearch',
-      'Alt-G': false,
-    };
-
-    const CmdOrCtrl = process.platform === 'darwin' ? 'Cmd-' : 'Ctrl-';
-    // from sublime.js package
-    extraKeys[CmdOrCtrl + 'Up'] = 'swapLineUp';
-    extraKeys[CmdOrCtrl + 'Down'] = 'swapLineDown';
-    extraKeys[CmdOrCtrl + '['] = (cm) => { cm.foldCode(cm.getCursor()); };
-    extraKeys[CmdOrCtrl + ']'] = (cm) => { cm.foldCode(cm.getCursor()); };
-    extraKeys[CmdOrCtrl + 'F'] = 'findPersistent';
-    extraKeys['Shift-' + CmdOrCtrl + 'F'] = 'replace';
-    extraKeys['Shift-' + CmdOrCtrl + 'R'] = 'replaceAll';
-    extraKeys[CmdOrCtrl + 'G'] = 'jumpToLine';
-    extraKeys[CmdOrCtrl + '/'] = (cm) => { this.checkboxSupport(cm); };
-
     const options = {
       styleActiveLine: true,
       lineNumbers: false,
@@ -242,12 +241,14 @@ export default class FromScratch extends React.Component {
           options={options}
         />
         <div className={this.state.mock}>Already saved! ;)</div>
+
         <div onClick={this.openDownloadPage.bind(this)} className={this.state.update}>
           There's an update available! Get version {latestVersion}
           <span title="Don't show this again until next available update" onClick={this.hideUpdateMessage.bind(this)}>
             ×
           </span>
         </div>
+
         <div className="titlebar" />
       </div>
     );
