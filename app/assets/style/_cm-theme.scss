@@ -1,140 +1,156 @@
 .cm-s-fromscratch {
-	&.CodeMirror {
-		background: $bgColor;
-		color: $textColor;
-	}
-	div.CodeMirror-selected {
-		background: lighten($bgColor, 5%);
-	  color: lighten($textColor, 15%);
-	}
-	.CodeMirror-line {
-		padding-left:3rem;
-		padding-right:3rem;
-	}
-	.CodeMirror-cursor {
-		border-left: 1px solid darken($textColor,5%);
-	}
-	.CodeMirror-activeline-background {
-		background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 4%, lighten($bgColor, 1%) 60%, $bgColor 100%);
-	}
+  &.CodeMirror {
+    background: $bgColor;
+    color: $textColor;
+  }
 
-	.CodeMirror-gutters {
-		background:transparent;
-		border:0;
-		left:2.8rem !important;
-	}
-	.CodeMirror-guttermarker-subtle,
-	.CodeMirror-foldmarker {
-		color:lighten($bgColor, 8%);
-		cursor:pointer;
-	}
-	.CodeMirror-foldmarker {
-		color:lighten($bgColor, 20%);
-		text-shadow:0 0 rgba(0,0,0,0);
-		background:lighten($bgColor, 3%);
-		border-radius:0.25em;
-		line-height:0.125em;
-		height:0.625em;
-		margin-top:0.3125em;
-		margin-left:0.3125em;
+  div.CodeMirror-selected {
+    background: lighten($bgColor, 5%);
+    color: lighten($textColor, 15%);
+  }
 
-		display:inline-block;
-		vertical-align:top;
-	}
+  .CodeMirror-line {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 
-	.CodeMirror-guttermarker-subtle {
-		opacity:0;
-		transition:0.3s ease opacity;
+  .CodeMirror-cursor {
+    border-left: 1px solid darken($textColor, 5%);
+  }
 
-		&:hover,
-		&.CodeMirror-foldgutter-folded {
-			opacity:1
-		}
-	}
+  .CodeMirror-activeline-background {
+    background: linear-gradient(90deg, $bgColor 0%, lighten($bgColor, 1%) 4%, lighten($bgColor, 1%) 60%, $bgColor 100%);
+  }
 
-	.CodeMirror-foldgutter-open:after {
-		margin-left:-1px;
-	}
+  .CodeMirror-gutters {
+    background: transparent;
+    border: 0;
+    left: 2.8rem !important;
+  }
 
-	.CodeMirror-gutter-elt {
-		left:2.8rem !important;
-	}
+  .CodeMirror-guttermarker-subtle,
+  .CodeMirror-foldmarker {
+    color: lighten($bgColor, 8%);
+    cursor: pointer;
+  }
 
+  .CodeMirror-foldmarker {
+    color: lighten($bgColor, 20%);
+    text-shadow: 0 0 rgba(0, 0, 0, 0);
+    background: lighten($bgColor, 3%);
+    border-radius: 0.25em;
+    line-height: 0.125em;
+    height: 0.625em;
+    margin-top: 0.3125em;
+    margin-left: 0.3125em;
+    display: inline-block;
+    vertical-align: top;
+  }
 
-	.CodeMirror-overlayscroll-vertical div {
-		background:lighten($bgColor, 4%);
-		border-radius:0;
-		transition:0.3s ease background, 0.3s ease width;
+  .CodeMirror-guttermarker-subtle {
+    opacity: 0;
+    transition: 0.3s ease opacity;
 
-		&:hover {
-			width:8px;
-			background:lighten($bgColor, 8%);
-		}
-	}
+    &:hover,
+    &.CodeMirror-foldgutter-folded {
+      opacity: 1;
+    }
+  }
+
+  .CodeMirror-foldgutter-open::after {
+    margin-left: -1px;
+  }
+
+  .CodeMirror-gutter-elt {
+    left: 2.8rem !important;
+  }
+
+  .CodeMirror-overlayscroll-vertical div {
+    background: lighten($bgColor, 4%);
+    border-radius: 0;
+    transition: 0.3s ease background, 0.3s ease width;
+
+    &:hover {
+      width: 8px;
+      background: lighten($bgColor, 8%);
+    }
+  }
 }
 
-.CodeMirror-scroll { overflow-x:hidden !important;}
-.CodeMirror-sizer {padding-right:0 !important; /* prevent scrollbar from changing width of contents */}
+.CodeMirror-scroll {
+  overflow-x: hidden !important;
+}
+
+.CodeMirror-sizer {
+  /* prevent scrollbar from changing width of contents */
+  padding-right: 0 !important;
+}
+
 .CodeMirror-search-match {
   background: lighten($bgColor, 20%);
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  opacity: .5;
+  opacity: 0.5;
 }
+
 .cm-searching {
   background: lighten($bgColor, 4%);
-  outline:2px solid lighten($bgColor, 4%);
+  outline: 2px solid lighten($bgColor, 4%);
   color: lighten($textColor, 20%);
 }
 
 .CodeMirror-dialog {
-  z-index:6;
-  background:rgba(255,255,255,0.1);
-  background:rgb(25,64,74); /* no transparancy so overlapping the updater looks correct */
-  color:rgba(255,255,255,0.4);
-  width:100%;
-  line-height:2rem;
-  padding:1rem calc(11px + 3rem) 0;
-  position:fixed;
-  top:-1rem;
+  z-index: 6;
+  background: rgba(255, 255, 255, 0.1);
+
+  /* no transparancy so overlapping the updater looks correct */
+  background: rgb(25, 64, 74);
+  color: rgba(255, 255, 255, 0.4);
+  width: 100%;
+  line-height: 2rem;
+  padding: 1rem calc(11px + 3rem) 0;
+  position: fixed;
+  top: -1rem;
 }
 
-[data-platform=darwin] .CodeMirror-dialog {padding-top:2rem}
+[data-platform=darwin] .CodeMirror-dialog {
+  padding-top: 2rem;
+}
 
 .CodeMirror-dialog-top {
   border-bottom: 0;
-  top:-1rem;
+  top: -1rem;
 }
 
 .CodeMirror-dialog input {
   border: none;
   outline: none;
-  display:inline-block;
-  width:calc(100% - 9rem) !important;
+  display: inline-block;
+  width: calc(100% - 9rem) !important;
   color: inherit;
   font-family: inherit;
-  font-size:inherit;
+  font-size: inherit;
 }
 
 .CodeMirror-dialog button {
-  border:0;
-  font-size:inherit;
-  font-family:inherit;
-  background:none;
-  display:inline-block;
-  padding:0 5px;
-  margin:0 5px;
-  color:darken($textColor,5%);
-  cursor:default;
+  border: 0;
+  font-size: inherit;
+  font-family: inherit;
+  background: none;
+  display: inline-block;
+  padding: 0 5px;
+  margin: 0 5px;
+  color: darken($textColor, 5%);
+  cursor: default;
 }
 
 .CodeMirror-dialog button:hover,
 .CodeMirror-dialog button:focus,
 .CodeMirror-dialog button:active {
-  color:lighten($textColor,15%);
-  outline:0;
+  color: lighten($textColor, 15%);
+  outline: 0;
 }
 
 .CodeMirror-search-hint {
-  display:none;
+  display: none;
 }
