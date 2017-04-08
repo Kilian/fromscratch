@@ -68,10 +68,10 @@ app.on('ready', () => {
     show: false,
     title: app.getName(),
     icon: __dirname + '/app/assets/img/icon.png',
-    x: windowState.bounds && windowState.bounds.x || undefined,
-    y: windowState.bounds && windowState.bounds.y || undefined,
-    width: windowState.bounds && windowState.bounds.width || 550,
-    height: windowState.bounds && windowState.bounds.height || 450,
+    x: (windowState.bounds && windowState.bounds.x) || undefined,
+    y: (windowState.bounds && windowState.bounds.y) || undefined,
+    width: (windowState.bounds && windowState.bounds.width) || 550,
+    height: (windowState.bounds && windowState.bounds.height) || 450,
     darkTheme: true,
     backgroundColor: '#002b36',
     titleBarStyle: 'hidden',
@@ -104,6 +104,7 @@ app.on('ready', () => {
     gsc.register('CmdOrCtrl+w', () => { app.quit(); });
     gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
     gsc.register('CmdOrCtrl+r ', () => { });
+    gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
   };
 
   registerShortcuts();
