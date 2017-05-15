@@ -47,6 +47,11 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
+  background: $bgColor;
+  color: $textColor;
+}
+#react-root > div {
+  transition:0.4s ease filter;
 }
 
 .CodeMirror {

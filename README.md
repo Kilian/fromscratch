@@ -33,6 +33,7 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * <kbd>cmd/ctrl+g</kbd> - jump to line (you can also use <line>:<character> notation, or go relative lines with +<line> and -<line>)
 * <kbd>cmd/ctrl+/</kbd> - Add or toggle a checkbox
 * <kbd>f11</kbd> - Toggle fullscreen
+* <kbd>cmd/ctrl+i</kbd> - Toggle between light and dark theme
 * <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
 ## Download

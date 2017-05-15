@@ -100,6 +100,7 @@ app.on('ready', () => {
     gsc.register('CmdOrCtrl+-', () => { dispatchShortcutEvent('decrease-font'); });
     gsc.register('CmdOrCtrl+=', () => { dispatchShortcutEvent('increase-font'); });
     gsc.register('CmdOrCtrl+Plus', () => { dispatchShortcutEvent('increase-font'); });
+    gsc.register('CmdOrCtrl+i', () => { dispatchShortcutEvent('toggle-theme'); });
     gsc.register('CmdOrCtrl+s', () => { dispatchShortcutEvent('save'); });
     gsc.register('CmdOrCtrl+w', () => { app.quit(); });
     gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
