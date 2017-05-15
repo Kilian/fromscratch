@@ -203,16 +203,16 @@ export default class FromScratch extends React.Component {
     this.setState({ lightTheme });
   }
 
-  handleChange(newcontent) {
+  handleChange = (newcontent) => {
     this.setState({ content: newcontent });
   }
 
-  openDownloadPage() {
+  openDownloadPage = () => {
     shell.openExternal('https://fromscratch.rocks');
     this.setState({ update: 'updater' });
   }
 
-  hideUpdateMessage(e) {
+  hideUpdateMessage = (e) => {
     e.stopPropagation();
     nodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
     this.setState({ update: 'updater' });
@@ -252,14 +252,14 @@ export default class FromScratch extends React.Component {
         <Codemirror
           value={this.state.content}
           ref={(c) => { this.editor = c; }}
-          onChange={this.handleChange.bind(this)}
+          onChange={this.handleChange}
           options={options}
         />
         <div className={this.state.mock}>Already saved! ;)</div>
 
-        <div onClick={this.openDownloadPage.bind(this)} className={this.state.update}>
+        <div onClick={this.openDownloadPage} className={this.state.update}>
           There's an update available! Get version {latestVersion}
-          <span title="Don't show this again until next available update" onClick={this.hideUpdateMessage.bind(this)}>
+          <span title="Don't show this again until next available update" onClick={this.hideUpdateMessage}>
             ×
           </span>
         </div>
