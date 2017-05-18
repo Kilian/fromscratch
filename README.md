@@ -34,6 +34,7 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * <kbd>cmd/ctrl+/</kbd> - Add or toggle a checkbox
 * <kbd>f11</kbd> - Toggle fullscreen
 * <kbd>cmd/ctrl+i</kbd> - Toggle between light and dark theme
+* <kbd>alt</kbd> - show or hide menu (Windows only)
 * <kbd>cmd/ctrl+s</kbd> - ...this does nothing.
 
 ## Download
