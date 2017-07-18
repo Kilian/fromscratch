@@ -12,10 +12,21 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
-// data saving
-const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] +
-                        '/.fromscratch' +
-                        (process.env.NODE_ENV === 'development' ? '/dev' : '');
+// get data location
+const dataLocation = () =>{
+
+ var defaultLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch' + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+
+  process.argv.forEach((arg) => {
+   if (arg.toLowerCase() === '-p' || arg.toLowerCase() === '--portable') {
+     defaultLocation = process.cwd() +'/userdata'
+   }
+ })
+
+  return defaultLocation;
+}
+
+const storageLocation = dataLocation();
 
 global.nodeStorage = new JSONStorage(storageLocation);
 
