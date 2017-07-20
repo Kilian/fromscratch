@@ -5,8 +5,11 @@ const JSONStorage = require('node-localstorage').JSONStorage;
 const APPVERSION = require('./package.json').version;
 const https = require('https');
 const compareVersions = require('compare-versions');
+const minimist = require('minimist');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
+
+var argv = minimist(process.argv.slice(2));
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
@@ -15,14 +18,17 @@ if (process.env.NODE_ENV === 'development') {
 // get data location
 const dataLocation = () =>{
 
- var defaultLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch' + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+ let defaultLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch' + (process.env.NODE_ENV === 'development' ? '/dev' : '');
 
-  process.argv.forEach((arg) => {
-   if (arg.toLowerCase() === '-p' || arg.toLowerCase() === '--portable') {
-     defaultLocation = process.cwd() +'/userdata'
-   }
- })
-
+ if(argv.portable){
+  if(argv.userdata){
+    defaultLocation = argv.userdata
+  }
+  else{
+    defaultLocation = process.cwd() +'/userdata'
+  }
+ }
+  app.setPath('userData', defaultLocation)
   return defaultLocation;
 }
 
