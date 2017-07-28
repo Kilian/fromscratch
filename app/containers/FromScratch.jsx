@@ -251,24 +251,12 @@ export default class FromScratch extends React.Component {
     return (
       <div style={style} data-platform={process.platform}>
 
-        {/* <div className="tabs-canvas">
-            <div className="tab">
-              <span className="tab-title">DUPA.txt</span>
-              <span className="tab-close">x</span>
-            </div>
-        </div> */}
-
-        {/* <div className="text-canvas"> */}
-
-            <Codemirror
-              value={this.state.content}
-              ref={(c) => { this.editor = c; }}
-              onChange={this.handleChange}
-              options={options}
-            />
-
-        {/* </div> */}
-
+        <Codemirror
+          value={this.state.content}
+          ref={(c) => { this.editor = c; }}
+          onChange={this.handleChange}
+          options={options}
+        />
 
         <div className={this.state.mock}>Already saved! ;)</div>
 

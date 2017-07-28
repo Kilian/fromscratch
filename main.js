@@ -137,6 +137,36 @@ const storageLocation = getDataLocation();
 
 global.nodeStorage = new JSONStorage(storageLocation);
 
+// ---------------------------------------------------------------------------------------------------- Folder tree
+global.projects = {
+  // current: 'project-name/scratch-name',
+  default: 'default/scratch_1',
+  current: '',
+  tree: {
+    // project-name: [
+    //   'scratch-name',
+    //   ...
+    // ],
+    // another-project-name: [...]
+  },
+  refreshProjectsTree(){ // load directory tree from local storage
+    let projectsRaw = dirTree(storageLocation).children.filter(f => f.name === 'projects').shift().children.filter(f => f.type === 'directory');
+
+    this.tree = projectsRaw.reduce((prev, curr, i, arr) => {
+      let projectName = curr.name;
+      let scratches = curr.children.map(data => data.name);
+      prev[projectName] = scratches;
+      return prev;
+    }, {});
+  },
+  setCurrentScratch(project, scratch){
+    this.current = project + '/' + scratch;
+    global.handleContent.filename = storageLocation + this.current + '/content.txt';
+    // folds in FromScratch.jsx?
+    // some kind of signal to rerender FromScratch with new directory
+  }
+}
+
 global.handleContent = {
   filename: storageLocation + '/' + (global.projects.current ? global.projects.current : global.projects.default) + '/content.txt',
   write(content) {
@@ -402,4 +432,8 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
   }
+
+
+
+  global.projects.refreshProjectsTree();
 });
