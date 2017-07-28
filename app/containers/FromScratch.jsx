@@ -99,7 +99,8 @@ export default class FromScratch extends React.Component {
     this.state = {
       content: handleContent.read() || props.content,
       fontSize: nodeStorage.getItem('fontSize') || 1,
-      lightTheme: nodeStorage.getItem('lightTheme') || false,
+      // lightTheme: nodeStorage.getItem('lightTheme') || false,
+      lightTheme: true,
       folds: (() => {
         const foldItem = nodeStorage.getItem('folds');
         return (foldItem && foldItem.folds) ? foldItem.folds : [];
@@ -222,7 +223,7 @@ export default class FromScratch extends React.Component {
     const style = {
       fontSize: `${this.state.fontSize}rem`,
       ...(this.state.lightTheme ?
-          { filter: 'invert(100%) hue-rotate(20deg) brightness(1.1) grayscale(50%)' }
+          { filter: 'invert(100%) hue-rotate(90deg) brightness(1.1) grayscale(75%)' }
           :
           {}
       )
