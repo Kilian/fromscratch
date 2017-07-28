@@ -1,6 +1,7 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
 const fs = require('fs');
+const dirTree = require('directory-tree');
 const JSONStorage = require('node-localstorage').JSONStorage;
 const APPVERSION = require('./package.json').version;
 const https = require('https');
@@ -13,14 +14,44 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // data saving
-const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] +
-                        '/.fromscratch' +
-                        (process.env.NODE_ENV === 'development' ? '/dev' : '');
+const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME']
+                        + '/.fromscratch'
+                        + (process.env.NODE_ENV === 'development' ? '/dev' : ''); // + projects.current later on
 
 global.nodeStorage = new JSONStorage(storageLocation);
 
+// ---------------------------------------------------------------------------------------------------- Folder tree
+global.projects = {
+  // current: 'project-name/scratch-name',
+  default: 'default/scratch_1',
+  current: '',
+  tree: {
+    // project-name: [
+    //   'scratch-name',
+    //   ...
+    // ],
+    // another-project-name: [...]
+  },
+  refreshProjectsTree(){ // load directory tree from local storage
+    let projectsRaw = dirTree(storageLocation).children.filter(f => f.name === 'projects').shift().children.filter(f => f.type === 'directory');
+
+    this.tree = projectsRaw.reduce((prev, curr, i, arr) => {
+      let projectName = curr.name;
+      let scratches = curr.children.map(data => data.name);
+      prev[projectName] = scratches;
+      return prev;
+    }, {});
+  },
+  setCurrentScratch(project, scratch){
+    this.current = project + '/' + scratch;
+    global.handleContent.filename = storageLocation + this.current + '/content.txt';
+    // folds in FromScratch.jsx?
+    // some kind of signal to rerender FromScratch with new directory
+  }
+}
+
 global.handleContent = {
-  filename: storageLocation + '/content.txt',
+  filename: storageLocation + global.projects.current + '/content.txt',
   write(content) {
     fs.writeFileSync(this.filename, content, 'utf8');
   },
@@ -261,4 +292,8 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
   }
+
+
+
+  global.projects.refreshProjectsTree();
 });
