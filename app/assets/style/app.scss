@@ -43,6 +43,7 @@ body {
 #react-root,
 .ReactCodeMirror {
   position: absolute;
+  // top: 22px; // space left for tabs
   top: 0;
   right: 0;
   bottom: 0;
@@ -174,6 +175,8 @@ body {
 [data-platform=darwin] .updater {
   padding-top: 2rem;
 }
+
+
 
 @import "../../../node_modules/codemirror/lib/codemirror.css";
 @import "../../../node_modules/codemirror/addon/scroll/simplescrollbars.css";
