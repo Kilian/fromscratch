@@ -28,14 +28,9 @@ export default class Sidebar extends React.Component {
 
     }
 
-
-    onClickScratch(ev, scratchName){
-        console.log('selecting scratch: ', scratchName);
-
-        projects.setCurrentScratch(scratchName);
-
-        // HOW TO GET FROM SCRATCH COMPONENT TO RERENDER WITH CHANGED DIRECTORY?
-
+    onClickScratch(ev, data){
+        projects.setCurrentScratch(data.project, data.scratch);
+        this.props.refreshScratch();
     }
 
 
@@ -44,7 +39,11 @@ export default class Sidebar extends React.Component {
 
         let menuItems = Object.entries(projects.tree).map((item, i) => {
             let projectName = item[0];
-            let scratches = item[1].map(s => (<div className="file" onClick={ev => self.onClickScratch(ev, s)}>{s}</div>));
+            let scratches = item[1].map(s => (
+                <div className="file" onClick={ev => self.onClickScratch(ev, {project: projectName, scratch: s})}>
+                    {s}
+                </div>
+            ));
             return (
                 <div className="folder">
                     <div className="folder-label">{projectName}</div>
