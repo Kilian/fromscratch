@@ -140,8 +140,8 @@ global.nodeStorage = new JSONStorage(storageLocation);
 // ---------------------------------------------------------------------------------------------------- Folder tree
 global.projects = {
   // current: 'project-name/scratch-name',
-  default: 'default/scratch_1',
-  current: '',
+  default: '',
+  current: undefined,
   tree: {
     // project-name: [
     //   'scratch-name',
@@ -160,10 +160,11 @@ global.projects = {
     }, {});
   },
   setCurrentScratch(project, scratch){
-    this.current = project + '/' + scratch;
-    global.handleContent.filename = storageLocation + this.current + '/content.txt';
-    // folds in FromScratch.jsx?
-    // some kind of signal to rerender FromScratch with new directory
+    this.current = 'projects/' + project + '/' + scratch;
+    global.handleContent.filename = storageLocation + '/' + this.current + '/content.txt';
+    global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current);
+    if(!global.handleContent.read())
+      global.handleContent.write('Scratch for ' + project + ': ' + scratch)
   }
 }
 
