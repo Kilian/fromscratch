@@ -52,6 +52,7 @@ class ProjectItem extends React.Component {
     constructor(props){
         super();
         this.state = { active: false };
+        this.key = (new Date).getTime();
     }
 
     onClick = (ev) => {
@@ -62,9 +63,10 @@ class ProjectItem extends React.Component {
     render(){
         let self      = this;
         let project   = this.props.project;
-        let scratches = this.props.scratches.map(scratch => {
+        let scratches = this.props.scratches.map((scratch, i) => {
+            let key = (new Date).getTime() + ':' + i;
             return (
-                <FileItem name={scratch} refreshScratch={self.props.refreshScratch} data={{ project: project, scratch: scratch }} />
+                <FileItem name={scratch} refreshScratch={self.props.refreshScratch} data={{ project: project, scratch: scratch }} key={key} />
             );
         });
 
@@ -90,8 +92,9 @@ export default class Sidebar extends React.Component {
         let self = this;
 
         let sidebarItems = Object.entries(projects.tree).map((item, i) => {
+            let key = (new Date).getTime() + ':' + i;
             return (
-                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={self.props.refreshScratch} />
+                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={self.props.refreshScratch} key={this.key} />
             );
         });
 
