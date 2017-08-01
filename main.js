@@ -67,15 +67,21 @@ global.signalEmitter = {
     // eventName: [callback1, callback2, ...],
     // ...
   },
-  dispatch(event, data) {
-    if (!this._events[event]) return; // no one is listening to this event
+  dispatch(event, data){
+    if(!this._events[event]) return; // no one is listening to this ev
     for (var i = 0; i < this._events[event].length; i++)
       this._events[event][i](data);
   },
-  subscribe(event, callback) {
-    if (!this._events[event]) this._events[event] = []; // new event
+  subscribe(event, callback){
+    if(!this._events[event]) this._events[event] = []; // new ev
     this._events[event].push(callback);
-  }
+  },
+  // unsubscribe(event, callback){
+  //   if(!this._events[event]) return; // can't unsubscribe from not existing ev
+  //   for(var i = 0; i < this._events[event].length; i++)
+  //     if(this._events[event][i] === callback)
+  //       this._events[event].splice(i, 1);
+  // }
 };
 
 const installExtensions = () => {
