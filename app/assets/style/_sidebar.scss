@@ -244,3 +244,6 @@ $sidebarWidth: 300px;
 .prompt.invalid .prompt-button.submit .sidebar-icon {
     fill: $dimmedTextColor;
 }
+.file.active {
+    background: green;
+}
