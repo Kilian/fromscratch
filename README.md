@@ -59,11 +59,29 @@ electron main.js
 # or run dev version
 npm run dev
 ```
+### Command Line Arguments
+**Portable mode** allows the use of the application from an USB-stick or other portable storage device.  In this mode all the configuration information as well as the content text will be stored either in a userdata directory under the directory of the main application or in the directory pointed to using the ```--userdata``` parameter.  This also comes in handy to save all your data in a directory that is synced to cloud storage so it can be accessed from multiple devices.
+
+```
+# run fromscratch in portable mode, saving data in spplication directory.
+fromscratch --portable
+```
+
+```
+# run fromscratch in portable mode, saving data in custom directory.
+fromscratch --portable --userdata ~/fromscratch_data
+```
+
+
 ### FAQ
 *Where is my data saved?*
 
 Your data is saved in a plain text file content.txt. On Mac and Linux, this file is saved in ~/.fromscratch. On Windows
-this file is saved in a directory called ".fromscratch" in your userprofile directory.
+this file is saved in a directory called ".fromscratch" in your userprofile directory.  
+
+*Can my data be saved in an alternate directory?*
+
+Yes! See the **portable mode** section under the **Command Line Arguments** heading above.
 
 ### Credits
 
@@ -74,4 +92,4 @@ FromScratch is built upon these open source projects:
 	<a href="http://codemirror.net/">CodeMirror</a> and
 	<a href="https://github.com/chentsulin/electron-react-boilerplate">Electron-react-boilerplate</a>.
 
-Thanks to @bittersweet for helping me set up IPC to work around a particularly nasty bug, and @chentsulin for the electron-react-boilerplate.
+Thanks to @bittersweet for helping me set up IPC to work around a particularly nasty bug, @chentsulin for the electron-react-boilerplate, and @ctrauma for the portable bits.

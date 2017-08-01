@@ -9,35 +9,31 @@ const minimist = require('minimist');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
 
-// slice args array differently
-// if calling electron directly in debug
-let arg_slice = 1
-
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
-  args_slice = 2
 }
 
-let argv = minimist(process.argv.slice(arg_slice));
+const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1));
 
 // get data location
-const dataLocation = () =>{
+const dataLocation = () => {
+  let defaultLocation = process.env[(process.platform === 'win32') ?
+    'USERPROFILE' : 'HOME'] + '/.fromscratch' +
+    (process.env.NODE_ENV === 'development' ? '/dev' : '');
 
- let defaultLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] + '/.fromscratch' + (process.env.NODE_ENV === 'development' ? '/dev' : '');
-
- if(argv.portable){
-  defaultLocation = process.cwd() +'/userdata'
-  if(argv.userdata){
-    if(typeof(argv.userdata) === 'string' ){
-      defaultLocation = argv.userdata
-    } else{
-       console.log("warning: userdata parameter missing value, using default location..")
+  if (argv.portable) {
+    defaultLocation = process.cwd() + '/userdata';
+    if (argv.userdata) {
+      if (typeof (argv.userdata) === 'string') {
+        defaultLocation = argv.userdata;
+      } else {
+        console.log('warning: userdata parameter missing value, using default location..');
+      }
     }
   }
- }
-  app.setPath('userData', defaultLocation)
+  app.setPath('userData', defaultLocation);
   return defaultLocation;
-}
+};
 
 const storageLocation = dataLocation();
 
