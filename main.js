@@ -13,7 +13,29 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
-const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1));
+const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
+  boolean: ['portable', 'help'],
+  string: ['userdata'],
+  alias: {
+    help: 'h',
+    userdata: 'u',
+    portable: 'p'
+  }
+});
+
+if (argv.help) {
+  console.log(
+`Usage: fromscratch [OPTION]...
+ Default is to start fromscratch using home directory to save data.
+
+Optional arguments:
+  -p, --portable             run in portable mode, saving data in executable directory.
+  -u, --userdata DIRECTORY   when running in portable mode save data to specific DIRECTORY.
+  -h, --help                 show this usage text.`
+  );
+
+  process.exit(0);
+}
 
 // get data location
 const dataLocation = () => {
