@@ -22,7 +22,7 @@ global.nodeStorage = new JSONStorage(storageLocation);
 
 // ---------------------------------------------------------------------------------------------------- Folder tree
 global.projects = {
-  // current: 'project-name/scratch-name',
+  // current: 'projects/project-name/scratch-name',
   default: '',
   current: undefined,
   tree: {
@@ -42,12 +42,12 @@ global.projects = {
       return prev;
     }, {});
   },
-  setCurrentScratch(project, scratch){
-    this.current = 'projects/' + project + '/' + scratch;
+  setCurrentScratch(data){
+    this.current = 'projects/' + data.project + '/' + data.scratch;
     global.handleContent.filename = storageLocation + '/' + this.current + '/content.txt';
     global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current);
     if(!global.handleContent.read())
-      global.handleContent.write('Scratch for ' + project + ': ' + scratch)
+      global.handleContent.write('Scratch for ' + data.project + ': ' + data.scratch)
   }
 }
 
@@ -58,6 +58,23 @@ global.handleContent = {
   },
   read() {
     return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
+  }
+};
+
+// simple pub-sub mechanizm
+global.signalEmitter = {
+  _events: {
+    // eventName: [callback1, callback2, ...],
+    // ...
+  },
+  dispatch(event, data) {
+    if (!this._events[event]) return; // no one is listening to this event
+    for (var i = 0; i < this._events[event].length; i++)
+      this._events[event][i](data);
+  },
+  subscribe(event, callback) {
+    if (!this._events[event]) this._events[event] = []; // new event
+    this._events[event].push(callback);
   }
 };
 
@@ -294,7 +311,4 @@ app.on('ready', () => {
     mainWindow.openDevTools();
   }
 
-
-
-  global.projects.refreshProjectsTree();
 });
