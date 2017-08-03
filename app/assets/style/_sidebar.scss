@@ -1,8 +1,152 @@
+
+// colors
+$bgColor: rgba(0, 43, 54, 1);
+$highlightColor: #004454;
+$selectedColor: #1B4949;
+$textColor: rgba(130, 150, 150, 1);
+$dimmedTextColor: rgba(130, 150, 150, 0.5);
+
+// measures
+$itemHeight: 26px;
+
+.sidebar {
+    font-family: 'Roboto';
+    height: 100%;
+}
+.sidebar-tree {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+// ------------- Project item -------------
+
+.project {
+    overflow: hidden;
+}
+.file-items-container {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .2s ease;
+    // max-height adjustment handled in component click method
+}
+
+.project-label {
+    cursor: pointer;
+    line-height: $itemHeight;
+    padding: 0 0 0 15px;
+    background-color: transparent;
+    transition: background-color .2s ease;
+}
+.project-label:hover {
+    background-color: $highlightColor;
+}
+.project-label::before {
+    content: "";
+    display: inline-block;
+    position: relative;
+    top: -2px;
+    left: -5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid $textColor;
+    transform: rotate(90deg);
+    transition: transform .2s ease;
+    will-change: transform;
+}
+.project.open .project-label::before {
+    transform: translateX(2px) rotate(135deg);
+}
+
+// ------------- File item -------------
+
 .file {
     width: 300px;
-    height: 20px;
-    background: red;
+    line-height: $itemHeight;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0 0 0 40px;
+    transition: background-color .2s ease, padding .2s ease;
+}
+.file:hover {
+    background-color: $highlightColor;
 }
 .file.active {
-    background: green;
+    background-color: $selectedColor;
+}
+
+// ------------- Title / new project button -------------
+
+.new-project {
+    background-color: transparent;
+    cursor: pointer;
+    line-height: 40px;
+    white-space: nowrap;
+}
+
+.new-project-label {
+    padding: 0 0 0 15px;
+    margin-left: -20ch;
+    opacity: 0;
+    transition: margin .2s ease, opacity .2s ease;
+    will-change: opacity;
+}
+.new-project-handle {
+    margin-left: 4.7ch;
+}
+
+.new-project-handle,
+.sidebar-title {
+    opacity: 1;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.sidebar-title {
+    margin-left: 9ch;
+}
+
+.new-project:hover {
+    background-color: $highlightColor;
+}
+.new-project:hover .new-project-label {
+    opacity: 1;
+    margin-left: 0;
+}
+.new-project:hover .new-project-handle,
+.new-project:hover .sidebar-title {
+    opacity: 0;
+}
+
+// ------------- Item actions -------------
+
+.item-actions {
+    opacity: 0;
+    float: right;
+    padding: 0 5px;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.item-action {
+    // display: inline-block;
+    width: 2ch;
+    // height: $itemHeight;
+    background-color: transparent;
+    overflow: hidden;
+    transition: font-weight .2s ease;
+}
+.item-action:hover {
+    font-weight: bold;
+}
+// .item-action-desc {
+//     display: block;
+//     width: 0;
+// }
+
+// ------------- Interactions -------------
+
+.file:hover .item-actions,
+.project-label:hover .item-actions{
+    opacity: 1;
 }

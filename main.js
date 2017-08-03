@@ -13,6 +13,19 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
+// common util
+global.utils = {
+  addClass(list, name){
+    list.push(name);
+    return list;
+  },
+  removeClass(list, name){
+    let i = list.indexOf(name);
+    if(i > -1) list.splice(i, 1);
+    return list;
+  }
+};
+
 // data saving
 const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME']
                   + '/.fromscratch'
@@ -20,7 +33,6 @@ const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFIL
 
 global.nodeStorage = new JSONStorage(storageLocation);
 
-// ---------------------------------------------------------------------------------------------------- Folder tree
 global.projects = {
   // current: 'projects/project-name/scratch-name',
   default: '',
@@ -76,12 +88,12 @@ global.signalEmitter = {
     if(!this._events[event]) this._events[event] = []; // new ev
     this._events[event].push(callback);
   },
-  // unsubscribe(event, callback){
-  //   if(!this._events[event]) return; // can't unsubscribe from not existing ev
-  //   for(var i = 0; i < this._events[event].length; i++)
-  //     if(this._events[event][i] === callback)
-  //       this._events[event].splice(i, 1);
-  // }
+  unsubscribe(event, callback){
+    if(!this._events[event]) return; // can't unsubscribe from not existing ev
+    for(var i = 0; i < this._events[event].length; i++)
+      if(this._events[event][i] === callback)
+        this._events[event].splice(i, 1);
+  }
 };
 
 const installExtensions = () => {
