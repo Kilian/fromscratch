@@ -245,5 +245,79 @@ $sidebarWidth: 300px;
     fill: $dimmedTextColor;
 }
 .file.active {
-    background: green;
+    background-color: $selectedColor;
+}
+
+// ------------- Title / new project button -------------
+
+.new-project {
+    background-color: transparent;
+    cursor: pointer;
+    line-height: 40px;
+    white-space: nowrap;
+}
+
+.new-project-label {
+    padding: 0 0 0 15px;
+    margin-left: -20ch;
+    opacity: 0;
+    transition: margin .2s ease, opacity .2s ease;
+    will-change: opacity;
+}
+.new-project-handle {
+    margin-left: 4.7ch;
+}
+
+.new-project-handle,
+.sidebar-title {
+    opacity: 1;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.sidebar-title {
+    margin-left: 9ch;
+}
+
+.new-project:hover {
+    background-color: $highlightColor;
+}
+.new-project:hover .new-project-label {
+    opacity: 1;
+    margin-left: 0;
+}
+.new-project:hover .new-project-handle,
+.new-project:hover .sidebar-title {
+    opacity: 0;
+}
+
+// ------------- Item actions -------------
+
+.item-actions {
+    opacity: 0;
+    float: right;
+    padding: 0 5px;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.item-action {
+    // display: inline-block;
+    width: 2ch;
+    // height: $itemHeight;
+    background-color: transparent;
+    overflow: hidden;
+    transition: font-weight .2s ease;
+}
+.item-action:hover {
+    font-weight: bold;
+}
+// .item-action-desc {
+//     display: block;
+//     width: 0;
+// }
+
+// ------------- Interactions -------------
+
+.file:hover .item-actions,
+.project-label:hover .item-actions{
+    opacity: 1;
 }

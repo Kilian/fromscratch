@@ -249,7 +249,7 @@ export default class FromScratch extends React.Component {
       extraKeys,
     };
     return (
-      <div style={style} data-platform={process.platform}>
+      <div style={style} data-platform={process.platform} className="from-scratch-root">
 
         <Codemirror
           value={this.state.content}
