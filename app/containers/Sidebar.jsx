@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Ionicon from 'react-ionicons'
 
 // require('../../node_modules/codemirror/addon/scroll/simplescrollbars.js');
 // require('../../node_modules/codemirror/addon/search/matchesonscrollbar.js');
@@ -33,8 +34,12 @@ class ItemActions extends React.Component {
 
         return(
             <span className="item-actions">
-                <span className="item-action action-remove"> - </span>
-                <span className="item-action action-rename"> * </span>
+                 <span className="item-action action-remove" title={'Remove ' + this.props.parentName}>
+                    <Ionicon icon="ion-ios-trash-outline" fontSize="20px" className="sidebar-icon" />
+                </span>
+                <span className="item-action action-rename" title={'Rename ' + this.props.parentName}>
+                    <Ionicon icon="ion-ios-at" fontSize="20px" className="sidebar-icon"/>
+                </span>
             </span>
         );
     }
@@ -72,11 +77,11 @@ class FileItem extends React.Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
-                <span className="label"> {this.props.name} </span>
-                <span className="actions"> <ItemActions /> </span>
+                <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
+                <span className="label">{this.props.name}</span>
+                <span className="actions"><ItemActions parentName="scratch" /></span>
             </div>
         )
     }
@@ -118,8 +123,9 @@ class ProjectItem extends React.Component {
         return (
             <div className={this.parentClasses.join(' ')}>
                 <div className="project-label" onClick={this.onClick}>
-                    <span className="label"> {this.props.project} </span>
-                    <span className="actions"> <ItemActions /> </span>
+                    <Ionicon icon="ion-ios-arrow-right" fontSize="20px" className="sidebar-icon project-label-icon" />
+                    <span className="label">{this.props.project}</span>
+                    <span className="actions"><ItemActions parentName="project" /></span>
                 </div>
                 <div className="file-items-container" style={this.computedStyle}>
                     {this.scratches}
@@ -153,7 +159,7 @@ export default class Sidebar extends React.Component {
 
                 <div className="new-project" id="new-project">
                     <span className="new-project-label">Create new project</span>
-                    <span className="new-project-handle">+</span>
+                    <Ionicon icon="ion-ios-plus-outline" fontSize="20px" className="sidebar-icon new-project-handle" />
                     <span className="sidebar-title">Your projects</span>
                 </div>
 

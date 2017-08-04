@@ -14,7 +14,12 @@ module.exports = {
     {
       test: /\.scss$/,
       loaders: ['style', 'css', 'sass']
-    }]
+    },
+    {
+      test: /\.css$/,
+      loaders: ['style', 'css']
+    },
+    ]
   },
   output: {
     path: path.join(__dirname, 'dist'),
