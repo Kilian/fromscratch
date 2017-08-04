@@ -60,7 +60,21 @@ global.projects = {
     global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current);
     if(!global.handleContent.read())
       global.handleContent.write('Scratch for ' + data.project + ': ' + data.scratch)
-  }
+  },
+  createProject(project){
+    if(project === '') throw 'A new project has to have a valid name.';
+    let path = storageLocation + '/projects/' + project;
+    fs.mkdirSync(path);
+  },
+  createScratch(project, scratch){
+    if(project==='' || scratch==='') throw 'Both project and scratch names are needed to create new scratch.';
+    let path = storageLocation + '/projects/' + project + '/' + scratch;
+    fs.mkdirSync(path);
+  },
+  removeProject(project){},
+  removeScratch(project, scratch){},
+  renameProject(project, newName){},
+  renameScratch(project, scratch, newName){}
 }
 
 global.handleContent = {

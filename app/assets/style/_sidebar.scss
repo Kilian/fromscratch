@@ -4,8 +4,9 @@ $bgColor: rgba(0, 43, 54, 1);
 $bgDarkerColor: #00242C;
 $highlightColor: #004454;
 $selectedColor: #1B4949;
-$cancelColor: #D84315;
+$errorColor: #D84315;
 $okColor: #2E7D32;
+$primaryColor: #1976D2;
 $inputColor: #173E47;
 $textColor: rgba(130, 150, 150, 1);
 $dimmedTextColor: rgba(130, 150, 150, 0.5);
@@ -76,12 +77,11 @@ $itemHeight: 26px;
     padding: 0 0 0 40px;
     transition: background-color .2s ease, padding .2s ease;
 }
-.file:hover {
-    background-color: $highlightColor;
-}
-.file.active {
-    background-color: $selectedColor;
-}
+.file:hover { background-color: $highlightColor; }
+.file.active { background-color: $selectedColor; }
+
+.file.dummy { pointer-events: none; }
+.file.dummy .label { font-size: 12px; }
 
 // ------------- Title / new project button -------------
 
@@ -146,12 +146,16 @@ $itemHeight: 26px;
     opacity: 1;
 }
 
+.action-add:hover .sidebar-icon {fill: $okColor;}
+.action-remove:hover .sidebar-icon {fill: $errorColor;}
+.action-rename:hover .sidebar-icon {fill: $primaryColor;}
+
 .file:hover .item-actions,
 .project-label:hover .item-actions{
     opacity: 1;
 }
 
-// ------------- Modal -------------
+// ------------- Prompt -------------
 
 .prompt {
     background-color: $bgDarkerColor;
@@ -171,6 +175,7 @@ $itemHeight: 26px;
     color: $textColor;
     outline: none;
     border: 0;
+    font-size: 16px;
     border-bottom: 1px solid $inputColor;
     transition: border-color .2s ease;
 }
@@ -178,7 +183,7 @@ $itemHeight: 26px;
     border-bottom: 1px solid $dimmedTextColor;
 }
 .prompt-error {
-    color: $cancelColor;
+    color: $errorColor;
     font-size: 14px;
 }
 
@@ -195,11 +200,11 @@ $itemHeight: 26px;
 }
 .prompt-button.submit:hover { color: $okColor; }
 .prompt-button.submit:hover .sidebar-icon { fill: $okColor; }
-.prompt-button.cancel:hover { color: $cancelColor; }
-.prompt-button.cancel:hover .sidebar-icon { fill: $cancelColor; }
+.prompt-button.cancel:hover { color: $primaryColor; }
+.prompt-button.cancel:hover .sidebar-icon { fill: $primaryColor; }
 
 .prompt.invalid .prompt-input {
-    border-bottom: 1px solid $cancelColor;
+    border-bottom: 1px solid $errorColor;
 }
 .prompt.invalid .prompt-button.submit {
     pointer-events: none;

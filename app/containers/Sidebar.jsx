@@ -26,19 +26,13 @@ export default class Sidebar extends React.Component {
                 show: false,
             }
         };
-
-
-
         projects.refreshProjectsTree();
     }
 
     createProject = (name) => {
-        console.log(name);
-
-        // create dir
-        // reload tree
-
         this.hidePrompt();
+        projects.createProject(name);
+        this.refreshSidebar();
     }
 
     showCreateProjectPrompt = (ev) => {
@@ -72,13 +66,19 @@ export default class Sidebar extends React.Component {
         return {valid: true, message: ''};
     }
 
+    refreshSidebar = () => {
+        projects.refreshProjectsTree();
+        this.componentWillMount();
+        this.forceUpdate();
+    };
+
     componentWillMount() {
         let self = this;
 
         this.sidebarItems = Object.entries(projects.tree).map((item, i) => {
             let key = (new Date).getTime() + ':' + i;
             return (
-                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={self.props.refreshScratch} key={key} />
+                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={self.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} />
             );
         });
     }
@@ -112,20 +112,15 @@ class ProjectItem extends React.Component {
         super();
         this.state = {
             open: false,  // if expanded (scratches inside are visible) or not
-            active: false // if one of the child scratches is the currently selected scratch
+            prompt: { show: false }
+        };
+        this.actionMethods = {
+            add: this.showAddScratchPrompt,
+            remove: ()=>{}, // TODO
+            rename: ()=>{}, // TODO
         };
         this.computedStyle = {};
         this.parentClasses = ['project']
-    }
-
-    componentWillMount() {
-        let self = this;
-        this.scratches = this.props.scratches.map((scratch, i) => {
-            let key = (new Date).getTime() + ':' + i;
-            return (
-                <FileItem name={scratch} refreshScratch={self.props.refreshScratch} data={{ project: this.props.project, scratch: scratch }} key={key} />
-            );
-        });
     }
 
     onClick = (ev) => {
@@ -137,14 +132,69 @@ class ProjectItem extends React.Component {
         this.forceUpdate();
     }
 
+    showAddScratchPrompt = () => {
+        this.promptData = {
+            instructions: 'Enter a name for new scratch. Has to be unique project-wide.',
+            submitDesc: 'Create',
+            cancelDesc: 'Cancel'
+        };
+        this.promptMethods = {
+            onSubmit: this.createScratch,
+            onCancel: this.hidePrompt,
+            validateInput: this.validateNewScratchName
+        };
+        this.promptMode = 'input';
+        this.state.prompt.show = true
+        this.forceUpdate();
+    }
+
+    validateNewScratchName = (value) => {
+        if(value === '')
+            return { valid: false, message: 'You have to provide SOME name...' };
+
+        let duplicates = projects.tree[this.props.project].filter(s => s === value);
+        if (duplicates.length)
+            return { valid: false, message: 'Scratch name has to be unique project-wide.' };
+
+        return { valid: true, message: '' };
+    }
+
+    hidePrompt = () => {
+        this.state.prompt.show = false;
+        this.forceUpdate();
+    }
+
+    createScratch = (name) => {
+        this.hidePrompt();
+        projects.createScratch(this.props.project, name);
+        this.props.refreshSidebar();
+    }
+
+    componentWillMount() {
+        let self = this;
+        this.scratches = this.props.scratches.map((scratch, i) => {
+            let key = (new Date).getTime() + ':' + i;
+            return (
+                <FileItem name={scratch} refreshScratch={self.props.refreshScratch} data={{ project: this.props.project, scratch: scratch }} key={key} />
+            );
+        });
+        if(!this.scratches.length)
+            this.scratches = [(
+                <FileItem dummy={true} key={(new Date).getTime() + ':0'}/>
+            )];
+    }
+
     render() {
         return (
             <div className={this.parentClasses.join(' ')}>
                 <div className="project-label" onClick={this.onClick}>
                     <Ionicon icon="ion-ios-arrow-right" fontSize="20px" className="sidebar-icon project-label-icon" />
                     <span className="label">{this.props.project}</span>
-                    <span className="actions"><ItemActions parentName="project" /></span>
+                    <span className="actions"><ItemActions mode="project" methods={this.actionMethods} /></span>
                 </div>
+
+                <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode={this.promptMode} />
+
                 <div className="file-items-container" style={this.computedStyle}>
                     {this.scratches}
                 </div>
@@ -158,10 +208,17 @@ class FileItem extends React.Component {
 
     constructor(props) {
         super();
-        this.state = { active: false };
-        this.name = props.data.project + '/' + props.data.scratch;
+        if(!props.dummy){
+            this.state = { active: false };
+            this.name = props.data.project + '/' + props.data.scratch;
 
-        signals.subscribe('adjust-file-item-state', this.onSignal);
+            this.actionMethods = {
+                remove: () => { }, // TODO
+                rename: () => { }, // TODO
+            };
+
+            signals.subscribe('adjust-file-item-state', this.onSignal);
+        }
     }
 
     componentWillUnmount() {
@@ -185,13 +242,20 @@ class FileItem extends React.Component {
     }
 
     render() {
-        return (
-            <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
-                <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
-                <span className="label">{this.props.name}</span>
-                <span className="actions"><ItemActions parentName="scratch" /></span>
-            </div>
-        )
+        if(this.props.dummy)
+            return (
+                <div className="file dummy">
+                    <span className="label">(empty)</span>
+                </div>
+            );
+        else
+            return (
+                <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
+                    <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
+                    <span className="label">{this.props.name}</span>
+                    <span className="actions"><ItemActions mode="scratch" methods={this.actionMethods} /></span>
+                </div>
+            );
     }
 }
 
@@ -200,18 +264,40 @@ class ItemActions extends React.Component {
 
     constructor(props) {
         super();
-        // pass onRename / onRemove callbacks through props - will change between project and file
-        // some kind of dialog for new name / confirm dialog
-        // on click - prevent default so that scratch/project doesn't get selected
+        // pass methods = {add: (), remove: (), rename: ()} callbacks through props
+        // some kind of dialog for new name / confirm dialog - let passed methods handle this
+    }
+
+    onClick = (ev, method) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        console.log('[ITEM ACTION]', method, this.props.mode);
+
+        if(this.props.methods[method])
+            this.props.methods[method]();
     }
 
     render() {
+
+        if(this.props.mode === 'project')
+            var add = [(
+                <span className="item-action action-add" title={'Add new scratch'}>
+                    <Ionicon icon="ion-ios-plus-empty" fontSize="20px" className="sidebar-icon" />
+                </span>
+            )];
+
         return (
             <span className="item-actions">
-                <span className="item-action action-remove" title={'Remove ' + this.props.parentName}>
+                {this.props.mode === 'project' && (
+                    <span className="item-action action-add" title={'Add new scratch'} onClick={(ev) => this.onClick(ev, 'add')}>
+                        <Ionicon icon="ion-ios-plus-empty" fontSize="20px" className="sidebar-icon" />
+                    </span>
+                )}
+                <span className="item-action action-remove" title={'Remove ' + this.props.mode} onClick={(ev) => this.onClick(ev, 'remove')}>
                     <Ionicon icon="ion-ios-trash-outline" fontSize="20px" className="sidebar-icon" />
                 </span>
-                <span className="item-action action-rename" title={'Rename ' + this.props.parentName}>
+                <span className="item-action action-rename" title={'Rename ' + this.props.mode} onClick={(ev) => this.onClick(ev, 'rename')}>
                     <Ionicon icon="ion-ios-at" fontSize="20px" className="sidebar-icon" />
                 </span>
             </span>
@@ -247,6 +333,11 @@ class Prompt extends React.Component {
 
     onSubmit = (ev) => {
         if(this.props.mode === 'input'){
+            if(this.inputValue === ''){
+                this.state.validation = {valid: false, message: 'You have to provide a value.'}
+                this.forceUpdate();
+                return;
+            }
             this.props.methods.onSubmit(this.inputValue);
             this.inputValue = '';
         } else {
