@@ -313,9 +313,65 @@ $sidebarWidth: 300px;
     opacity: 1;
 }
 
-// ------------- Interactions -------------
-
 .file:hover .item-actions,
 .project-label:hover .item-actions{
     opacity: 1;
+}
+
+// ------------- Modal -------------
+
+.prompt {
+    background-color: $bgDarkerColor;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+}
+
+.prompt-instructions {
+    padding: 15px;
+}
+
+.prompt-input {
+    margin: 0 15px 5px 15px;
+    width: calc(100% - 40px);
+    background-color: $bgDarkerColor;
+    color: $textColor;
+    outline: none;
+    border: 0;
+    border-bottom: 1px solid $inputColor;
+    transition: border-color .2s ease;
+}
+.prompt-input:focus {
+    border-bottom: 1px solid $dimmedTextColor;
+}
+.prompt-error {
+    color: $cancelColor;
+    font-size: 14px;
+}
+
+.prompt-button {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    background-color: $bgDarkerColor;
+    vertical-align: middle;
+    color: $textColor;
+    transition: color .2s ease;
+}
+.prompt-button.submit:hover { color: $okColor; }
+.prompt-button.submit:hover .sidebar-icon { fill: $okColor; }
+.prompt-button.cancel:hover { color: $cancelColor; }
+.prompt-button.cancel:hover .sidebar-icon { fill: $cancelColor; }
+
+.prompt.invalid .prompt-input {
+    border-bottom: 1px solid $cancelColor;
+}
+.prompt.invalid .prompt-button.submit {
+    pointer-events: none;
+    color: $dimmedTextColor;
+}
+.prompt.invalid .prompt-button.submit .sidebar-icon {
+    fill: $dimmedTextColor;
 }
