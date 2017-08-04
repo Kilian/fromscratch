@@ -21,37 +21,88 @@ export default class Sidebar extends React.Component {
 
     constructor(props) {
         super();
-        this.state = {};
+        this.state = {
+            prompt: {
+                show: false,
+            }
+        };
+
+
+
         projects.refreshProjectsTree();
     }
 
-    render() {
+    createProject = (name) => {
+        console.log(name);
+
+        // create dir
+        // reload tree
+
+        this.hidePrompt();
+    }
+
+    showCreateProjectPrompt = (ev) => {
+        this.promptData = {
+            instructions: 'Enter a unique name for new project',
+            submitDesc: 'Create',
+            cancelDesc: 'Cancel'
+        };
+        this.promptMethods = {
+            onSubmit: this.createProject,
+            onCancel: this.hidePrompt,
+            validateInput: this.validateNewProjectName
+        };
+        this.state.prompt.show = true;
+        this.forceUpdate();
+    }
+
+    hidePrompt = (ev) => {
+        this.state.prompt.show = false;
+        this.forceUpdate();
+    }
+
+    validateNewProjectName = (value) => {
+        if(value === '')
+            return { valid: false, message: 'You have to provide SOME name...' };
+
+        let duplicates = Object.keys(projects.tree).filter(p => p === value);
+        if(duplicates.length)
+            return {valid: false, message: 'Project name has to be unique.'};
+
+        return {valid: true, message: ''};
+    }
+
+    componentWillMount() {
         let self = this;
 
-        let sidebarItems = Object.entries(projects.tree).map((item, i) => {
+        this.sidebarItems = Object.entries(projects.tree).map((item, i) => {
             let key = (new Date).getTime() + ':' + i;
             return (
                 <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={self.props.refreshScratch} key={key} />
             );
         });
+    }
+
+    render() {
 
         return (
             <div className="sidebar">
 
-                <div className="new-project" id="new-project">
+                <div className="new-project" onClick={this.showCreateProjectPrompt}>
                     <span className="new-project-label">Create new project</span>
                     <Ionicon icon="ion-ios-plus-outline" fontSize="20px" className="sidebar-icon new-project-handle" />
                     <span className="sidebar-title">Your projects</span>
                 </div>
 
+                <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode="input" />
+
                 <div className="sidebar-tree">
-                    {sidebarItems}
+                    {this.sidebarItems}
                 </div>
 
             </div>
         );
     }
-
 }
 
 
@@ -151,6 +202,7 @@ class ItemActions extends React.Component {
         super();
         // pass onRename / onRemove callbacks through props - will change between project and file
         // some kind of dialog for new name / confirm dialog
+        // on click - prevent default so that scratch/project doesn't get selected
     }
 
     render() {
@@ -163,6 +215,72 @@ class ItemActions extends React.Component {
                     <Ionicon icon="ion-ios-at" fontSize="20px" className="sidebar-icon" />
                 </span>
             </span>
+        );
+    }
+}
+
+
+class Prompt extends React.Component {
+
+    // modes:
+    //   simple
+    //   input
+    constructor(props){
+        super();
+        this.state = {
+            validation: {valid: true, message: ''}
+        };
+        this.inputValue = '';
+    }
+
+    onInputChange = (ev) => {
+        this.inputValue = ev.target.value;
+        this.state.validation = this.props.methods.validateInput(this.inputValue);
+        this.forceUpdate();
+    }
+
+    onCancel = (ev) => {
+        this.state.validation = {valid: true, message: ''};
+        if(this.props.mode === 'input') this.inputValue = '';
+        this.props.methods.onCancel(ev);
+    }
+
+    onSubmit = (ev) => {
+        if(this.props.mode === 'input'){
+            this.props.methods.onSubmit(this.inputValue);
+            this.inputValue = '';
+        } else {
+            this.props.methods.onSubmit();
+        }
+    }
+
+    render() {
+        if(!this.props.show) return null;
+
+        if (this.props.mode === 'input'){
+            var input = (
+                <div className="prompt-input-wrapper">
+                    <input className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange}/>
+                    <p className="prompt-error">{this.state.validation.message}</p>
+                </div>
+            );
+        }
+
+        return (
+            <div className={'prompt ' + (this.state.validation.valid ? '' : 'invalid')}>
+                <p className="prompt-instructions">{this.props.textData.instructions}</p>
+                {input}
+                <div className="prompt-footer">
+                    <div className="prompt-button submit" onClick={this.onSubmit}>
+                        <Ionicon icon="ion-ios-checkmark-outline" fontSize="20px" className="sidebar-icon" />
+                        {this.props.textData.submitDesc}
+                    </div>
+                    <div className="prompt-button cancel" onClick={this.onCancel}>
+                        <Ionicon icon="ion-ios-close-outline" fontSize="20px" className="sidebar-icon" />
+                        {this.props.textData.cancelDesc}
+                    </div>
+                </div>
+            </div>
         );
     }
 }
