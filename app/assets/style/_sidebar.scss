@@ -17,6 +17,8 @@ $sidebarWidth: 300px;
 
 // ------------- General -------------
 
+// ------------- General -------------
+
 .sidebar {
     font-family: 'Roboto';
     -webkit-font-smoothing: antialiased;
@@ -265,7 +267,7 @@ $sidebarWidth: 300px;
     will-change: opacity;
 }
 .new-project-handle {
-    margin-left: 4.7ch;
+    margin-left: 5.4ch;
 }
 
 .new-project-handle,
@@ -275,7 +277,7 @@ $sidebarWidth: 300px;
     will-change: opacity;
 }
 .sidebar-title {
-    margin-left: 9ch;
+    margin-left: 8ch;
 }
 
 .new-project:hover {
@@ -283,7 +285,7 @@ $sidebarWidth: 300px;
 }
 .new-project:hover .new-project-label {
     opacity: 1;
-    margin-left: 0;
+    margin-left: 7.5ch;
 }
 .new-project:hover .new-project-handle,
 .new-project:hover .sidebar-title {
@@ -300,20 +302,16 @@ $sidebarWidth: 300px;
     will-change: opacity;
 }
 .item-action {
-    // display: inline-block;
     width: 2ch;
-    // height: $itemHeight;
     background-color: transparent;
     overflow: hidden;
-    transition: font-weight .2s ease;
+    opacity: 0.7;
+    transition: opacity .2s ease;
+    will-change: opacity;
 }
 .item-action:hover {
-    font-weight: bold;
+    opacity: 1;
 }
-// .item-action-desc {
-//     display: block;
-//     width: 0;
-// }
 
 // ------------- Interactions -------------
 
