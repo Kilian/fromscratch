@@ -46,13 +46,11 @@ export default class Sidebar extends React.Component {
             onCancel: this.hidePrompt,
             validateInput: this.validateNewProjectName
         };
-        this.state.prompt.show = true;
-        this.forceUpdate();
+        this.setState({prompt: {show: true}});
     }
 
     hidePrompt = (ev) => {
-        this.state.prompt.show = false;
-        this.forceUpdate();
+        this.setState({prompt: {show: false}});
     }
 
     validateNewProjectName = (value) => {
@@ -144,8 +142,7 @@ class ProjectItem extends React.Component {
             validateInput: this.validateNewScratchName
         };
         this.promptMode = 'input';
-        this.state.prompt.show = true
-        this.forceUpdate();
+        this.setState({prompt: {show: true}});
     }
 
     validateNewScratchName = (value) => {
@@ -160,8 +157,7 @@ class ProjectItem extends React.Component {
     }
 
     hidePrompt = () => {
-        this.state.prompt.show = false;
-        this.forceUpdate();
+        this.setState({prompt: {show: false}});
     }
 
     createScratch = (name) => {
@@ -226,8 +222,7 @@ class FileItem extends React.Component {
     }
 
     onSignal = (currentActiveName) => {
-        this.state.active = currentActiveName === this.name;
-        this.forceUpdate();
+        this.setState({active: currentActiveName === this.name});
     }
 
     onClick = (ev) => {
@@ -236,9 +231,8 @@ class FileItem extends React.Component {
 
         projects.setCurrentScratch(this.props.data);
         this.props.refreshScratch();
-        this.state.active = true;
         signals.dispatch('adjust-file-item-state', this.name);
-        this.forceUpdate();
+        this.setState({active: true});
     }
 
     render() {
@@ -321,8 +315,7 @@ class Prompt extends React.Component {
 
     onInputChange = (ev) => {
         this.inputValue = ev.target.value;
-        this.state.validation = this.props.methods.validateInput(this.inputValue);
-        this.forceUpdate();
+        this.setState({validation: this.props.methods.validateInput(this.inputValue)});
     }
 
     onCancel = (ev) => {
@@ -334,8 +327,7 @@ class Prompt extends React.Component {
     onSubmit = (ev) => {
         if(this.props.mode === 'input'){
             if(this.inputValue === ''){
-                this.state.validation = {valid: false, message: 'You have to provide a value.'}
-                this.forceUpdate();
+                this.setState({validation: {valid: false, message: 'You have to provide a value.'}});
                 return;
             }
             this.props.methods.onSubmit(this.inputValue);
