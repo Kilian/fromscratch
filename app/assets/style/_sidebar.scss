@@ -35,6 +35,14 @@ $itemHeight: 26px;
     transition: fill .2s ease;
 }
 
+.no-projects-message {
+    padding: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+.no-projects-message p {
+    margin-bottom: 10px;
+}
 
 // ------------- Project item -------------
 

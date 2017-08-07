@@ -1,6 +1,7 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
-const fs = require('fs');
+// const fs = require('fs');
+const fs = require('fs-extra');
 const dirTree = require('directory-tree');
 const JSONStorage = require('node-localstorage').JSONStorage;
 const APPVERSION = require('./package.json').version;
@@ -36,7 +37,7 @@ global.nodeStorage = new JSONStorage(storageLocation);
 global.projects = {
   // current: 'projects/project-name/scratch-name',
   default: '',
-  current: undefined,
+  current: '',
   tree: {
     // project-name: [
     //   'scratch-name',
@@ -54,8 +55,8 @@ global.projects = {
       return prev;
     }, {});
   },
-  setCurrentScratch(data){
-    this.current = 'projects/' + data.project + '/' + data.scratch;
+  setCurrentScratch(data, reset){
+    this.current = !reset ? 'projects/' + data.project + '/' + data.scratch : this.default;
     global.handleContent.filename = storageLocation + '/' + this.current + '/content.txt';
     global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current);
     if(!global.handleContent.read())
@@ -74,12 +75,16 @@ global.projects = {
   removeProject(project){
     if(project === '') throw 'To remove a project, the name has to be specified';
     let path = storageLocation + '/projects/' + project;
-    fs.rmdirSync(path);
+    fs.removeSync(path);
+    if(this.current.indexOf(project)>-1)
+      this.setCurrentScratch({project: 'default', scratch: 'default_scratch'}, true);
   },
   removeScratch(project, scratch){
     if(project==='' || scratch==='') throw 'To remove a scratch, the name and containing project have to be specified';
     let path = storageLocation + '/projects/' + project + '/' + scratch;
-    fs.rmdirSync(path);
+    fs.removeSync(path);
+    if(this.current.indexOf(project)>-1 && this.current.indexOf(scratch)>-1)
+      this.setCurrentScratch({project: 'default', scratch: 'default_scratch'}, true);
   },
   renameProject(project, newName){
     if(project==='' || newName==='' || project===newName) throw 'New project name has to be non empty and different than the current one.'

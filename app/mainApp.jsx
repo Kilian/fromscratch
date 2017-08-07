@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import FromScratch from './containers/FromScratch';
-import Sidebar from './containers/Sidebar';
+import Sidebar from './containers/Sidebar/Sidebar';
 import './assets/style/app.scss';
 
 
