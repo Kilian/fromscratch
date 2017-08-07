@@ -71,8 +71,16 @@ global.projects = {
     let path = storageLocation + '/projects/' + project + '/' + scratch;
     fs.mkdirSync(path);
   },
-  removeProject(project){},
-  removeScratch(project, scratch){},
+  removeProject(project){
+    if(project === '') throw 'To remove a project, the name has to be specified';
+    let path = storageLocation + '/projects/' + project;
+    fs.rmdirSync(path);
+  },
+  removeScratch(project, scratch){
+    if(project==='' || scratch==='') throw 'To remove a scratch, the name and containing project have to be specified';
+    let path = storageLocation + '/projects/' + project + '/' + scratch;
+    fs.rmdirSync(path);
+  },
   renameProject(project, newName){
     if(project==='' || newName==='' || project===newName) throw 'New project name has to be non empty and different than the current one.'
     let path = storageLocation + '/projects/';

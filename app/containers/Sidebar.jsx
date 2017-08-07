@@ -112,7 +112,7 @@ class ProjectItem extends React.Component {
         };
         this.actionMethods = {
             add: this.showAddScratchPrompt,
-            remove: ()=>{}, // TODO
+            remove: this.showRemoveProjectPrompt,
             rename: this.showRenameProjectPrompt,
         };
         this.computedStyle = {};
@@ -193,6 +193,26 @@ class ProjectItem extends React.Component {
         this.props.refreshSidebar();
     }
 
+    showRemoveProjectPrompt = () => {
+        this.promptData = {
+            instructions: 'Do you really want to remove project ' + this.props.project + '? This cannot be undone.',
+            submitDesc: 'Remove',
+            cancelDesc: 'Cancel'
+        };
+        this.promptMethods = {
+            onSubmit: this.removeProject,
+            onCancel: this.hidePrompt,
+        };
+        this.promptMode = 'prompt';
+        this.setState({prompt: {show: true}});
+    }
+
+    removeProject = (name) => {
+        this.hidePrompt();
+        projects.removeProject(this.props.project);
+        this.props.refreshSidebar();
+    }
+
     hidePrompt = () => {
         this.setState({prompt: {show: false}});
     }
@@ -253,7 +273,7 @@ class FileItem extends React.Component {
             this.name = props.data.project + '/' + props.data.scratch;
 
             this.actionMethods = {
-                remove: () => { }, // TODO
+                remove: this.showRemoveScratchPrompt,
                 rename: this.showRenameScratchPrompt,
             };
 
@@ -293,6 +313,27 @@ class FileItem extends React.Component {
     renameScratch = (name) => {
         this.hidePrompt();
         projects.renameScratch(this.props.data.project, this.props.data.scratch, name);
+        this.props.refreshSidebar();
+    }
+
+    showRemoveScratchPrompt = () => {
+        this.promptData = {
+            instructions: 'Do you really want to remove scratch '+this.props.data.project+'/'+this.props.data.scratch+'? This cannot be undone.',
+            submitDesc: 'Remove',
+            cancelDesc: 'Cancel'
+        };
+        this.promptMethods = {
+            onSubmit: this.removeScratch,
+            onCancel: this.hidePrompt,
+        };
+        this.promptMode = 'prompt';
+        this.setState({prompt: {show: true}});
+        this.props.compensateHeight(true);
+    }
+
+    removeScratch = () => {
+        this.hidePrompt();
+        projects.removeScratch(this.props.data.project, this.props.data.scratch);
         this.props.refreshSidebar();
     }
 
