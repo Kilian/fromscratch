@@ -1,0 +1,246 @@
+
+// colors
+$bgColor: rgba(0, 43, 54, 1);
+$bgDarkerColor: #00242C;
+$highlightColor: #004454;
+$selectedColor: #1B4949;
+$errorColor: #D84315;
+$okColor: #2E7D32;
+$primaryColor: #1976D2;
+$inputColor: #173E47;
+$textColor: rgba(130, 150, 150, 1);
+$dimmedTextColor: rgba(130, 150, 150, 0.5);
+
+// measures
+$itemHeight: 26px;
+$sidebarWidth: 300px;
+
+// ------------- General -------------
+
+.sidebar {
+    font-family: 'Roboto';
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    transition: max-width .2s ease;
+}
+.sidebar.open {
+    max-width: 300px;
+}
+.sidebar.closed {
+    max-width: 20px;
+}
+
+.sidebar-tree {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-tree::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+.sidebar-tree::-webkit-scrollbar {
+	width: 7px;
+	background-color: transparent;
+}
+.sidebar-tree::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #004b5f;
+}
+
+
+.sidebar-icon {
+    position: relative;
+    fill: $textColor;
+    top: 4px;
+    margin-right: 2px;
+    transition: fill .2s ease;
+}
+
+.no-projects-message {
+    padding: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+.no-projects-message p {
+    margin-bottom: 10px;
+}
+
+// ------------- Project item -------------
+
+.project {
+    overflow: hidden;
+    word-break: break-all;
+}
+.file-items-container {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .2s ease;
+    // max-height adjustment handled in component click method
+}
+
+.project-label {
+    cursor: pointer;
+    line-height: $itemHeight;
+    padding: 0 0 0 15px;
+    background-color: transparent;
+    transition: background-color .2s ease;
+}
+.project-label:hover {
+    background-color: $highlightColor;
+}
+.project-label-icon {
+    transform: rotate(0deg);
+    transition: transform .2s ease;
+    will-change: transform;
+}
+.project.open .project-label-icon {
+    transform: translateX(2px) rotate(90deg);
+}
+
+// ------------- File item -------------
+
+.file {
+    width: 300px;
+    line-height: $itemHeight;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0 0 0 40px;
+    transition: background-color .2s ease, padding .2s ease;
+}
+.file:hover { background-color: $highlightColor; }
+.file.active { background-color: $selectedColor; }
+
+.file.dummy { pointer-events: none; }
+.file.dummy .label { font-size: 12px; }
+
+// ------------- Title / new project button -------------
+
+.new-project {
+    background-color: transparent;
+    cursor: pointer;
+    line-height: 40px;
+    white-space: nowrap;
+}
+
+.new-project-label {
+    padding: 0 0 0 15px;
+    margin-left: -20ch;
+    opacity: 0;
+    transition: margin .2s ease, opacity .2s ease;
+    will-change: opacity;
+}
+.new-project-handle {
+    margin-left: 5.4ch;
+}
+
+.new-project-handle,
+.sidebar-title {
+    opacity: 1;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.sidebar-title {
+    margin-left: 7ch;
+}
+
+.new-project:hover {
+    background-color: $highlightColor;
+}
+.new-project:hover .new-project-label {
+    opacity: 1;
+    margin-left: 7.5ch;
+}
+.new-project:hover .new-project-handle,
+.new-project:hover .sidebar-title {
+    opacity: 0;
+}
+
+// ------------- Item actions -------------
+
+.item-actions {
+    opacity: 0;
+    float: right;
+    padding: 0 5px;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.item-action {
+    width: 2ch;
+    background-color: transparent;
+    overflow: hidden;
+    opacity: 0.7;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.item-action:hover {
+    opacity: 1;
+}
+
+.action-add:hover .sidebar-icon {fill: $okColor;}
+.action-remove:hover .sidebar-icon {fill: $errorColor;}
+.action-rename:hover .sidebar-icon {fill: $primaryColor;}
+
+.file:hover .item-actions,
+.project-label:hover .item-actions{
+    opacity: 1;
+}
+
+// ------------- Prompt -------------
+
+.prompt {
+    background-color: $bgDarkerColor;
+    width: $sidebarWidth;
+    overflow: hidden;
+    text-align: center;
+}
+
+.prompt-instructions {
+    padding: 15px;
+}
+
+.prompt-input {
+    margin: 0 15px 5px 15px;
+    width: calc(100% - 40px);
+    background-color: $bgDarkerColor;
+    color: $textColor;
+    outline: none;
+    border: 0;
+    font-size: 16px;
+    border-bottom: 1px solid $inputColor;
+    transition: border-color .2s ease;
+}
+.prompt-input:focus {
+    border-bottom: 1px solid $dimmedTextColor;
+}
+.prompt-error {
+    color: $errorColor;
+    font-size: 14px;
+}
+
+.prompt-button {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    background-color: $bgDarkerColor;
+    vertical-align: middle;
+    color: $textColor;
+    transition: color .2s ease;
+}
+.prompt-button.submit:hover { color: $okColor; }
+.prompt-button.submit:hover .sidebar-icon { fill: $okColor; }
+.prompt-button.cancel:hover { color: $primaryColor; }
+.prompt-button.cancel:hover .sidebar-icon { fill: $primaryColor; }
+
+.prompt.invalid .prompt-input {
+    border-bottom: 1px solid $errorColor;
+}
+.prompt.invalid .prompt-button.submit {
+    pointer-events: none;
+    color: $dimmedTextColor;
+}
+.prompt.invalid .prompt-button.submit .sidebar-icon {
+    fill: $dimmedTextColor;
+}

@@ -1,0 +1,66 @@
+@charset "UTF-8";
+
+$bgColor: rgba(0, 43, 54, 1);
+$textColor: rgba(130, 150, 150, 1);
+
+@font-face {
+  font-family: "FiraCode";
+  src: url(../font/FiraCode-Regular.otf) format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  height: 100%;
+  min-height: 100%;
+  font-family: "FiraCode";
+  overflow: hidden;
+  font-size: 100%;
+  line-height: 1.25;
+  background: $bgColor;
+  color: $textColor;
+  padding: 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+  -webkit-user-select: none;
+}
+
+#react-root-sidebar {
+  display: flex;
+  flex: 0 0 auto;
+  background: $bgColor;
+  color: $textColor;
+}
+#react-root-workspace {
+  display: flex;
+  flex: 1;
+  background: $bgColor;
+  color: $textColor;
+}
+
+// --------------------------- libs
+@import "../../../node_modules/codemirror/lib/codemirror.css";
+@import "../../../node_modules/codemirror/addon/scroll/simplescrollbars.css";
+@import "../../../node_modules/codemirror/addon/fold/foldgutter.css";
+@import "../../../node_modules/codemirror/addon/dialog/dialog.css";
+// --------------------------- local
+@import "_fromscratch.scss";
+@import "_sidebar.scss";
+@import "_tabs.scss";
+@import "_cm-theme.scss";
