@@ -27,6 +27,19 @@ $itemHeight: 26px;
     overflow-x: hidden;
 }
 
+.sidebar-tree::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+.sidebar-tree::-webkit-scrollbar {
+	width: 7px;
+	background-color: transparent;
+}
+.sidebar-tree::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #004b5f;
+}
+
+
 .sidebar-icon {
     position: relative;
     fill: $textColor;

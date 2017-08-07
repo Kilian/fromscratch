@@ -40,13 +40,20 @@ export default class Prompt extends React.Component {
         }
     }
 
+    handleKey = (ev) => {
+        if(ev.keyCode == 13 && this.state.validation.valid)
+            this.onSubmit();
+        else if(ev.keyCode === 27)
+            this.onCancel();
+    }
+
     render() {
         if(!this.props.show) return null;
 
         if (this.props.mode === 'input'){
             var input = (
                 <div className="prompt-input-wrapper">
-                    <input className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange}/>
+                    <input className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/>
                     <p className="prompt-error">{this.state.validation.message}</p>
                 </div>
             );

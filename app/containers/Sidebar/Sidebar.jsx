@@ -5,9 +5,6 @@ import Ionicon from 'react-ionicons'
 import ProjectItem from './ProjectItem'
 import Prompt from './Prompt'
 
-// require('../../node_modules/codemirror/addon/scroll/simplescrollbars.js');
-// require('../../node_modules/codemirror/addon/search/matchesonscrollbar.js');
-
 const electron      = require('electron');
 const ipc           = electron.ipcRenderer;
 const remote        = electron.remote;
