@@ -73,8 +73,16 @@ global.projects = {
   },
   removeProject(project){},
   removeScratch(project, scratch){},
-  renameProject(project, newName){},
-  renameScratch(project, scratch, newName){}
+  renameProject(project, newName){
+    if(project==='' || newName==='' || project===newName) throw 'New project name has to be non empty and different than the current one.'
+    let path = storageLocation + '/projects/';
+    fs.renameSync(path + project, path + newName)
+  },
+  renameScratch(project, scratch, newName){
+    if(project==='' || scratch==='' || newName==='' || scratch===newName) throw 'New scratch name has to be non empty and different than the current one.'
+    let path = storageLocation + '/projects/' + project + '/';
+    fs.renameSync(path + scratch, path + newName);
+  },
 }
 
 global.handleContent = {

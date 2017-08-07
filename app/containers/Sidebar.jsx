@@ -44,7 +44,7 @@ export default class Sidebar extends React.Component {
         this.promptMethods = {
             onSubmit: this.createProject,
             onCancel: this.hidePrompt,
-            validateInput: this.validateNewProjectName
+            validateInput: this.validateProjectName
         };
         this.setState({prompt: {show: true}});
     }
@@ -53,7 +53,7 @@ export default class Sidebar extends React.Component {
         this.setState({prompt: {show: false}});
     }
 
-    validateNewProjectName = (value) => {
+    validateProjectName = (value) => {
         if(value === '')
             return { valid: false, message: 'You have to provide SOME name...' };
 
@@ -71,12 +71,10 @@ export default class Sidebar extends React.Component {
     };
 
     componentWillMount() {
-        let self = this;
-
         this.sidebarItems = Object.entries(projects.tree).map((item, i) => {
             let key = (new Date).getTime() + ':' + i;
             return (
-                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={self.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} />
+                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} />
             );
         });
     }
@@ -115,19 +113,18 @@ class ProjectItem extends React.Component {
         this.actionMethods = {
             add: this.showAddScratchPrompt,
             remove: ()=>{}, // TODO
-            rename: ()=>{}, // TODO
+            rename: this.showRenameProjectPrompt,
         };
         this.computedStyle = {};
         this.parentClasses = ['project']
     }
 
     onClick = (ev) => {
-        this.state.open = !this.state.open;
-        this.parentClasses = this.state.open ? utils.addClass(this.parentClasses, 'open') : utils.removeClass(this.parentClasses, 'open');
-        this.computedStyle = !this.state.open ? {} : {
-            maxHeight: (this.props.scratches.length * 26) + 'px'
-        };
-        this.forceUpdate();
+        let shouldOpen = !this.state.open;
+        this.openHeight = this.props.scratches.length ? (this.props.scratches.length * 26) : 26;
+        this.parentClasses = shouldOpen ? utils.addClass(this.parentClasses, 'open') : utils.removeClass(this.parentClasses, 'open');
+        this.computedStyle = !shouldOpen ? {} : {maxHeight: this.openHeight + 'px'};
+        this.setState({open: shouldOpen});
     }
 
     showAddScratchPrompt = () => {
@@ -139,13 +136,13 @@ class ProjectItem extends React.Component {
         this.promptMethods = {
             onSubmit: this.createScratch,
             onCancel: this.hidePrompt,
-            validateInput: this.validateNewScratchName
+            validateInput: this.validateScratchName
         };
         this.promptMode = 'input';
         this.setState({prompt: {show: true}});
     }
 
-    validateNewScratchName = (value) => {
+    validateScratchName = (value) => {
         if(value === '')
             return { valid: false, message: 'You have to provide SOME name...' };
 
@@ -156,22 +153,64 @@ class ProjectItem extends React.Component {
         return { valid: true, message: '' };
     }
 
-    hidePrompt = () => {
-        this.setState({prompt: {show: false}});
-    }
-
     createScratch = (name) => {
         this.hidePrompt();
         projects.createScratch(this.props.project, name);
         this.props.refreshSidebar();
     }
 
+    showRenameProjectPrompt = () => {
+        this.promptData = {
+            instructions: 'Enter a new unique name for '+this.props.project+' project.',
+            submitDesc: 'Rename',
+            cancelDesc: 'Cancel'
+        };
+        this.promptMethods = {
+            onSubmit: this.renameProject,
+            onCancel: this.hidePrompt,
+            validateInput: this.validateProjectName
+        };
+        this.promptMode = 'input';
+        this.setState({prompt: {show: true}});
+    }
+
+    validateProjectName = (value) => {
+        if(value === '')
+            return { valid: false, message: 'You have to provide SOME name...' };
+        if(value === this.props.project)
+            return { valid: false, message: 'You have to provide a different name...' };
+
+        let duplicates = Object.keys(projects.tree).filter(p => p === value);
+        if(duplicates.length)
+            return {valid: false, message: 'Project name has to be unique.'};
+
+        return {valid: true, message: ''};
+    }
+
+    renameProject = (name) => {
+        this.hidePrompt();
+        projects.renameProject(this.props.project, name);
+        this.props.refreshSidebar();
+    }
+
+    hidePrompt = () => {
+        this.setState({prompt: {show: false}});
+    }
+
+    compensateForFilePrompt = (stretch) => {
+        let adjustment = 150;
+        let current = this.computedStyle.maxHeight;
+        this.computedStyle = {maxHeight: stretch ? (this.openHeight + adjustment) + 'px' : this.openHeight + 'px'};
+        this.forceUpdate();
+    }
+
     componentWillMount() {
-        let self = this;
         this.scratches = this.props.scratches.map((scratch, i) => {
             let key = (new Date).getTime() + ':' + i;
             return (
-                <FileItem name={scratch} refreshScratch={self.props.refreshScratch} data={{ project: this.props.project, scratch: scratch }} key={key} />
+                <FileItem name={scratch} compensateHeight={this.compensateForFilePrompt}
+                    refreshScratch={this.props.refreshScratch} refreshSidebar={this.props.refreshSidebar}
+                    data={{ project: this.props.project, scratch: scratch }} key={key} />
             );
         });
         if(!this.scratches.length)
@@ -205,20 +244,61 @@ class FileItem extends React.Component {
     constructor(props) {
         super();
         if(!props.dummy){
-            this.state = { active: false };
+            this.state = {
+                active: false,
+                prompt: {
+                    show: false
+                }
+            };
             this.name = props.data.project + '/' + props.data.scratch;
 
             this.actionMethods = {
                 remove: () => { }, // TODO
-                rename: () => { }, // TODO
+                rename: this.showRenameScratchPrompt,
             };
 
             signals.subscribe('adjust-file-item-state', this.onSignal);
         }
     }
 
-    componentWillUnmount() {
-        signals.unsubscribe('adjust-file-item-state', this.onSignal);
+    showRenameScratchPrompt = () => {
+        this.promptData = {
+            instructions: 'Enter a new name for '+this.props.data.scratch+' scratch.',
+            submitDesc: 'Rename',
+            cancelDesc: 'Cancel'
+        };
+        this.promptMethods = {
+            onSubmit: this.renameScratch,
+            onCancel: this.hidePrompt,
+            validateInput: this.validateScratchName
+        };
+        this.promptMode = 'input';
+        this.setState({prompt: {show: true}});
+        this.props.compensateHeight(true);
+    }
+
+    validateScratchName = (value) => {
+        if(value === '')
+            return { valid: false, message: 'You have to provide SOME name...' };
+        if(value === this.props.data.scratch)
+            return { valid: false, message: 'You have to provide a different name...' };
+
+        let duplicates = projects.tree[this.props.data.project].filter(s => s === value);
+        if (duplicates.length)
+            return { valid: false, message: 'Scratch name has to be unique project-wide.' };
+
+        return { valid: true, message: '' };
+    }
+
+    renameScratch = (name) => {
+        this.hidePrompt();
+        projects.renameScratch(this.props.data.project, this.props.data.scratch, name);
+        this.props.refreshSidebar();
+    }
+
+    hidePrompt = () => {
+        this.setState({prompt: {show: false}});
+        this.props.compensateHeight(false);
     }
 
     onSignal = (currentActiveName) => {
@@ -235,6 +315,10 @@ class FileItem extends React.Component {
         this.setState({active: true});
     }
 
+    componentWillUnmount() {
+        signals.unsubscribe('adjust-file-item-state', this.onSignal);
+    }
+
     render() {
         if(this.props.dummy)
             return (
@@ -244,10 +328,15 @@ class FileItem extends React.Component {
             );
         else
             return (
-                <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
-                    <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
-                    <span className="label">{this.props.name}</span>
-                    <span className="actions"><ItemActions mode="scratch" methods={this.actionMethods} /></span>
+                <div className="file-wrapper">
+
+                    <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
+                        <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
+                        <span className="label">{this.props.name}</span>
+                        <span className="actions"><ItemActions mode="scratch" methods={this.actionMethods} /></span>
+
+                    </div>
+                    <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode={this.promptMode} />
                 </div>
             );
     }
