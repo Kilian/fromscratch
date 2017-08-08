@@ -88,7 +88,7 @@ export default class FileItem extends React.Component {
         projects.removeScratch(this.props.data.project, this.props.data.scratch);
         this.props.refreshSidebar();
         this.props.refreshScratch();
-        signals.dispatch('adjust-file-item-state', 'Default');
+        signals.dispatch('adjust-file-item-state', '/Default');
     }
 
     hidePrompt = () => {

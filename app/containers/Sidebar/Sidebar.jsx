@@ -11,7 +11,6 @@ const ipc             = electron.ipcRenderer;
 const remote          = electron.remote;
 const shell           = electron.shell;
 const handleContent   = remote.getGlobal('handleContent');
-const nodeStorage     = remote.getGlobal('nodeStorage');
 const rootNodeStorage = remote.getGlobal('rootNodeStorage');
 const projects        = remote.getGlobal('projects');
 const signals         = remote.getGlobal('signalEmitter');
@@ -30,8 +29,6 @@ export default class Sidebar extends React.Component {
             open: rootNodeStorage.getItem('sidebar') || false
         };
         projects.refreshProjectsTree();
-
-        console.log(rootNodeStorage.getItem('sidebar'));
     }
 
     createProject = (name) => {
@@ -83,8 +80,9 @@ export default class Sidebar extends React.Component {
     componentWillMount() {
         this.sidebarItems = Object.entries(projects.tree).map((item, i) => {
             let key = (new Date).getTime() + ':' + i;
+            let open = projects.openProjects[item[0]];
             return (
-                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} />
+                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} open={open}/>
             );
         });
         if(!this.sidebarItems.length)
@@ -94,6 +92,8 @@ export default class Sidebar extends React.Component {
                     <p>To create one, use the plus icon in the top left corner.</p>
                 </div>
             );
+
+            setTimeout(() => signals.dispatch('adjust-file-item-state', projects.current.project + '/' + projects.current.scratch) , 500);
     }
 
     render() {

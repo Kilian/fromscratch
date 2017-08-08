@@ -5,11 +5,11 @@ import FileItem from './FileItem'
 import Prompt from './Prompt'
 import ItemActions from './ItemActions'
 
-const electron      = require('electron');
-const remote        = electron.remote;
-const projects      = remote.getGlobal('projects');
-const signals       = remote.getGlobal('signalEmitter');
-const utils         = remote.getGlobal('utils');
+const electron = require('electron');
+const remote   = electron.remote;
+const projects = remote.getGlobal('projects');
+const signals  = remote.getGlobal('signalEmitter');
+const utils    = remote.getGlobal('utils');
 let latestVersion;
 
 
@@ -27,11 +27,12 @@ export default class ProjectItem extends React.Component {
             rename: this.showRenameProjectPrompt,
         };
         this.computedStyle = {};
-        this.parentClasses = ['project']
+        this.parentClasses = ['project'];
     }
 
     onClick = (ev) => {
         let shouldOpen = !this.state.open;
+        projects.markProjectOpenness(this.props.project, shouldOpen);
         this.openHeight = this.props.scratches.length ? (this.props.scratches.length * 26) : 26;
         this.parentClasses = shouldOpen ? utils.addClass(this.parentClasses, 'open') : utils.removeClass(this.parentClasses, 'open');
         this.computedStyle = !shouldOpen ? {} : {maxHeight: this.openHeight + 'px'};
@@ -67,7 +68,10 @@ export default class ProjectItem extends React.Component {
     createScratch = (name) => {
         this.hidePrompt();
         projects.createScratch(this.props.project, name);
+        projects.setCurrentScratch({project: this.props.project, scratch: name});
         this.props.refreshSidebar();
+        this.props.refreshScratch();
+        setTimeout(()=>signals.dispatch('adjust-file-item-state', this.props.project + '/' + name), 200);
     }
 
     showRenameProjectPrompt = () => {
@@ -120,9 +124,9 @@ export default class ProjectItem extends React.Component {
 
     removeProject = () => {
         this.hidePrompt();
+        if(projects.current.project === this.props.project)
+            signals.dispatch('adjust-file-item-state', '/Default');
         projects.removeProject(this.props.project);
-        if(projects.current.indexOf(this.props.project) > -1)
-            signals.dispatch('adjust-file-item-state', 'Default');
         this.props.refreshSidebar();
         this.props.refreshScratch();
     }
@@ -151,6 +155,9 @@ export default class ProjectItem extends React.Component {
             this.scratches = [(
                 <FileItem dummy={true} key={(new Date).getTime() + ':0'}/>
             )];
+
+        if(this.props.open === true)
+            this.onClick();
     }
 
     render() {
