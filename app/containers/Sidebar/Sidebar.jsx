@@ -71,6 +71,10 @@ export default class Sidebar extends React.Component {
         this.forceUpdate();
     };
 
+    toggleSidebar = () => {
+        this.setState({open: !this.state.open});
+    }
+
     componentWillMount() {
         this.sidebarItems = Object.entries(projects.tree).map((item, i) => {
             let key = (new Date).getTime() + ':' + i;
@@ -104,6 +108,9 @@ export default class Sidebar extends React.Component {
                     {this.sidebarItems}
                 </div>
 
+                <div className="collapse-handle-container" onClick={this.toggleSidebar}>
+                    <Ionicon icon="ion-ios-arrow-left" fontSize="35px" className="collapse-handle" />
+                </div>
             </div>
         );
     }

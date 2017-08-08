@@ -33,9 +33,19 @@ $sidebarWidth: 300px;
 }
 
 .sidebar-tree {
-    height: calc(100% - 40px);
+    height: calc(100% - 40px - 40px);
     overflow-y: auto;
     overflow-x: hidden;
+    transition: opacity .2s ease;
+}
+
+.sidebar.closed .sidebar-tree {
+    opacity: 0;
+    pointer-events: none;
+}
+.sidebar.open .sidebar-tree {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .sidebar-tree::-webkit-scrollbar-track {
@@ -67,6 +77,24 @@ $sidebarWidth: 300px;
 .no-projects-message p {
     margin-bottom: 10px;
 }
+
+.collapse-handle-container {
+    text-align: center;
+    transition: background-color .2s ease;
+}
+.collapse-handle {
+    position: relative;
+    top: 2.5px;
+    fill: $textColor;
+    transition: transform .2s ease, fill .2s ease;
+    will-change: transform;
+    cursor: pointer;
+}
+.sidebar.open .collapse-handle { transform: rotate(0deg); }
+.sidebar.closed .collapse-handle { transform: rotate(180deg); }
+
+.collapse-handle-container:hover { background-color: $highlightColor; }
+.collapse-handle-container:hover .collapse-handle { fill: $primaryColor; }
 
 // ------------- Project item -------------
 
@@ -123,6 +151,7 @@ $sidebarWidth: 300px;
     cursor: pointer;
     line-height: 40px;
     white-space: nowrap;
+    transition: opacity .2s ease;
 }
 
 .new-project-label {
@@ -156,6 +185,15 @@ $sidebarWidth: 300px;
 .new-project:hover .new-project-handle,
 .new-project:hover .sidebar-title {
     opacity: 0;
+}
+
+.sidebar.open .new-project {
+    opacity: 1;
+    pointer-events: all;
+}
+.sidebar.closed .new-project {
+    opacity: 0;
+    pointer-events: none;
 }
 
 // ------------- Item actions -------------
