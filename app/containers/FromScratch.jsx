@@ -18,7 +18,8 @@ const ipc = electron.ipcRenderer;
 const remote = electron.remote;
 const shell = electron.shell;
 const handleContent = remote.getGlobal('handleContent');
-const nodeStorage = remote.getGlobal('nodeStorage');
+const rootNodeStorage = remote.getGlobal('rootNodeStorage');
+let nodeStorage = remote.getGlobal('nodeStorage');
 let latestVersion;
 
 const CmdOrCtrl = process.platform === 'darwin' ? 'Cmd-' : 'Ctrl-';
@@ -96,10 +97,12 @@ export default class FromScratch extends React.Component {
   constructor(props) {
     super();
 
+    nodeStorage = remote.getGlobal('nodeStorage'); // refresh necessary to correctly read data stored on per-scratch basis
+
     this.state = {
       content: handleContent.read() || props.content,
-      fontSize: nodeStorage.getItem('fontSize') || 1,
-      lightTheme: nodeStorage.getItem('lightTheme') || false,
+      fontSize: rootNodeStorage.getItem('fontSize') || 1,
+      lightTheme: rootNodeStorage.getItem('lightTheme') || false,
       // lightTheme: true,
       folds: (() => {
         const foldItem = nodeStorage.getItem('folds');
@@ -108,6 +111,7 @@ export default class FromScratch extends React.Component {
       mock: 'nosave',
       update: 'updater'
     };
+
   }
 
   componentDidMount() {
@@ -183,7 +187,7 @@ export default class FromScratch extends React.Component {
   }
 
   showUpdateMessage() {
-    const hideMessageFor = nodeStorage.getItem('hideUpdateMessage');
+    const hideMessageFor = rootNodeStorage.getItem('hideUpdateMessage');
     const hideVersion = hideMessageFor ? hideMessageFor.version : false;
 
     if (latestVersion !== hideVersion) {
@@ -193,14 +197,14 @@ export default class FromScratch extends React.Component {
 
   updateFont(diff, reset) {
     const newFontsize = reset ? 1 : Math.min(Math.max(this.state.fontSize + diff, 0.5), 2.5);
-    nodeStorage.setItem('fontSize', newFontsize);
+    rootNodeStorage.setItem('fontSize', newFontsize);
     this.setState({ fontSize: newFontsize });
   }
 
   updateTheme() {
     const lightTheme = !this.state.lightTheme;
 
-    nodeStorage.setItem('lightTheme', lightTheme);
+    rootNodeStorage.setItem('lightTheme', lightTheme);
     this.setState({ lightTheme });
   }
 
@@ -215,7 +219,7 @@ export default class FromScratch extends React.Component {
 
   hideUpdateMessage = (e) => {
     e.stopPropagation();
-    nodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
+    rootNodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
     this.setState({ update: 'updater' });
   }
 
