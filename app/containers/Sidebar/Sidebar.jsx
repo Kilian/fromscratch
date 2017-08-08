@@ -4,6 +4,7 @@ import Ionicon from 'react-ionicons'
 
 import ProjectItem from './ProjectItem'
 import Prompt from './Prompt'
+import DefaultFileItem from './DefaultFileItem'
 
 const electron      = require('electron');
 const ipc           = electron.ipcRenderer;
@@ -25,7 +26,7 @@ export default class Sidebar extends React.Component {
             prompt: {
                 show: false,
             },
-            open: true
+            open: false
         };
         projects.refreshProjectsTree();
     }
@@ -107,6 +108,8 @@ export default class Sidebar extends React.Component {
                 <div className="sidebar-tree">
                     {this.sidebarItems}
                 </div>
+
+                <DefaultFileItem refreshScratch={this.props.refreshScratch} />
 
                 <div className="collapse-handle-container" onClick={this.toggleSidebar}>
                     <Ionicon icon="ion-ios-arrow-left" fontSize="35px" className="collapse-handle" />
