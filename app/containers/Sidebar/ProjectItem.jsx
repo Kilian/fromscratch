@@ -10,6 +10,7 @@ const remote   = electron.remote;
 const projects = remote.getGlobal('projects');
 const signals  = remote.getGlobal('signalEmitter');
 const utils    = remote.getGlobal('utils');
+const limits   = remote.getGlobal('nameLengthTruncLimits');
 let latestVersion;
 
 
@@ -135,6 +136,10 @@ export default class ProjectItem extends React.Component {
         this.setState({prompt: {show: false}});
     }
 
+    truncName = (name) => {
+
+    }
+
     compensateForFilePrompt = (stretch) => {
         let adjustment = 150;
         let current = this.computedStyle.maxHeight;
@@ -163,7 +168,7 @@ export default class ProjectItem extends React.Component {
     render() {
         return (
             <div className={this.parentClasses.join(' ')}>
-                <div className="project-label" onClick={this.onClick}>
+                <div className="project-label" onClick={this.onClick} title={this.props.project}>
                     <Ionicon icon="ion-ios-arrow-right" fontSize="20px" className="sidebar-icon project-label-icon" />
                     <span className="label">{this.props.project}</span>
                     <span className="actions"><ItemActions mode="project" methods={this.actionMethods} /></span>

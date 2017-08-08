@@ -4,11 +4,12 @@ import Ionicon from 'react-ionicons'
 import Prompt from './Prompt'
 import ItemActions from './ItemActions'
 
-const electron      = require('electron');
-const remote        = electron.remote;
-const projects      = remote.getGlobal('projects');
-const signals       = remote.getGlobal('signalEmitter');
-const utils         = remote.getGlobal('utils');
+const electron = require('electron');
+const remote   = electron.remote;
+const projects = remote.getGlobal('projects');
+const signals  = remote.getGlobal('signalEmitter');
+const utils    = remote.getGlobal('utils');
+const limits   = remote.getGlobal('nameLengthTruncLimits');
 let latestVersion;
 
 export default class FileItem extends React.Component {
@@ -130,12 +131,10 @@ export default class FileItem extends React.Component {
         else
             return (
                 <div className="file-wrapper">
-
-                    <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
+                    <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick} title={this.name}>
                         <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
                         <span className="label">{this.props.name}</span>
                         <span className="actions"><ItemActions mode="scratch" methods={this.actionMethods} /></span>
-
                     </div>
                     <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode={this.promptMode} />
                 </div>

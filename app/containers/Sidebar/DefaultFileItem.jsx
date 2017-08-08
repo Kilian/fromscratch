@@ -1,11 +1,11 @@
 import React from 'react';
 import Ionicon from 'react-ionicons'
 
-const electron      = require('electron');
-const remote        = electron.remote;
-const projects      = remote.getGlobal('projects');
-const signals       = remote.getGlobal('signalEmitter');
-const utils         = remote.getGlobal('utils');
+const electron = require('electron');
+const remote   = electron.remote;
+const projects = remote.getGlobal('projects');
+const signals  = remote.getGlobal('signalEmitter');
+const utils    = remote.getGlobal('utils');
 let latestVersion;
 
 export default class DefaultFileItem extends React.Component {

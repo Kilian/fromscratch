@@ -7,10 +7,7 @@ import Prompt from './Prompt'
 import DefaultFileItem from './DefaultFileItem'
 
 const electron        = require('electron');
-const ipc             = electron.ipcRenderer;
 const remote          = electron.remote;
-const shell           = electron.shell;
-const handleContent   = remote.getGlobal('handleContent');
 const rootNodeStorage = remote.getGlobal('rootNodeStorage');
 const projects        = remote.getGlobal('projects');
 const signals         = remote.getGlobal('signalEmitter');
