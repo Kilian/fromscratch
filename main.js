@@ -33,6 +33,7 @@ const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFIL
                   + '/.fromscratch'
                   + (process.env.NODE_ENV === 'development' ? '/dev' : '');
 
+global.rootNodeStorage = new JSONStorage(storageLocation);
 global.nodeStorage = new JSONStorage(storageLocation);
 
 global.projects = {
@@ -64,7 +65,11 @@ global.projects = {
     global.handleContent.filename = storageLocation + '/' + this.current + '/content.txt';
     global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current);
     if(!global.handleContent.read())
-      global.handleContent.write('Scratch for ' + data.project + ': ' + data.scratch)
+      global.handleContent.write(
+        !reset
+        ? 'Scratch for ' + data.project + ': ' + data.scratch
+        : 'Default workspace'
+      );
   },
   createProject(project){
     if(project === '') throw 'A new project has to have a valid name.';
@@ -264,7 +269,7 @@ app.on('ready', () => {
 
   let windowState = {};
   try {
-    windowState = global.nodeStorage.getItem('windowstate') || {};
+    windowState = global.rootNodeStorage.getItem('windowstate') || {};
   } catch (err) {
     console.log('empty window state file, creating new one.');
   }
@@ -333,7 +338,7 @@ app.on('ready', () => {
       // only update bounds if the window isn't currently maximized
       windowState.bounds = mainWindow.getBounds();
     }
-    global.nodeStorage.setItem('windowstate', windowState);
+    global.rootNodeStorage.setItem('windowstate', windowState);
   };
 
   ['resize', 'move', 'close'].forEach((e) => {

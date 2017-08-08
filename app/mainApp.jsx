@@ -4,6 +4,9 @@ import FromScratch from './containers/FromScratch';
 import Sidebar from './containers/Sidebar/Sidebar';
 import './assets/style/app.scss';
 
+const electron = require('electron');
+const remote = electron.remote;
+const signals = remote.getGlobal('signalEmitter');
 
 function refreshScratch(){
     ReactDOM.unmountComponentAtNode(document.getElementById('react-root-workspace'));

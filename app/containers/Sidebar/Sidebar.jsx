@@ -6,15 +6,16 @@ import ProjectItem from './ProjectItem'
 import Prompt from './Prompt'
 import DefaultFileItem from './DefaultFileItem'
 
-const electron      = require('electron');
-const ipc           = electron.ipcRenderer;
-const remote        = electron.remote;
-const shell         = electron.shell;
-const handleContent = remote.getGlobal('handleContent');
-const nodeStorage   = remote.getGlobal('nodeStorage');
-const projects      = remote.getGlobal('projects');
-const signals       = remote.getGlobal('signalEmitter');
-const utils         = remote.getGlobal('utils');
+const electron        = require('electron');
+const ipc             = electron.ipcRenderer;
+const remote          = electron.remote;
+const shell           = electron.shell;
+const handleContent   = remote.getGlobal('handleContent');
+const nodeStorage     = remote.getGlobal('nodeStorage');
+const rootNodeStorage = remote.getGlobal('rootNodeStorage');
+const projects        = remote.getGlobal('projects');
+const signals         = remote.getGlobal('signalEmitter');
+const utils           = remote.getGlobal('utils');
 let latestVersion;
 
 
@@ -26,9 +27,11 @@ export default class Sidebar extends React.Component {
             prompt: {
                 show: false,
             },
-            open: false
+            open: rootNodeStorage.getItem('sidebar') || false
         };
         projects.refreshProjectsTree();
+
+        console.log(rootNodeStorage.getItem('sidebar'));
     }
 
     createProject = (name) => {
@@ -73,6 +76,7 @@ export default class Sidebar extends React.Component {
     };
 
     toggleSidebar = () => {
+        rootNodeStorage.setItem('sidebar', !this.state.open);
         this.setState({open: !this.state.open});
     }
 
