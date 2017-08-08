@@ -23,11 +23,16 @@ $sidebarWidth: 300px;
     height: 100%;
     transition: max-width .2s ease;
 }
-.sidebar.open { max-width: 300px; }
+.sidebar.open {
+    max-width: $sidebarWidth;
+    border-image: linear-gradient(to bottom, $textColor 0%, $bgColor 100%);
+    border-right: 1px solid transparent;
+    border-image-slice: 1;
+}
 .sidebar.closed { max-width: 40px; }
 
 .sidebar-tree {
-    height: calc(100% - 40px - 40px);
+    height: calc(100% - 40px - 40px - 40px);
     overflow-y: auto;
     overflow-x: hidden;
     transition: opacity .2s ease;
@@ -125,18 +130,29 @@ $sidebarWidth: 300px;
 // ------------- File item -------------
 
 .file {
-    width: 300px;
+    width: 299px;
     line-height: $itemHeight;
     background-color: transparent;
     cursor: pointer;
     padding: 0 0 0 40px;
-    transition: background-color .2s ease, padding .2s ease;
+    transition: background-color .2s ease;
 }
 .file:hover { background-color: $highlightColor; }
 .file.active { background-color: $selectedColor; }
 
 .file.dummy { pointer-events: none; }
 .file.dummy .label { font-size: 12px; }
+
+.file.default {
+    padding: 0 0 0 15px;
+    line-height: 40px;
+}
+.file-wrapper.default {
+    opacity: 1;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.sidebar.closed .file-wrapper.default {opacity: 0;}
 
 // ------------- Title / new project button -------------
 
@@ -224,7 +240,7 @@ $sidebarWidth: 300px;
 
 .prompt {
     background-color: $bgDarkerColor;
-    width: $sidebarWidth;
+    width: 299px;
     overflow: hidden;
     text-align: center;
 }

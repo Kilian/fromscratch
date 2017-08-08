@@ -88,6 +88,7 @@ export default class FileItem extends React.Component {
         projects.removeScratch(this.props.data.project, this.props.data.scratch);
         this.props.refreshSidebar();
         this.props.refreshScratch();
+        signals.dispatch('adjust-file-item-state', 'Default');
     }
 
     hidePrompt = () => {
@@ -96,7 +97,8 @@ export default class FileItem extends React.Component {
     }
 
     onSignal = (currentActiveName) => {
-        this.setState({active: currentActiveName === this.name});
+        if(this._mounted)
+            this.setState({active: currentActiveName === this.name});
     }
 
     onClick = (ev) => {
@@ -109,8 +111,13 @@ export default class FileItem extends React.Component {
         this.setState({active: true});
     }
 
+    componentDidMount() {
+        this._mounted = true;
+    }
+
     componentWillUnmount() {
         signals.unsubscribe('adjust-file-item-state', this.onSignal);
+        this._mounted = false;
     }
 
     render() {

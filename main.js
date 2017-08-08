@@ -46,6 +46,9 @@ global.projects = {
     // another-project-name: [...]
   },
   refreshProjectsTree(){ // load directory tree from local storage
+    let rootPath = storageLocation + '/projects';
+    if(!fs.existsSync(rootPath)) fs.mkdirSync(rootPath);
+
     let projectsRaw = dirTree(storageLocation).children.filter(f => f.name === 'projects').shift().children.filter(f => f.type === 'directory');
 
     this.tree = projectsRaw.reduce((prev, curr, i, arr) => {

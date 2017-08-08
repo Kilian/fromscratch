@@ -118,9 +118,11 @@ export default class ProjectItem extends React.Component {
         this.setState({prompt: {show: true}});
     }
 
-    removeProject = (name) => {
+    removeProject = () => {
         this.hidePrompt();
         projects.removeProject(this.props.project);
+        if(projects.current.indexOf(this.props.project) > -1)
+            signals.dispatch('adjust-file-item-state', 'Default');
         this.props.refreshSidebar();
         this.props.refreshScratch();
     }
