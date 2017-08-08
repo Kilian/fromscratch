@@ -37,15 +37,17 @@ global.rootNodeStorage = new JSONStorage(storageLocation);
 global.nodeStorage = new JSONStorage(storageLocation);
 
 global.projects = {
-  // current: 'projects/project-name/scratch-name',
-  default: '',
-  current: '',
+  default: { project: '', scratch: 'Default', path: ''},
+  current: { project: '', scratch: '', path: '', },
   tree: {
     // project-name: [
     //   'scratch-name',
     //   ...
     // ],
     // another-project-name: [...]
+  },
+  openProjects: {
+    // project-name: true/false,
   },
   refreshProjectsTree(){ // load directory tree from local storage
     let rootPath = storageLocation + '/projects';
@@ -61,15 +63,31 @@ global.projects = {
     }, {});
   },
   setCurrentScratch(data, reset){
-    this.current = !reset ? 'projects/' + data.project + '/' + data.scratch : this.default;
-    global.handleContent.filename = storageLocation + '/' + this.current + '/content.txt';
-    global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current);
+    this.current = reset ? this.default : {
+      path: 'projects/' + data.project + '/' + data.scratch,
+      scratch: data.scratch,
+      project: data.project
+    };
+    global.rootNodeStorage.setItem('current', this.current);
+    global.handleContent.filename = storageLocation + '/' + this.current.path + '/content.txt';
+    global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current.path);
+
     if(!global.handleContent.read())
       global.handleContent.write(
         !reset
         ? 'Scratch for ' + data.project + ': ' + data.scratch
         : 'Default workspace'
       );
+  },
+  retrieveSavedState(){
+    this.openProjects = global.rootNodeStorage.getItem('openProjects') || [];
+
+    let data = global.rootNodeStorage.getItem('current');
+    this.current = data ? data : this.default;
+
+    let scratchPath = storageLocation + '/' + this.current.path;
+    global.nodeStorage = new JSONStorage(scratchPath);
+    return scratchPath + '/content.txt';
   },
   createProject(project){
     if(project === '') throw 'A new project has to have a valid name.';
@@ -188,30 +206,42 @@ global.projects = {
     if(project === '') throw 'To remove a project, the name has to be specified';
     let path = storageLocation + '/projects/' + project;
     fs.removeSync(path);
-    if(this.current.indexOf(project)>-1)
-      this.setCurrentScratch({project: 'default', scratch: 'default_scratch'}, true);
+    if(this.current.project === project)
+      this.setCurrentScratch(undefined, true);
   },
   removeScratch(project, scratch){
     if(project==='' || scratch==='') throw 'To remove a scratch, the name and containing project have to be specified';
     let path = storageLocation + '/projects/' + project + '/' + scratch;
     fs.removeSync(path);
-    if(this.current.indexOf(project)>-1 && this.current.indexOf(scratch)>-1)
-      this.setCurrentScratch({project: 'default', scratch: 'default_scratch'}, true);
+    if(this.current.project===project && this.current.scratch===scratch)
+      this.setCurrentScratch(undefined, true);
   },
   renameProject(project, newName){
     if(project==='' || newName==='' || project===newName) throw 'New project name has to be non empty and different than the current one.'
     let path = storageLocation + '/projects/';
     fs.renameSync(path + project, path + newName)
+    this.markProjectOpenness(project, false);
+    if(this.current.project===project)
+      this.setCurrentScratch(undefined, true);
   },
   renameScratch(project, scratch, newName){
     if(project==='' || scratch==='' || newName==='' || scratch===newName) throw 'New scratch name has to be non empty and different than the current one.'
     let path = storageLocation + '/projects/' + project + '/';
     fs.renameSync(path + scratch, path + newName);
+    if(this.current.project===project && this.current.scratch===scratch)
+      this.setCurrentScratch(undefined, true);
   },
+  markProjectOpenness(project, open){
+    if(open)
+      this.openProjects[project] = true;
+    else
+      delete this.openProjects[project];
+    global.rootNodeStorage.setItem('openProjects', this.openProjects);
+  }
 }
 
 global.handleContent = {
-  filename: storageLocation + '/' + (global.projects.current ? global.projects.current : global.projects.default) + '/content.txt',
+  filename: global.projects.retrieveSavedState(),
   write(content) {
     fs.writeFileSync(this.filename, content, 'utf8');
   },

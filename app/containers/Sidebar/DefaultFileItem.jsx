@@ -14,9 +14,9 @@ export default class DefaultFileItem extends React.Component {
         super();
         if(!props.dummy){
             this.state = {
-                active: true, // user lands at default scratch on start
+                active: false, // user lands at default scratch on start
             };
-            this.name = 'Default';
+            this.name = '' + '/' + 'Default';
 
             signals.subscribe('adjust-file-item-state', this.onSignal);
         }
@@ -34,6 +34,11 @@ export default class DefaultFileItem extends React.Component {
         this.props.refreshScratch();
         signals.dispatch('adjust-file-item-state', this.name);
         this.setState({active: true});
+    }
+
+    componentWillMount(){
+        if(projects.current.project==='' && projects.current.scratch===this.name)
+            signals.dispatch('adjust-file-item-state', this.name);
     }
 
     componentWillUnmount() {
