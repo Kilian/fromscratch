@@ -53,7 +53,7 @@ export default class Prompt extends React.Component {
         if (this.props.mode === 'input'){
             var input = (
                 <div className="prompt-input-wrapper">
-                    <input className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/>
+                    <input autoFocus className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/>
                     <p className="prompt-error">{this.state.validation.message}</p>
                 </div>
             );

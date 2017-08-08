@@ -25,7 +25,7 @@ global.utils = {
     let i = list.indexOf(name);
     if(i > -1) list.splice(i, 1);
     return list;
-  }
+  },
 };
 
 // data saving
@@ -36,6 +36,7 @@ const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFIL
 global.rootNodeStorage = new JSONStorage(storageLocation);
 global.nodeStorage = new JSONStorage(storageLocation);
 
+// a set of data structures and methods related to management of projects/scratches directory hierarchy
 global.projects = {
   default: { project: '', scratch: 'Default', path: ''},
   current: { project: '', scratch: '', path: '', },

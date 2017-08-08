@@ -64,7 +64,7 @@ $sidebarWidth: 300px;
 .sidebar-icon {
     position: relative;
     fill: $textColor;
-    top: 4px;
+    top: -3px;
     margin-right: 2px;
     transition: fill .2s ease;
 }
@@ -81,6 +81,7 @@ $sidebarWidth: 300px;
 .collapse-handle-container {
     text-align: center;
     transition: background-color .2s ease;
+    cursor: pointer;
 }
 .collapse-handle {
     position: relative;
@@ -88,7 +89,6 @@ $sidebarWidth: 300px;
     fill: $textColor;
     transition: transform .2s ease, fill .2s ease;
     will-change: transform;
-    cursor: pointer;
 }
 .sidebar.open .collapse-handle { transform: rotate(0deg); }
 .sidebar.closed .collapse-handle { transform: rotate(180deg); }
@@ -103,6 +103,7 @@ $sidebarWidth: 300px;
     word-break: break-all;
 }
 .file-items-container {
+    width: 299px;
     overflow: hidden;
     max-height: 0;
     transition: max-height .2s ease;
@@ -112,9 +113,17 @@ $sidebarWidth: 300px;
 .project-label {
     cursor: pointer;
     line-height: $itemHeight;
+    height: $itemHeight;
     padding: 0 0 0 15px;
     background-color: transparent;
     transition: background-color .2s ease;
+}
+.project-label .label {
+    max-width: calc(299px - 15px - 22px - 76px);
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .project-label:hover {
     background-color: $highlightColor;
@@ -133,6 +142,7 @@ $sidebarWidth: 300px;
 .file {
     width: 299px;
     line-height: $itemHeight;
+    height: $itemHeight;
     background-color: transparent;
     cursor: pointer;
     padding: 0 0 0 40px;
@@ -141,12 +151,24 @@ $sidebarWidth: 300px;
 .file:hover { background-color: $highlightColor; }
 .file.active { background-color: $selectedColor; }
 
+.file .label {
+    max-width: calc(299px - 40px - 22px - 54px - 22px);
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .file.dummy { pointer-events: none; }
 .file.dummy .label { font-size: 12px; }
 
 .file.default {
     padding: 0 0 0 15px;
     line-height: 40px;
+    height: 40px;
+}
+.file.default .sidebar-icon {
+    top: -10px;
 }
 .file-wrapper.default {
     opacity: 1;
@@ -174,6 +196,7 @@ $sidebarWidth: 300px;
 }
 .new-project-handle {
     margin-left: 5.4ch;
+    top: 4px;
 }
 
 .new-project-handle,
@@ -211,10 +234,14 @@ $sidebarWidth: 300px;
 
 .item-actions {
     opacity: 0;
+    top: 6px;
+    position: relative;
     float: right;
     padding: 0 5px;
     transition: opacity .2s ease;
     will-change: opacity;
+    line-height: $itemHeight;
+    height: $itemHeight;
 }
 .item-action {
     width: 2ch;
@@ -279,6 +306,9 @@ $sidebarWidth: 300px;
     vertical-align: middle;
     color: $textColor;
     transition: color .2s ease;
+}
+.prompt-button .sidebar-icon {
+    top: 4px;
 }
 .prompt-button.submit:hover { color: $okColor; }
 .prompt-button.submit:hover .sidebar-icon { fill: $okColor; }
