@@ -3,8 +3,6 @@
 $bgColor: rgba(0, 43, 54, 1);
 $textColor: rgba(130, 150, 150, 1);
 
-$sideBarWidth: 300px;
-
 @font-face {
   font-family: "FiraCode";
   src: url(../font/FiraCode-Regular.otf) format("opentype");
@@ -28,6 +26,7 @@ html {
 }
 
 body {
+  display: flex;
   height: 100%;
   min-height: 100%;
   font-family: "FiraCode";
@@ -43,20 +42,14 @@ body {
 }
 
 #react-root-sidebar {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: $sideBarWidth;
+  display: flex;
+  flex: 0 0 auto;
   background: $bgColor;
   color: $textColor;
 }
 #react-root-workspace {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: $sideBarWidth;
+  display: flex;
+  flex: 1;
   background: $bgColor;
   color: $textColor;
 }
