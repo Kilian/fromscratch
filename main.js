@@ -1,6 +1,7 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
 const fs = require('fs-extra');
+const path = require('path');
 const dirTree = require('directory-tree');
 const JSONStorage = require('node-localstorage').JSONStorage;
 const APPVERSION = require('./package.json').version;
@@ -27,9 +28,11 @@ global.utils = {
 };
 
 // data saving
-const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME']
-                  + '/.fromscratch'
-                  + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+const storageLocation = path.join(
+  process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'],
+  '.fromscratch',
+  (process.env.NODE_ENV === 'development' ? 'dev' : '')
+);
 
 global.rootNodeStorage = new JSONStorage(storageLocation);
 global.nodeStorage = new JSONStorage(storageLocation);
@@ -49,7 +52,7 @@ global.projects = {
     // project-name: true/false,
   },
   refreshProjectsTree(){ // load directory tree from local storage
-    let rootPath = storageLocation + '/projects';
+    let rootPath = path.join(storageLocation, 'projects');
     if(!fs.existsSync(rootPath)) fs.mkdirSync(rootPath);
 
     let projectsRaw = dirTree(storageLocation).children.filter(f => f.name === 'projects').shift().children.filter(f => f.type === 'directory');
@@ -63,13 +66,13 @@ global.projects = {
   },
   setCurrentScratch(data, reset){
     this.current = reset ? this.default : {
-      path: 'projects/' + data.project + '/' + data.scratch,
+      path: path.join('projects', data.project, data.scratch),
       scratch: data.scratch,
       project: data.project
     };
     global.rootNodeStorage.setItem('current', this.current);
-    global.handleContent.filename = storageLocation + '/' + this.current.path + '/content.txt';
-    global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current.path);
+    global.handleContent.filename = path.join(storageLocation, this.current.path, 'content.txt');
+    global.nodeStorage = new JSONStorage(path.join(storageLocation, this.current.path));
 
     if(!global.handleContent.read())
       global.handleContent.write(
@@ -84,46 +87,46 @@ global.projects = {
     let data = global.rootNodeStorage.getItem('current');
     this.current = data ? data : this.default;
 
-    let scratchPath = storageLocation + '/' + this.current.path;
+    let scratchPath = path.join(storageLocation, this.current.path);
     global.nodeStorage = new JSONStorage(scratchPath);
-    return scratchPath + '/content.txt';
+    return path.join(scratchPath, 'content.txt');
   },
   createProject(project){
     if(project === '') throw 'A new project has to have a valid name.';
-    let path = storageLocation + '/projects/' + project;
-    fs.mkdirSync(path);
+    let projectPath = path.join(storageLocation, 'projects', project);
+    fs.mkdirSync(projectPath);
   },
   createScratch(project, scratch){
     if(project==='' || scratch==='') throw 'Both project and scratch names are needed to create new scratch.';
-    let path = storageLocation + '/projects/' + project + '/' + scratch;
-    fs.mkdirSync(path);
+    let scratchPath = path.join(storageLocation, 'projects', project, scratch);
+    fs.mkdirSync(scratchPath);
   },
   removeProject(project){
     if(project === '') throw 'To remove a project, the name has to be specified';
-    let path = storageLocation + '/projects/' + project;
-    fs.removeSync(path);
+    let projectPath = path.join(storageLocation, 'projects', project);
+    fs.removeSync(projectPath);
     if(this.current.project === project)
       this.setCurrentScratch(undefined, true);
   },
   removeScratch(project, scratch){
     if(project==='' || scratch==='') throw 'To remove a scratch, the name and containing project have to be specified';
-    let path = storageLocation + '/projects/' + project + '/' + scratch;
-    fs.removeSync(path);
+    let scratchPath = path.join(storageLocation, 'projects', project, scratch);
+    fs.removeSync(scratchPath);
     if(this.current.project===project && this.current.scratch===scratch)
       this.setCurrentScratch(undefined, true);
   },
   renameProject(project, newName){
     if(project==='' || newName==='' || project===newName) throw 'New project name has to be non empty and different than the current one.'
-    let path = storageLocation + '/projects/';
-    fs.renameSync(path + project, path + newName)
+    let rootPath = path.join(storageLocation, 'projects');
+    fs.renameSync(path.join(rootPath, project), path.join(rootPath, newName));
     this.markProjectOpenness(project, false);
     if(this.current.project===project)
       this.setCurrentScratch(undefined, true);
   },
   renameScratch(project, scratch, newName){
     if(project==='' || scratch==='' || newName==='' || scratch===newName) throw 'New scratch name has to be non empty and different than the current one.'
-    let path = storageLocation + '/projects/' + project + '/';
-    fs.renameSync(path + scratch, path + newName);
+    let rootPath = path.join(storageLocation, 'projects', project);
+    fs.renameSync(path.join(rootPath, scratch), path.join(rootPath, newName));
     if(this.current.project===project && this.current.scratch===scratch)
       this.setCurrentScratch(undefined, true);
   },
