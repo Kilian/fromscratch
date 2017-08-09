@@ -103,7 +103,6 @@ export default class FromScratch extends React.Component {
       content: handleContent.read() || props.content,
       fontSize: rootNodeStorage.getItem('fontSize') || 1,
       lightTheme: rootNodeStorage.getItem('lightTheme') || false,
-      // lightTheme: true,
       folds: (() => {
         const foldItem = nodeStorage.getItem('folds');
         return (foldItem && foldItem.folds) ? foldItem.folds : [];
