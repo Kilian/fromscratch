@@ -18,14 +18,6 @@ export default class ItemActions extends React.Component {
     }
 
     render() {
-
-        if(this.props.mode === 'project')
-            var add = [(
-                <span className="item-action action-add" title={'Add new scratch'}>
-                    <Ionicon icon="ion-ios-plus-empty" fontSize="20px" className="sidebar-icon" />
-                </span>
-            )];
-
         return (
             <span className="item-actions">
                 {this.props.mode === 'project' && (

@@ -1,6 +1,5 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
-// const fs = require('fs');
 const fs = require('fs-extra');
 const dirTree = require('directory-tree');
 const JSONStorage = require('node-localstorage').JSONStorage;
