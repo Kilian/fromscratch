@@ -8,12 +8,8 @@ module.exports = {
       exclude: /node_modules/
     },
     {
-      test: /\.(otf)/,
+      test: /\.(otf|ttf)/,
       loader: 'url-loader'
-    },
-    {
-      test: /\.(woff|woff2|eot|ttf|svg)$/,
-      loader: 'file?name=fonts/[name].[ext]'
     },
     {
       test: /\.scss$/,
