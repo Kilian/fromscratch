@@ -91,6 +91,8 @@
     "react": "^16.0.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.0.0",
+    "fs-extra": "^4.0.1",
+    "path": "^0.12.7",
     "react-ionicons": "^1.5.7"
   }
 }

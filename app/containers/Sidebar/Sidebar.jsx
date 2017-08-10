@@ -75,11 +75,11 @@ export default class Sidebar extends React.Component {
     }
 
     componentWillMount() {
-        this.sidebarItems = Object.entries(projects.tree).map((item, i) => {
+        this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
             let key = (new Date).getTime() + ':' + i;
-            let open = projects.openProjects[item[0]];
+            let open = projects.openProjects[project];
             return (
-                <ProjectItem project={item[0]} scratches={item[1]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} open={open}/>
+                <ProjectItem project={project} scratches={projects.tree[project]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} open={open}/>
             );
         });
         if(!this.sidebarItems.length)
