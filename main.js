@@ -83,7 +83,7 @@ global.projects = {
       );
   },
   retrieveSavedState(){
-    this.openProjects = global.rootNodeStorage.getItem('openProjects') || [];
+    this.openProjects = global.rootNodeStorage.getItem('openProjects') || {};
 
     let data = global.rootNodeStorage.getItem('current');
     this.current = data ? data : this.default;
