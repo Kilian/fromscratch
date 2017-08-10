@@ -1,6 +1,4 @@
 
-@import "_roboto.scss";
-
 // colors
 $bgColor: rgba(0, 43, 54, 1);
 $bgDarkerColor: #00242C;
@@ -22,7 +20,9 @@ $sidebarWidth: 300px;
 // ------------- General -------------
 
 .sidebar {
-    font-family: 'Roboto';
+    font-family: 'Roboto-local';
+    font-weight: normal;
+    font-style: normal;
     -webkit-font-smoothing: antialiased;
     height: 100%;
     transition: max-width .2s ease;
