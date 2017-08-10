@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import FromScratch from './containers/FromScratch';
 import Sidebar from './containers/Sidebar/Sidebar';
+
+// import './assets/font/roboto/roboto.scss';
 import './assets/style/app.scss';
 
 const electron = require('electron');
