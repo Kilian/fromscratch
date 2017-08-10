@@ -67,7 +67,7 @@
     "eslint-plugin-react": "^6.10.3",
     "express": "^4.15.2",
     "extract-text-webpack-plugin": "^1.0.1",
-    "file-loader": "^0.11.1",
+    "file-loader": "^0.11.2",
     "minimist": "^1.2.0",
     "node-libs-browser": "^2.0.0",
     "node-sass": "^4.5.2",

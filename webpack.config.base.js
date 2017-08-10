@@ -12,6 +12,10 @@ module.exports = {
       loader: 'url-loader'
     },
     {
+      test: /\.(woff|woff2|eot|ttf|svg)$/,
+      loader: 'file?name=fonts/[name].[ext]'
+    },
+    {
       test: /\.scss$/,
       loaders: ['style', 'css', 'sass']
     },
