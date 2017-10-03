@@ -1,16 +1,16 @@
 /* eslint no-path-concat: 0, func-names:0 */
-const electron = require('electron')
-const fs = require('fs')
-const JSONStorage = require('node-localstorage').JSONStorage
-const APPVERSION = require('./package.json').version
-const https = require('https')
-const compareVersions = require('compare-versions')
-const minimist = require('minimist')
+const electron = require('electron');
+const fs = require('fs');
+const JSONStorage = require('node-localstorage').JSONStorage;
+const APPVERSION = require('./package.json').version;
+const https = require('https');
+const compareVersions = require('compare-versions');
+const minimist = require('minimist');
 
-const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron
+const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
 
 if (process.env.NODE_ENV === 'development') {
-  require('electron-debug')() // eslint-disable-line global-require
+  require('electron-debug')(); // eslint-disable-line global-require
 }
 
 const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
@@ -20,7 +20,7 @@ const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' 
     help: 'h',
     portable: 'p'
   }
-})
+});
 
 if (argv.help) {
   console.log(
@@ -30,75 +30,75 @@ if (argv.help) {
 Optional arguments:
   -p, --portable [DIRECTORY] run in portable mode, saving data in executable directory, or in alternate path
   -h, --help                 show this usage text.`
-  )
+  );
 
-  process.exit(0)
+  process.exit(0);
 }
 
 // get data location
 const dataLocation = () => {
   let defaultLocation = process.env[(process.platform === 'win32') ?
     'USERPROFILE' : 'HOME'] + '/.fromscratch' +
-    (process.env.NODE_ENV === 'development' ? '/dev' : '')
+    (process.env.NODE_ENV === 'development' ? '/dev' : '');
   if (typeof (argv.portable) !== 'undefined') {
     if (argv.portable !== '') {
-      defaultLocation = argv.portable
+      defaultLocation = argv.portable;
     } else {
-      defaultLocation = process.cwd() + '/userdata'
+      defaultLocation = process.cwd() + '/userdata';
     }
   }
-  app.setPath('userData', defaultLocation)
-  return defaultLocation
-}
+  app.setPath('userData', defaultLocation);
+  return defaultLocation;
+};
 
-const storageLocation = dataLocation()
+const storageLocation = dataLocation();
 
-global.nodeStorage = new JSONStorage(storageLocation)
+global.nodeStorage = new JSONStorage(storageLocation);
 
 global.handleContent = {
   filename: storageLocation + '/content.txt',
-  write (content) {
-    fs.writeFileSync(this.filename, content, 'utf8')
+  write(content) {
+    fs.writeFileSync(this.filename, content, 'utf8');
   },
-  read () {
-    return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false
+  read() {
+    return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
   }
-}
+};
 
 const installExtensions = () => {
   if (process.env.NODE_ENV === 'development') {
-    const installer = require('electron-devtools-installer') // eslint-disable-line global-require
+    const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
     const extensions = [
       'REACT_DEVELOPER_TOOLS'
-    ]
-    const forceDownload = !!process.env.UPGRADE_EXTENSIONS
+    ];
+    const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
     for (const name of extensions) {
       try {
-        installer.default(installer[name], forceDownload)
+        installer.default(installer[name], forceDownload);
       } catch (e) {} // eslint-disable-line
     }
   }
-}
+};
 
 // app init
-let mainWindow = null
+let mainWindow = null;
 app.on('window-all-closed', () => {
-  app.quit()
-})
+  app.quit();
+});
 
 app.on('ready', () => {
-  installExtensions()
+  installExtensions();
 
-  let windowState = {}
+  let windowState = {};
   try {
-    windowState = global.nodeStorage.getItem('windowstate') || {}
+    windowState = global.nodeStorage.getItem('windowstate') || {};
   } catch (err) {
-    console.log('empty window state file, creating new one.')
+    console.log('empty window state file, creating new one.');
   }
 
   ipc.on('writeContent', (event, arg) => {
-    global.handleContent.write(arg)
-  })
+    global.handleContent.write(arg);
+  });
 
   const windowSettings = {
     show: false,
@@ -112,96 +112,96 @@ app.on('ready', () => {
     backgroundColor: '#002b36',
     titleBarStyle: 'hidden',
     autoHideMenuBar: true
-  }
+  };
 
-  mainWindow = new BrowserWindow(windowSettings)
-  mainWindow.loadURL('file://' + __dirname + '/app/app.html')
+  mainWindow = new BrowserWindow(windowSettings);
+  mainWindow.loadURL('file://' + __dirname + '/app/app.html');
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
+    mainWindow.show();
     // Restore maximised state if it is set. not possible via options so we do it here
     if (windowState.isMaximized) {
-      mainWindow.maximize()
+      mainWindow.maximize();
     }
-    mainWindow.focus()
-    checkForUpdates()
-  })
+    mainWindow.focus();
+    checkForUpdates();
+  });
 
   const dispatchShortcutEvent = (ev) => {
-    mainWindow.webContents.send('executeShortCut', ev)
-  }
+    mainWindow.webContents.send('executeShortCut', ev);
+  };
 
   const registerShortcuts = () => {
-    gsc.register('CmdOrCtrl+0', () => { dispatchShortcutEvent('reset-font') })
-    gsc.register('CmdOrCtrl+-', () => { dispatchShortcutEvent('decrease-font') })
-    gsc.register('CmdOrCtrl+=', () => { dispatchShortcutEvent('increase-font') })
-    gsc.register('CmdOrCtrl+Plus', () => { dispatchShortcutEvent('increase-font') })
-    gsc.register('CmdOrCtrl+i', () => { dispatchShortcutEvent('toggle-theme') })
-    gsc.register('CmdOrCtrl+s', () => { dispatchShortcutEvent('save') })
-    gsc.register('CmdOrCtrl+w', () => { app.quit() })
-    gsc.register('CmdOrCtrl+q ', () => { app.quit() })
-    gsc.register('CmdOrCtrl+r ', () => { })
-    gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()) })
-  }
+    gsc.register('CmdOrCtrl+0', () => { dispatchShortcutEvent('reset-font'); });
+    gsc.register('CmdOrCtrl+-', () => { dispatchShortcutEvent('decrease-font'); });
+    gsc.register('CmdOrCtrl+=', () => { dispatchShortcutEvent('increase-font'); });
+    gsc.register('CmdOrCtrl+Plus', () => { dispatchShortcutEvent('increase-font'); });
+    gsc.register('CmdOrCtrl+i', () => { dispatchShortcutEvent('toggle-theme'); });
+    gsc.register('CmdOrCtrl+s', () => { dispatchShortcutEvent('save'); });
+    gsc.register('CmdOrCtrl+w', () => { app.quit(); });
+    gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
+    gsc.register('CmdOrCtrl+r ', () => { });
+    gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
+  };
 
-  registerShortcuts()
+  registerShortcuts();
 
   mainWindow.on('focus', () => {
-    registerShortcuts()
-  })
+    registerShortcuts();
+  });
 
   mainWindow.on('blur', () => {
-    gsc.unregisterAll()
-  })
+    gsc.unregisterAll();
+  });
 
   const storeWindowState = () => {
-    windowState.isMaximized = mainWindow.isMaximized()
+    windowState.isMaximized = mainWindow.isMaximized();
     if (!windowState.isMaximized) {
       // only update bounds if the window isn't currently maximized
-      windowState.bounds = mainWindow.getBounds()
+      windowState.bounds = mainWindow.getBounds();
     }
-    global.nodeStorage.setItem('windowstate', windowState)
+    global.nodeStorage.setItem('windowstate', windowState);
   };
 
   ['resize', 'move', 'close'].forEach((e) => {
     mainWindow.on(e, () => {
-      storeWindowState()
-    })
-  })
+      storeWindowState();
+    });
+  });
 
   const checkForUpdates = () => {
     https.get('https://fromscratch.rocks/latest.json?current=' + APPVERSION, (res) => {
-      let json = ''
+      let json = '';
       res.on('data', (d) => {
-        json += d
-      })
+        json += d;
+      });
 
       res.on('end', () => {
-        const latestVersion = JSON.parse(json).version
+        const latestVersion = JSON.parse(json).version;
         if (compareVersions(latestVersion, APPVERSION) === 1) {
-          global.latestVersion = latestVersion
-          dispatchShortcutEvent('show-update-msg')
+          global.latestVersion = latestVersion;
+          dispatchShortcutEvent('show-update-msg');
         }
-      })
+      });
     }).on('error', (e) => {
-      console.error(e)
-    })
-  }
+      console.error(e);
+    });
+  };
 
   let template = [{
     label: app.getName(),
     submenu: [
       {
         label: 'Website',
-        click () { shell.openExternal('https://fromscratch.rocks') }
+        click() { shell.openExternal('https://fromscratch.rocks'); }
       },
       {
         label: 'Support',
-        click () { shell.openExternal('https://github.com/Kilian/fromscratch/issues') }
+        click() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
       },
       {
         label: 'Check for updates (current: ' + APPVERSION + ')',
-        click () { shell.openExternal('https://github.com/Kilian/fromscratch/releases') }
+        click() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
       },
       {
         type: 'separator'
@@ -209,9 +209,9 @@ app.on('ready', () => {
       {
         label: 'Quit',
         accelerator: 'CmdOrCtrl+Q',
-        click () { app.quit() }
+        click() { app.quit(); }
       }]
-  }]
+  }];
 
   if (process.platform === 'darwin') {
     template = [{
@@ -219,15 +219,15 @@ app.on('ready', () => {
       submenu: [
         {
           label: 'About ' + app.getName(),
-          click () { shell.openExternal('https://fromscratch.rocks') }
+          click() { shell.openExternal('https://fromscratch.rocks'); }
         },
         {
           label: 'Support',
-          click () { shell.openExternal('https://github.com/Kilian/fromscratch/issues') }
+          click() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
         },
         {
           label: 'Check for updates (current: ' + APPVERSION + ')',
-          click () { shell.openExternal('https://github.com/Kilian/fromscratch/releases') }
+          click() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
         },
         {
           type: 'separator'
@@ -252,7 +252,7 @@ app.on('ready', () => {
         {
           label: 'Quit',
           accelerator: 'Command+Q',
-          click () { app.quit() }
+          click() { app.quit(); }
         }
       ]
     }, {
@@ -284,17 +284,17 @@ app.on('ready', () => {
         accelerator: 'CmdOrCtrl+A',
         selector: 'selectAll:'
       }]
-    }]
+    }];
   }
 
-  const menuBar = menu.buildFromTemplate(template)
-  menu.setApplicationMenu(menuBar)
+  const menuBar = menu.buildFromTemplate(template);
+  menu.setApplicationMenu(menuBar);
 
   mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+    mainWindow = null;
+  });
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.openDevTools()
+    mainWindow.openDevTools();
   }
-})
+});
