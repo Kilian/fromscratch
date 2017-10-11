@@ -5,6 +5,7 @@ const JSONStorage = require('node-localstorage').JSONStorage;
 const APPVERSION = require('./package.json').version;
 const https = require('https');
 const compareVersions = require('compare-versions');
+const minimist = require('minimist');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
 
@@ -12,10 +13,45 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
 }
 
-// data saving
-const storageLocation = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] +
-                        '/.fromscratch' +
-                        (process.env.NODE_ENV === 'development' ? '/dev' : '');
+const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
+  boolean: ['help'],
+  string: ['portable'],
+  alias: {
+    help: 'h',
+    portable: 'p'
+  }
+});
+
+if (argv.help) {
+  console.log(
+`Usage: fromscratch [OPTION]...
+ Default is to start fromscratch using home directory to save data.
+
+Optional arguments:
+  -p, --portable [DIRECTORY] run in portable mode, saving data in executable directory, or in alternate path
+  -h, --help                 show this usage text.`
+  );
+
+  process.exit(0);
+}
+
+// get data location
+const dataLocation = () => {
+  let defaultLocation = process.env[(process.platform === 'win32') ?
+    'USERPROFILE' : 'HOME'] + '/.fromscratch' +
+    (process.env.NODE_ENV === 'development' ? '/dev' : '');
+  if (typeof (argv.portable) !== 'undefined') {
+    if (argv.portable !== '') {
+      defaultLocation = argv.portable;
+    } else {
+      defaultLocation = process.cwd() + '/userdata';
+    }
+  }
+  app.setPath('userData', defaultLocation);
+  return defaultLocation;
+};
+
+const storageLocation = dataLocation();
 
 global.nodeStorage = new JSONStorage(storageLocation);
 
@@ -75,7 +111,7 @@ app.on('ready', () => {
     darkTheme: true,
     backgroundColor: '#002b36',
     titleBarStyle: 'hidden',
-    autoHideMenuBar: true,
+    autoHideMenuBar: true
   };
 
   mainWindow = new BrowserWindow(windowSettings);
@@ -217,7 +253,7 @@ app.on('ready', () => {
           label: 'Quit',
           accelerator: 'Command+Q',
           click() { app.quit(); }
-        },
+        }
       ]
     }, {
       label: 'Edit',
