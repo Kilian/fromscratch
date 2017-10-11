@@ -60,18 +60,30 @@ electron main.js
 npm run dev
 ```
 ### Command Line Arguments
-**Portable mode** allows the use of the application from an USB-stick or other portable storage device.  In this mode all the configuration information as well as the content text will be stored either in a userdata directory under the directory of the main application or in the directory pointed to using the ```--userdata``` parameter.  This also comes in handy to save all your data in a directory that is synced to cloud storage so it can be accessed from multiple devices.
+**Portable Mode**
+`-p, --portable`
+
+Lets you store all the files FromScratch generates in a specified location, such as a USB-stick or
+other portable storage device. In this mode both the configuration files as well as your text content will be stored in
+a "userdata" directory alongside the FromScratch executable, or when given a directory as an argument, will store
+the files there.
+
+You can also use this to store the FromScratch configuration files, and the text content, in a synced cloud storage
+folder.
 
 ```
-# run fromscratch in portable mode, saving data in spplication directory.
+# run FromScratch in portable mode, saving data in application directory.
 fromscratch --portable
 ```
 
 ```
-# run fromscratch in portable mode, saving data in custom directory.
-fromscratch --portable --userdata ~/fromscratch_data
+# run FromScratch in portable mode, saving data in custom directory.
+fromscratch --portable ~/fromscratch_data
 ```
+**help**
+`-h, --help`
 
+Prints help information
 
 ### FAQ
 *Where is my data saved?*

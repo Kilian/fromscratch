@@ -18,40 +18,36 @@ const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' 
   string: ['portable'],
   alias: {
     help: 'h',
-    portable: 'p'
-  }
+    portable: 'p',
+  },
 });
 
 if (argv.help) {
-  console.log(
-`Usage: fromscratch [OPTION]...
- Default is to start fromscratch using home directory to save data.
+  console.log(`Usage: fromscratch [OPTION]...
 
 Optional arguments:
   -p, --portable [DIRECTORY] run in portable mode, saving data in executable directory, or in alternate path
-  -h, --help                 show this usage text.`
-  );
+  -h, --help                 show this usage text.
+  `);
 
   process.exit(0);
 }
 
 // get data location
-const dataLocation = () => {
-  let defaultLocation = process.env[(process.platform === 'win32') ?
-    'USERPROFILE' : 'HOME'] + '/.fromscratch' +
-    (process.env.NODE_ENV === 'development' ? '/dev' : '');
-  if (typeof (argv.portable) !== 'undefined') {
-    if (argv.portable !== '') {
-      defaultLocation = argv.portable;
-    } else {
-      defaultLocation = process.cwd() + '/userdata';
-    }
+const getDataLocation = () => {
+  let location = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
+    + '/.fromscratch'
+    + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+
+  if (typeof argv.portable !== 'undefined') {
+    location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
+    app.setPath('userData', location);
   }
-  app.setPath('userData', defaultLocation);
-  return defaultLocation;
+
+  return location;
 };
 
-const storageLocation = dataLocation();
+const storageLocation = getDataLocation();
 
 global.nodeStorage = new JSONStorage(storageLocation);
 
