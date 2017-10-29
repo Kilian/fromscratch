@@ -130,8 +130,7 @@ export default class Sidebar extends React.Component {
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
 
                 <div className="new-project" onClick={this.showCreateProjectPrompt}>
-                    <span className="new-project-label">Create new project</span>
-                    <span className="sidebar-icon new-project-handle"><Plus width={20} height={20}/></span>
+                    <span className="sidebar-icon"><Plus width={20} height={20}/></span>
                     <span className="sidebar-title">Your projects</span>
                 </div>
 
@@ -143,9 +142,6 @@ export default class Sidebar extends React.Component {
                     {this.sidebarItems}
                 </div>
 
-                {/* <div className="collapse-handle-container" onClick={this.toggleSidebar}> */}
-                    {/* toggle handle */}
-                {/* </div> */}
             </div>
         );
     }

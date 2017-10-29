@@ -1,16 +1,4 @@
 
-// colors
-$bgColor: rgba(0, 43, 54, 1);
-$bgDarkerColor: #00242C;
-$highlightColor: #004454;
-$selectedColor: #1B4949;
-$errorColor: #D84315;
-$okColor: #2E7D32;
-$primaryColor: #1976D2;
-$inputColor: #173E47;
-$textColor: rgba(130, 150, 150, 1);
-$dimmedTextColor: rgba(130, 150, 150, 0.5);
-
 // measures
 $itemHeight: 26px;
 $sidebarWidth: 300px;
@@ -81,24 +69,6 @@ $sidebarWidth: 300px;
     margin-bottom: 10px;
 }
 
-.collapse-handle-container {
-    text-align: center;
-    transition: background-color .2s ease;
-    cursor: pointer;
-}
-.collapse-handle {
-    position: relative;
-    top: 2.5px;
-    fill: $textColor;
-    transition: transform .2s ease, fill .2s ease;
-    will-change: transform;
-}
-.sidebar.open .collapse-handle { transform: rotate(0deg); }
-.sidebar.closed .collapse-handle { transform: rotate(180deg); }
-
-.collapse-handle-container:hover { background-color: $highlightColor; }
-.collapse-handle-container:hover .collapse-handle { fill: $primaryColor; }
-
 // ------------- Project item -------------
 
 .project {
@@ -117,7 +87,7 @@ $sidebarWidth: 300px;
     cursor: pointer;
     line-height: $itemHeight;
     height: $itemHeight;
-    padding: 0 0 0 15px;
+    padding: 0 0 0 10px;
     white-space: nowrap;
     background-color: transparent;
     transition: background-color .2s ease;
@@ -130,7 +100,7 @@ $sidebarWidth: 300px;
     overflow: hidden;
 }
 .project-label:hover {
-    background-color: $highlightColor;
+    background-color: $bgFadedColor;
 }
 .project-label-icon svg {
     transform: rotate(0deg);
@@ -149,12 +119,12 @@ $sidebarWidth: 300px;
     height: $itemHeight;
     background-color: transparent;
     cursor: pointer;
-    padding: 0 0 0 40px;
+    padding: 0 0 0 35px;
     white-space: nowrap;
     transition: background-color .2s ease;
 }
-.file:hover { background-color: $highlightColor; }
-.file.active { background-color: $selectedColor; }
+.file:hover { background-color: $bgFadedColor; }
+.file.active { background-color: $bgColor; }
 
 .file .label {
     max-width: calc(299px - 40px - 22px - 54px - 22px);
@@ -168,7 +138,7 @@ $sidebarWidth: 300px;
 .file.dummy .label { font-size: 12px; }
 
 .file.default {
-    padding: 0 0 0 15px;
+    padding: 0 0 0 10px;
 }
 .file.default .sidebar-icon {
     margin-left: 2px;
@@ -186,7 +156,7 @@ $sidebarWidth: 300px;
 }
 
 .new-project-label {
-    padding: 0 0 0 15px;
+    padding: 0 0 0 10px;
     margin-left: -20ch;
     opacity: 0;
     transition: margin .2s ease, opacity .2s ease;
@@ -323,9 +293,6 @@ $sidebarWidth: 300px;
 .prompt.invalid .prompt-button.submit .sidebar-icon {
     fill: $dimmedTextColor;
 }
-.file.active {
-    background-color: $selectedColor;
-}
 
 // ------------- Title / new project button -------------
 
@@ -358,7 +325,7 @@ $sidebarWidth: 300px;
 }
 
 .new-project:hover {
-    background-color: $highlightColor;
+    background-color: $bgFadedColor;
 }
 .new-project:hover .new-project-label {
     opacity: 1;
