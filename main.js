@@ -28,12 +28,51 @@ global.utils = {
   },
 };
 
-// data saving
-const storageLocation = path.join(
-  process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'],
-  '.fromscratch',
-  (process.env.NODE_ENV === 'development' ? 'dev' : '')
-);
+// // data saving
+// const storageLocation = path.join(
+//   process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'],
+//   '.fromscratch',
+//   (process.env.NODE_ENV === 'development' ? 'dev' : '')
+// );
+
+const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
+  boolean: ['help'],
+  string: ['portable'],
+  alias: {
+    help: 'h',
+    portable: 'p',
+  },
+});
+
+if (argv.help) {
+  console.log(`Usage: fromscratch [OPTION]...
+
+Optional arguments:
+  -p, --portable [DIRECTORY] run in portable mode, saving data in executable directory, or in alternate path
+  -h, --help                 show this usage text.
+  `);
+
+  process.exit(0);
+}
+
+// get data location
+const getDataLocation = () => {
+  let location = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
+    + '/.fromscratch'
+    + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+
+  if (typeof argv.portable !== 'undefined') {
+    location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
+    app.setPath('userData', location);
+  }
+
+  return location;
+};
+
+const storageLocation = getDataLocation();
+
+global.nodeStorage = new JSONStorage(storageLocation);
+
 
 global.rootNodeStorage = new JSONStorage(storageLocation);
 global.nodeStorage = new JSONStorage(storageLocation);
@@ -104,111 +143,8 @@ global.projects = {
   },
   removeProject(project){
     if(project === '') throw 'To remove a project, the name has to be specified';
-    let path = storageLocation + '/projects/' + project;
-    fs.removeSync(path);
-    if(this.current.indexOf(project)>-1)
-      this.setCurrentScratch({project: 'default', scratch: 'default_scratch'}, true);
-  },
-  removeScratch(project, scratch){
-    if(project==='' || scratch==='') throw 'To remove a scratch, the name and containing project have to be specified';
-    let path = storageLocation + '/projects/' + project + '/' + scratch;
-    fs.removeSync(path);
-    if(this.current.indexOf(project)>-1 && this.current.indexOf(scratch)>-1)
-      this.setCurrentScratch({project: 'default', scratch: 'default_scratch'}, true);
-  },
-  renameProject(project, newName){
-    if(project==='' || newName==='' || project===newName) throw 'New project name has to be non empty and different than the current one.'
-    let path = storageLocation + '/projects/';
-    fs.renameSync(path + project, path + newName)
-  },
-  renameScratch(project, scratch, newName){
-    if(project==='' || scratch==='' || newName==='' || scratch===newName) throw 'New scratch name has to be non empty and different than the current one.'
-    let path = storageLocation + '/projects/' + project + '/';
-    fs.renameSync(path + scratch, path + newName);
-  },
-}
-
-const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
-  boolean: ['help'],
-  string: ['portable'],
-  alias: {
-    help: 'h',
-    portable: 'p',
-  },
-});
-
-if (argv.help) {
-  console.log(`Usage: fromscratch [OPTION]...
-
-Optional arguments:
-  -p, --portable [DIRECTORY] run in portable mode, saving data in executable directory, or in alternate path
-  -h, --help                 show this usage text.
-  `);
-
-  process.exit(0);
-}
-
-// get data location
-const getDataLocation = () => {
-  let location = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
-    + '/.fromscratch'
-    + (process.env.NODE_ENV === 'development' ? '/dev' : '');
-
-  if (typeof argv.portable !== 'undefined') {
-    location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
-    app.setPath('userData', location);
-  }
-
-  return location;
-};
-
-const storageLocation = getDataLocation();
-
-global.nodeStorage = new JSONStorage(storageLocation);
-
-// ---------------------------------------------------------------------------------------------------- Folder tree
-global.projects = {
-  // current: 'projects/project-name/scratch-name',
-  default: '',
-  current: undefined,
-  tree: {
-    // project-name: [
-    //   'scratch-name',
-    //   ...
-    // ],
-    // another-project-name: [...]
-  },
-  refreshProjectsTree(){ // load directory tree from local storage
-    let projectsRaw = dirTree(storageLocation).children.filter(f => f.name === 'projects').shift().children.filter(f => f.type === 'directory');
-
-    this.tree = projectsRaw.reduce((prev, curr, i, arr) => {
-      let projectName = curr.name;
-      let scratches = curr.children.map(data => data.name);
-      prev[projectName] = scratches;
-      return prev;
-    }, {});
-  },
-  setCurrentScratch(data, reset){
-    this.current = !reset ? 'projects/' + data.project + '/' + data.scratch : this.default;
-    global.handleContent.filename = storageLocation + '/' + this.current + '/content.txt';
-    global.nodeStorage = new JSONStorage(storageLocation + '/' + this.current);
-    if(!global.handleContent.read())
-      global.handleContent.write('Scratch for ' + data.project + ': ' + data.scratch)
-  },
-  createProject(project){
-    if(project === '') throw 'A new project has to have a valid name.';
-    let path = storageLocation + '/projects/' + project;
-    fs.mkdirSync(path);
-  },
-  createScratch(project, scratch){
-    if(project==='' || scratch==='') throw 'Both project and scratch names are needed to create new scratch.';
-    let path = storageLocation + '/projects/' + project + '/' + scratch;
-    fs.mkdirSync(path);
-  },
-  removeProject(project){
-    if(project === '') throw 'To remove a project, the name has to be specified';
-    let path = storageLocation + '/projects/' + project;
-    fs.removeSync(path);
+    let projectPath = path.join(storageLocation, 'projects', project);
+    fs.removeSync(projectPath);
     if(this.current.project === project)
       this.setCurrentScratch(undefined, true);
   },
@@ -242,6 +178,7 @@ global.projects = {
     global.rootNodeStorage.setItem('openProjects', this.openProjects);
   }
 }
+
 
 global.handleContent = {
   filename: global.projects.retrieveSavedState(),
