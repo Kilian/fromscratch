@@ -1,5 +1,5 @@
 import React from 'react';
-import Ionicon from 'react-ionicons'
+import { ChevronRight } from 'react-bytesize-icons';
 
 import FileItem from './FileItem'
 import Prompt from './Prompt'
@@ -169,7 +169,7 @@ export default class ProjectItem extends React.Component {
         return (
             <div className={this.parentClasses.join(' ')}>
                 <div className="project-label" onClick={this.onClick} title={this.props.project}>
-                    <Ionicon icon="ion-ios-arrow-right" fontSize="20px" className="sidebar-icon project-label-icon" />
+                    <span className="sidebar-icon project-label-icon"><ChevronRight width={20} height={20}/></span>
                     <span className="label">{this.props.project}</span>
                     <span className="actions"><ItemActions mode="project" methods={this.actionMethods} /></span>
                 </div>

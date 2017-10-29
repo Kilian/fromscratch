@@ -1,5 +1,5 @@
 import React from 'react';
-import Ionicon from 'react-ionicons'
+import { Checkmark, Close } from 'react-bytesize-icons';
 let latestVersion;
 
 
@@ -65,11 +65,11 @@ export default class Prompt extends React.Component {
                 {input}
                 <div className="prompt-footer">
                     <div className="prompt-button submit" onClick={this.onSubmit}>
-                        <Ionicon icon="ion-ios-checkmark-outline" fontSize="20px" className="sidebar-icon" />
+                        <span className="sidebar-icon"><Checkmark width={20} height={20}/></span>
                         {this.props.textData.submitDesc}
                     </div>
                     <div className="prompt-button cancel" onClick={this.onCancel}>
-                        <Ionicon icon="ion-ios-close-outline" fontSize="20px" className="sidebar-icon" />
+                        <span className="sidebar-icon"><Close width={20} height={20}/></span>
                         {this.props.textData.cancelDesc}
                     </div>
                 </div>

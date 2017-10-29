@@ -1,5 +1,5 @@
 import React from 'react';
-import Ionicon from 'react-ionicons'
+import { Plus, Edit, Trash } from 'react-bytesize-icons';
 let latestVersion;
 
 
@@ -22,14 +22,14 @@ export default class ItemActions extends React.Component {
             <span className="item-actions">
                 {this.props.mode === 'project' && (
                     <span className="item-action action-add" title={'Add new scratch'} onClick={(ev) => this.onClick(ev, 'add')}>
-                        <Ionicon icon="ion-ios-plus-empty" fontSize="20px" className="sidebar-icon" />
+                        <span className="sidebar-icon"><Plus width={20} height={20}/></span>
                     </span>
                 )}
                 <span className="item-action action-remove" title={'Remove ' + this.props.mode} onClick={(ev) => this.onClick(ev, 'remove')}>
-                    <Ionicon icon="ion-ios-trash-outline" fontSize="20px" className="sidebar-icon" />
+                    <span className="sidebar-icon"><Trash width={20} height={20}/></span>
                 </span>
                 <span className="item-action action-rename" title={'Rename ' + this.props.mode} onClick={(ev) => this.onClick(ev, 'rename')}>
-                    <Ionicon icon="ion-ios-at" fontSize="20px" className="sidebar-icon" />
+                <span className="sidebar-icon"><Edit width={20} height={20}/></span>
                 </span>
             </span>
         );

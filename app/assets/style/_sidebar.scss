@@ -74,8 +74,11 @@ $sidebarWidth: 300px;
     position: relative;
     fill: $textColor;
     top: -3px;
-    margin-right: 2px;
+    margin-right: 5px;
     transition: fill .2s ease;
+}
+.sidebar-icon svg {
+    padding: 2px;
 }
 
 .no-projects-message {
@@ -137,12 +140,12 @@ $sidebarWidth: 300px;
 .project-label:hover {
     background-color: $highlightColor;
 }
-.project-label-icon {
+.project-label-icon svg {
     transform: rotate(0deg);
     transition: transform .2s ease;
     will-change: transform;
 }
-.project.open .project-label-icon {
+.project.open .project-label-icon svg {
     transform: translateX(2px) rotate(90deg);
 }
 

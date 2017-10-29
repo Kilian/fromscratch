@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Ionicon from 'react-ionicons'
+import { Plus } from 'react-bytesize-icons';
 
 import ProjectItem from './ProjectItem'
 import Prompt from './Prompt'
@@ -100,7 +100,7 @@ export default class Sidebar extends React.Component {
 
                 <div className="new-project" onClick={this.showCreateProjectPrompt}>
                     <span className="new-project-label">Create new project</span>
-                    <Ionicon icon="ion-ios-plus-outline" fontSize="20px" className="sidebar-icon new-project-handle" />
+                    <span className="sidebar-icon new-project-handle"><Plus width={20} height={20}/></span>
                     <span className="sidebar-title">Your projects</span>
                 </div>
 
@@ -113,7 +113,7 @@ export default class Sidebar extends React.Component {
                 <DefaultFileItem refreshScratch={this.props.refreshScratch} />
 
                 <div className="collapse-handle-container" onClick={this.toggleSidebar}>
-                    <Ionicon icon="ion-ios-arrow-left" fontSize="35px" className="collapse-handle" />
+                    toggle handle
                 </div>
             </div>
         );

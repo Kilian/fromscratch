@@ -1,5 +1,5 @@
 import React from 'react';
-import Ionicon from 'react-ionicons'
+import { Compose } from 'react-bytesize-icons';
 
 const electron = require('electron');
 const remote   = electron.remote;
@@ -49,7 +49,7 @@ export default class DefaultFileItem extends React.Component {
         return (
             <div className="file-wrapper default">
                 <div className={'file default ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
-                    <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
+                    <span className="sidebar-icon"><Compose width={20} height={20}/></span>
                     <span className="label">Default workspace</span>
                 </div>
             </div>

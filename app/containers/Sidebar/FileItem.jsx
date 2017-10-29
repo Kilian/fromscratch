@@ -1,5 +1,5 @@
 import React from 'react';
-import Ionicon from 'react-ionicons'
+import { Compose } from 'react-bytesize-icons';
 
 import Prompt from './Prompt'
 import ItemActions from './ItemActions'
@@ -132,7 +132,7 @@ export default class FileItem extends React.Component {
             return (
                 <div className="file-wrapper">
                     <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick} title={this.name}>
-                        <Ionicon icon="ion-ios-compose-outline" fontSize="20px" className="sidebar-icon" />
+                        <span className="sidebar-icon"><Compose width={20} height={20}/></span>
                         <span className="label">{this.props.name}</span>
                         <span className="actions"><ItemActions mode="scratch" methods={this.actionMethods} /></span>
                     </div>
