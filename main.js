@@ -289,6 +289,7 @@ app.on('ready', () => {
     gsc.register('CmdOrCtrl+w', () => { app.quit(); });
     gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
     gsc.register('CmdOrCtrl+r ', () => { });
+    gsc.register('CmdOrCtrl+b', () => { dispatchShortcutEvent('toggle-sidebar') });
     gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
   };
 

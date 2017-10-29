@@ -29,11 +29,11 @@ $sidebarWidth: 300px;
     max-width: 300px;
 }
 .sidebar.closed {
-    max-width: 20px;
+    max-width: 0px;
 }
 
 .sidebar-tree {
-    height: calc(100% - 40px - 40px - 40px);
+    height: calc(100% - 40px);
     overflow-y: auto;
     overflow-x: hidden;
     transition: opacity .2s ease;
@@ -118,6 +118,7 @@ $sidebarWidth: 300px;
     line-height: $itemHeight;
     height: $itemHeight;
     padding: 0 0 0 15px;
+    white-space: nowrap;
     background-color: transparent;
     transition: background-color .2s ease;
 }
@@ -149,6 +150,7 @@ $sidebarWidth: 300px;
     background-color: transparent;
     cursor: pointer;
     padding: 0 0 0 40px;
+    white-space: nowrap;
     transition: background-color .2s ease;
 }
 .file:hover { background-color: $highlightColor; }

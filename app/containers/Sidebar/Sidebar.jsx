@@ -7,6 +7,7 @@ import Prompt from './Prompt'
 import DefaultFileItem from './DefaultFileItem'
 
 const electron        = require('electron');
+const ipc             = electron.ipcRenderer;
 const remote          = electron.remote;
 const rootNodeStorage = remote.getGlobal('rootNodeStorage');
 const projects        = remote.getGlobal('projects');
@@ -74,6 +75,36 @@ export default class Sidebar extends React.Component {
         this.setState({open: !this.state.open});
     }
 
+    componentDidMount() {
+        const editor = this.editor;
+        ipc.on('executeShortCut', (event, shortcut) => {
+            switch (shortcut) {
+                case 'toggle-sidebar':
+                    console.log('should toggle sidebar'); // TODO: feature
+                    this.toggleSidebar();
+                    break;
+                case 'reset-font':
+                    console.log('should reset font'); // TODO: feature
+                //   this.updateFont(0, true);
+                    break;
+                case 'increase-font':
+                    console.log('should reset font'); // TODO: feature
+                    // this.updateFont(0.1);
+                    break;
+                case 'decrease-font':
+                    console.log('should reset font'); // TODO: feature
+                    // this.updateFont(-0.1);
+                    break;
+                case 'toggle-theme':
+                    console.log('should update theme'); // TODO: feature
+                    // this.updateTheme();
+                    break;
+                default:
+                    break;
+          }
+       });
+    }
+
     componentWillMount() {
         this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
             let key = (new Date).getTime() + ':' + i;
@@ -112,9 +143,9 @@ export default class Sidebar extends React.Component {
                     {this.sidebarItems}
                 </div>
 
-                <div className="collapse-handle-container" onClick={this.toggleSidebar}>
-                    toggle handle
-                </div>
+                {/* <div className="collapse-handle-container" onClick={this.toggleSidebar}> */}
+                    {/* toggle handle */}
+                {/* </div> */}
             </div>
         );
     }
