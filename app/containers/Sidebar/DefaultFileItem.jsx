@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compose } from 'react-bytesize-icons';
+import { Compose, Plus } from 'react-bytesize-icons';
 
 const electron = require('electron');
 const remote   = electron.remote;
@@ -20,6 +20,7 @@ export default class DefaultFileItem extends React.Component {
 
             signals.subscribe('adjust-file-item-state', this.onSignal);
         }
+        console.log(props)
     }
 
     onSignal = (currentActiveName) => {
@@ -51,6 +52,14 @@ export default class DefaultFileItem extends React.Component {
                 <div className={'file default ' + (this.state.active ? 'active' : '')} onClick={this.onClick}>
                     <span className="sidebar-icon"><Compose width={20} height={20}/></span>
                     <span className="label">Default workspace</span>
+                    <span className="actions">
+                        <span className="item-actions">
+                            {/* <span className="item-action action-add" title={'Add new scratch'} onClick={this.props.createNewScreatch}> */}
+                            <span className="item-action action-add" title={'Add new scratch'} onClick={this.props.createNewProject}>
+                                <span className="sidebar-icon"><Plus width={20} height={20}/></span>
+                            </span>
+                        </span>
+                    </span>
                 </div>
             </div>
         );

@@ -35,7 +35,7 @@ export default class Sidebar extends React.Component {
         this.refreshSidebar();
     }
 
-    showCreateProjectPrompt = (ev) => {
+    showCreateProjectPrompt = () => {
         this.promptData = {
             instructions: 'Enter a unique name for new project',
             submitDesc: 'Create',
@@ -128,20 +128,11 @@ export default class Sidebar extends React.Component {
 
         return (
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
-
-                <div className="new-project" onClick={this.showCreateProjectPrompt}>
-                    <span className="sidebar-icon"><Plus width={20} height={20}/></span>
-                    <span className="sidebar-title">Your projects</span>
-                </div>
-
+                <DefaultFileItem refreshScratch={this.props.refreshScratch} createNewProject={this.showCreateProjectPrompt}/>
                 <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode="input" />
-
-                <DefaultFileItem refreshScratch={this.props.refreshScratch} />
-
                 <div className="sidebar-tree">
                     {this.sidebarItems}
                 </div>
-
             </div>
         );
     }

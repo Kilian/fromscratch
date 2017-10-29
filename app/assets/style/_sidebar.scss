@@ -3,10 +3,17 @@
 $itemHeight: 26px;
 $sidebarWidth: 300px;
 
+@font-face {
+    font-family: 'Roboto-local';
+    src: url(../font/Roboto-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 // ------------- General -------------
 
 .sidebar {
-    font-size: 14px;
+    font-family: 'Roboto';
     font-weight: normal;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
@@ -119,12 +126,7 @@ $sidebarWidth: 300px;
 
 // ------------- File item -------------
 
-.file-wrapper {
-    display: flex;
-}
-
 .file {
-    // width: 299px;
     display: flex;
     flex: 1 0;
     line-height: $itemHeight;
@@ -139,7 +141,7 @@ $sidebarWidth: 300px;
 .file.active { background-color: $bgColor; }
 
 .file .label {
-    max-width: calc(299px - 40px - 22px - 54px - 22px);
+    flex: 1 0;
     display: inline-block;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -157,63 +159,10 @@ $sidebarWidth: 300px;
     margin-right: 3px;
 }
 
-// ------------- Title / new project button -------------
-
-.new-project {
-    background-color: transparent;
-    cursor: pointer;
-    line-height: 40px;
-    white-space: nowrap;
-    transition: opacity .2s ease;
-}
-
-.new-project-label {
-    padding: 0 0 0 10px;
-    margin-left: -20ch;
-    opacity: 0;
-    transition: margin .2s ease, opacity .2s ease;
-    will-change: opacity;
-}
-.new-project-handle {
-    margin-left: 5.4ch;
-    top: 4px;
-}
-
-.new-project-handle,
-.sidebar-title {
-    opacity: 1;
-    transition: opacity .2s ease;
-    will-change: opacity;
-}
-.sidebar-title {
-    margin-left: 7ch;
-}
-
-.new-project:hover {
-    background-color: $highlightColor;
-}
-.new-project:hover .new-project-label {
-    opacity: 1;
-    margin-left: 7.5ch;
-}
-.new-project:hover .new-project-handle,
-.new-project:hover .sidebar-title {
-    opacity: 0;
-}
-
-.sidebar.open .new-project {
-    opacity: 1;
-    pointer-events: all;
-}
-.sidebar.closed .new-project {
-    opacity: 0;
-    pointer-events: none;
-}
-
 // ------------- Item actions -------------
 
 .project-label .actions,
- {
+.file .actions {
     flex: 0 0;
 }
 
@@ -236,6 +185,9 @@ $sidebarWidth: 300px;
     opacity: 0.7;
     transition: opacity .2s ease;
     will-change: opacity;
+}
+.item-action:hover {
+    opacity: 1;
 }
 
 .action-add:hover .sidebar-icon {fill: $okColor;}
@@ -308,135 +260,5 @@ $sidebarWidth: 300px;
 }
 .prompt.invalid .prompt-button.submit .sidebar-icon {
     fill: $dimmedTextColor;
-}
 
-// ------------- Title / new project button -------------
-
-.new-project {
-    background-color: transparent;
-    cursor: pointer;
-    line-height: 40px;
-    white-space: nowrap;
-}
-
-.new-project-label {
-    padding: 0 0 0 15px;
-    margin-left: -20ch;
-    opacity: 0;
-    transition: margin .2s ease, opacity .2s ease;
-    will-change: opacity;
-}
-.new-project-handle {
-    margin-left: 5.4ch;
-}
-
-.new-project-handle,
-.sidebar-title {
-    opacity: 1;
-    transition: opacity .2s ease;
-    will-change: opacity;
-}
-.sidebar-title {
-    margin-left: 7ch;
-}
-
-.new-project:hover {
-    background-color: $bgFadedColor;
-}
-.new-project:hover .new-project-label {
-    opacity: 1;
-    margin-left: 7.5ch;
-}
-.new-project:hover .new-project-handle,
-.new-project:hover .sidebar-title {
-    opacity: 0;
-}
-
-// ------------- Item actions -------------
-
-.item-actions {
-    opacity: 0;
-    float: right;
-    padding: 0 5px;
-    transition: opacity .2s ease;
-    will-change: opacity;
-}
-.item-action {
-    width: 2ch;
-    background-color: transparent;
-    overflow: hidden;
-    opacity: 0.7;
-    transition: opacity .2s ease;
-    will-change: opacity;
-}
-.item-action:hover {
-    opacity: 1;
-}
-
-.action-add:hover .sidebar-icon {fill: $okColor;}
-.action-remove:hover .sidebar-icon {fill: $errorColor;}
-.action-rename:hover .sidebar-icon {fill: $primaryColor;}
-
-.file:hover .item-actions,
-.project-label:hover .item-actions{
-    opacity: 1;
-}
-
-// ------------- Prompt -------------
-
-.prompt {
-    background-color: $bgDarkerColor;
-    width: 100%;
-    overflow: hidden;
-    text-align: center;
-}
-
-.prompt-instructions {
-    padding: 15px;
-}
-
-.prompt-input {
-    margin: 0 15px 5px 15px;
-    width: calc(100% - 40px);
-    background-color: $bgDarkerColor;
-    color: $textColor;
-    outline: none;
-    border: 0;
-    font-size: 16px;
-    border-bottom: 1px solid $inputColor;
-    transition: border-color .2s ease;
-}
-.prompt-input:focus {
-    border-bottom: 1px solid $dimmedTextColor;
-}
-.prompt-error {
-    color: $errorColor;
-    font-size: 14px;
-}
-
-.prompt-button {
-    display: inline-block;
-    width: 50%;
-    text-align: center;
-    line-height: 40px;
-    cursor: pointer;
-    background-color: $bgDarkerColor;
-    vertical-align: middle;
-    color: $textColor;
-    transition: color .2s ease;
-}
-.prompt-button.submit:hover { color: $okColor; }
-.prompt-button.submit:hover .sidebar-icon { fill: $okColor; }
-.prompt-button.cancel:hover { color: $primaryColor; }
-.prompt-button.cancel:hover .sidebar-icon { fill: $primaryColor; }
-
-.prompt.invalid .prompt-input {
-    border-bottom: 1px solid $errorColor;
-}
-.prompt.invalid .prompt-button.submit {
-    pointer-events: none;
-    color: $dimmedTextColor;
-}
-.prompt.invalid .prompt-button.submit .sidebar-icon {
-    fill: $dimmedTextColor;
 }
