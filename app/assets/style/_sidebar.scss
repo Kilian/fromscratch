@@ -167,18 +167,11 @@ $sidebarWidth: 300px;
 
 .file.default {
     padding: 0 0 0 15px;
-    line-height: 40px;
-    height: 40px;
 }
 .file.default .sidebar-icon {
-    top: -10px;
+    margin-left: 2px;
+    margin-right: 3px;
 }
-.file-wrapper.default {
-    opacity: 1;
-    transition: opacity .2s ease;
-    will-change: opacity;
-}
-.sidebar.closed .file-wrapper.default {opacity: 0;}
 
 // ------------- Title / new project button -------------
 

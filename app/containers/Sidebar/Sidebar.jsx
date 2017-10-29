@@ -106,11 +106,11 @@ export default class Sidebar extends React.Component {
 
                 <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode="input" />
 
+                <DefaultFileItem refreshScratch={this.props.refreshScratch} />
+
                 <div className="sidebar-tree">
                     {this.sidebarItems}
                 </div>
-
-                <DefaultFileItem refreshScratch={this.props.refreshScratch} />
 
                 <div className="collapse-handle-container" onClick={this.toggleSidebar}>
                     toggle handle
