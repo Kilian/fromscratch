@@ -80,7 +80,6 @@ export default class Sidebar extends React.Component {
         ipc.on('executeShortCut', (event, shortcut) => {
             switch (shortcut) {
                 case 'toggle-sidebar':
-                    console.log('should toggle sidebar'); // TODO: feature
                     this.toggleSidebar();
                     break;
                 case 'reset-font':
@@ -130,9 +129,7 @@ export default class Sidebar extends React.Component {
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
                 <DefaultFileItem refreshScratch={this.props.refreshScratch} createNewProject={this.showCreateProjectPrompt}/>
                 <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode="input" />
-                <div className="sidebar-tree">
-                    {this.sidebarItems}
-                </div>
+                {this.sidebarItems}
             </div>
         );
     }

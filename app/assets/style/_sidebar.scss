@@ -18,10 +18,12 @@ $sidebarWidth: 300px;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     height: 100%;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: overlay;
     transition: max-width .2s ease;
 }
 .sidebar.open {
-    // max-width: 300px;
     max-width: 400px;
     width: 400px;
 }
@@ -29,32 +31,23 @@ $sidebarWidth: 300px;
     max-width: 0px;
 }
 
-.sidebar-tree {
-    height: calc(100% - 40px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: opacity .2s ease;
-}
-
-.sidebar.closed .sidebar-tree {
-    opacity: 0;
-    pointer-events: none;
-}
-.sidebar.open .sidebar-tree {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.sidebar-tree::-webkit-scrollbar-track {
+.sidebar::-webkit-scrollbar-track {
 	background-color: transparent;
 }
-.sidebar-tree::-webkit-scrollbar {
-	width: 7px;
-	background-color: transparent;
+.sidebar::-webkit-scrollbar {
+	width: 6px;
+    background-color: transparent;
+    transition: width .2s ease;
 }
-.sidebar-tree::-webkit-scrollbar-thumb {
-	border-radius: 10px;
-	background-color: #004b5f;
+.sidebar::-webkit-scrollbar:hover {
+	width: 9px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: $bgFadedColor;
+    transition: background-color .2s ease;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: $highlightColor;
 }
 
 
@@ -85,7 +78,6 @@ $sidebarWidth: 300px;
     width: 100%;
 }
 .file-items-container {
-    // width: 299px;
     width: 100%;
     overflow: hidden;
     max-height: 0;
@@ -203,8 +195,7 @@ $sidebarWidth: 300px;
 // ------------- Prompt -------------
 
 .prompt {
-    background-color: $bgDarkerColor;
-    width: 299px;
+    background-color: $bgFadedColor;
     overflow: hidden;
     text-align: center;
 }
@@ -216,7 +207,7 @@ $sidebarWidth: 300px;
 .prompt-input {
     margin: 0 15px 5px 15px;
     width: calc(100% - 40px);
-    background-color: $bgDarkerColor;
+    background-color: $bgFadedColor;
     color: $textColor;
     outline: none;
     border: 0;
@@ -238,7 +229,7 @@ $sidebarWidth: 300px;
     text-align: center;
     line-height: 40px;
     cursor: pointer;
-    background-color: $bgDarkerColor;
+    background-color: $bgFadedColor;
     vertical-align: middle;
     color: $textColor;
     transition: color .2s ease;

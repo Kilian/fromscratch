@@ -17,10 +17,8 @@ export default class DefaultFileItem extends React.Component {
                 active: false, // user lands at default scratch on start
             };
             this.name = '' + '/' + 'Default';
-
             signals.subscribe('adjust-file-item-state', this.onSignal);
         }
-        console.log(props)
     }
 
     onSignal = (currentActiveName) => {
@@ -54,7 +52,6 @@ export default class DefaultFileItem extends React.Component {
                     <span className="label">Default workspace</span>
                     <span className="actions">
                         <span className="item-actions">
-                            {/* <span className="item-action action-add" title={'Add new scratch'} onClick={this.props.createNewScreatch}> */}
                             <span className="item-action action-add" title={'Add new scratch'} onClick={this.props.createNewProject}>
                                 <span className="sidebar-icon"><Plus width={20} height={20}/></span>
                             </span>
