@@ -15,19 +15,10 @@ $dimmedTextColor: rgba(130, 150, 150, 0.5);
 $itemHeight: 26px;
 $sidebarWidth: 300px;
 
-@font-face {
-    font-family: 'Roboto-local';
-    src: url(../font/Roboto-Regular.ttf) format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-// ------------- General -------------
-
 // ------------- General -------------
 
 .sidebar {
-    font-family: 'Roboto-local';
+    font-size: 14px;
     font-weight: normal;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
