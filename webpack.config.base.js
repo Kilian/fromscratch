@@ -18,8 +18,7 @@ module.exports = {
     {
       test: /\.css$/,
       loaders: ['style', 'css']
-    },
-    ]
+    }]
   },
   output: {
     path: path.join(__dirname, 'dist'),

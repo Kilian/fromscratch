@@ -10,8 +10,8 @@
   }
 
   .CodeMirror-line {
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding-left: 5vw;
+    padding-right: 5vw;
   }
 
   .CodeMirror-cursor {
@@ -62,7 +62,7 @@
   }
 
   .CodeMirror-gutter-elt {
-    left: 2.8rem !important;
+    left: 2.8vw !important;
   }
 
   .CodeMirror-overlayscroll-vertical div {
@@ -108,7 +108,7 @@
   color: rgba(255, 255, 255, 0.4);
   width: 100%;
   line-height: 2rem;
-  padding: 1rem calc(11px + 3rem) 0;
+  padding: 1rem calc(11px + 5vw) 0;
   position: fixed;
   top: -1rem;
 }
