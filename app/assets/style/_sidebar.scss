@@ -14,7 +14,9 @@ $sidebarWidth: 300px;
     transition: max-width .2s ease;
 }
 .sidebar.open {
-    max-width: 300px;
+    // max-width: 300px;
+    max-width: 400px;
+    width: 400px;
 }
 .sidebar.closed {
     max-width: 0px;
@@ -50,14 +52,13 @@ $sidebarWidth: 300px;
 
 
 .sidebar-icon {
-    position: relative;
     fill: $textColor;
-    top: -3px;
     margin-right: 5px;
     transition: fill .2s ease;
 }
 .sidebar-icon svg {
     padding: 2px;
+    vertical-align: middle;
 }
 
 .no-projects-message {
@@ -74,9 +75,11 @@ $sidebarWidth: 300px;
 .project {
     overflow: hidden;
     word-break: break-all;
+    width: 100%;
 }
 .file-items-container {
-    width: 299px;
+    // width: 299px;
+    width: 100%;
     overflow: hidden;
     max-height: 0;
     transition: max-height .2s ease;
@@ -91,9 +94,12 @@ $sidebarWidth: 300px;
     white-space: nowrap;
     background-color: transparent;
     transition: background-color .2s ease;
+
+    display: flex;
 }
 .project-label .label {
-    max-width: calc(299px - 15px - 22px - 76px);
+    flex: 1 0;
+
     display: inline-block;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -113,8 +119,14 @@ $sidebarWidth: 300px;
 
 // ------------- File item -------------
 
+.file-wrapper {
+    display: flex;
+}
+
 .file {
-    width: 299px;
+    // width: 299px;
+    display: flex;
+    flex: 1 0;
     line-height: $itemHeight;
     height: $itemHeight;
     background-color: transparent;
@@ -200,16 +212,22 @@ $sidebarWidth: 300px;
 
 // ------------- Item actions -------------
 
+.project-label .actions,
+ {
+    flex: 0 0;
+}
+
 .item-actions {
     opacity: 0;
-    top: 6px;
-    position: relative;
-    float: right;
     padding: 0 5px;
     transition: opacity .2s ease;
     will-change: opacity;
     line-height: $itemHeight;
     height: $itemHeight;
+    white-space: nowrap;
+    width: 100%;
+    max-width: 0;
+    display: inline-block;
 }
 .item-action {
     width: 2ch;
@@ -219,16 +237,14 @@ $sidebarWidth: 300px;
     transition: opacity .2s ease;
     will-change: opacity;
 }
-.item-action:hover {
-    opacity: 1;
-}
 
 .action-add:hover .sidebar-icon {fill: $okColor;}
 .action-remove:hover .sidebar-icon {fill: $errorColor;}
 .action-rename:hover .sidebar-icon {fill: $primaryColor;}
 
 .file:hover .item-actions,
-.project-label:hover .item-actions{
+.project-label:hover .item-actions {
+    max-width: 100%;
     opacity: 1;
 }
 
