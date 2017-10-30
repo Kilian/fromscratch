@@ -193,62 +193,58 @@ $sidebarWidth: 300px;
 
 // ------------- Prompt -------------
 
-.prompt {
-    background-color: $bgFadedColor;
-    overflow: hidden;
-    text-align: center;
-}
+// .prompt {
+//     background-color: $bgFadedColor;
+//     overflow: hidden;
+//     text-align: center;
+// }
 
-.prompt-instructions {
-    padding: 15px;
-}
+// .prompt-instructions {
+//     padding: 15px;
+// }
 
-.prompt-input {
-    margin: 0 15px 5px 15px;
-    width: calc(100% - 40px);
-    background-color: $bgFadedColor;
-    color: $textColor;
-    outline: none;
-    border: 0;
-    font-size: 16px;
-    border-bottom: 1px solid $inputColor;
-    transition: border-color .2s ease;
-}
-.prompt-input:focus {
-    border-bottom: 1px solid $dimmedTextColor;
-}
-.prompt-error {
-    color: $errorColor;
-    font-size: 14px;
-}
+// .prompt-input {
+//     margin: 0 15px 5px 15px;
+//     width: calc(100% - 40px);
+//     background-color: $bgFadedColor;
+//     color: $textColor;
+//     outline: none;
+//     border: 0;
+//     font-size: 16px;
+//     border-bottom: 1px solid $inputColor;
+//     transition: border-color .2s ease;
+// }
+// .prompt-input:focus {
+//     border-bottom: 1px solid $dimmedTextColor;
+// }
+// .prompt-error {
+//     color: $errorColor;
+//     font-size: 14px;
+// }
 
-.prompt-button {
-    display: inline-block;
-    width: 50%;
-    text-align: center;
-    line-height: 40px;
-    cursor: pointer;
-    background-color: $bgFadedColor;
-    vertical-align: middle;
-    color: $textColor;
-    transition: color .2s ease;
-}
-.prompt-button .sidebar-icon {
-    top: 4px;
-}
-.prompt-button.submit:hover { color: $okColor; }
-.prompt-button.submit:hover .sidebar-icon { fill: $okColor; }
-.prompt-button.cancel:hover { color: $primaryColor; }
-.prompt-button.cancel:hover .sidebar-icon { fill: $primaryColor; }
+// .prompt-button {
+//     display: inline-block;
+//     width: 50%;
+//     text-align: center;
+//     line-height: 40px;
+//     cursor: pointer;
+//     background-color: $bgFadedColor;
+//     vertical-align: middle;
+//     color: $textColor;
+//     transition: color .2s ease;
+// }
+// .prompt-button .sidebar-icon {
+//     top: 4px;
+// }
 
-.prompt.invalid .prompt-input {
-    border-bottom: 1px solid $errorColor;
-}
-.prompt.invalid .prompt-button.submit {
-    pointer-events: none;
-    color: $dimmedTextColor;
-}
-.prompt.invalid .prompt-button.submit .sidebar-icon {
-    fill: $dimmedTextColor;
+// .prompt.invalid .prompt-input {
+//     border-bottom: 1px solid $errorColor;
+// }
+// .prompt.invalid .prompt-button.submit {
+//     pointer-events: none;
+//     color: $dimmedTextColor;
+// }
+// .prompt.invalid .prompt-button.submit .sidebar-icon {
+//     fill: $dimmedTextColor;
+// }
 
-}

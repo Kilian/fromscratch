@@ -20,7 +20,8 @@ export default class ProjectItem extends React.Component {
         super();
         this.state = {
             open: false,  // if expanded (scratches inside are visible) or not
-            prompt: { show: false }
+            prompt: false,
+            newScratch: false
         };
         this.actionMethods = {
             add: this.showAddScratchPrompt,
@@ -41,18 +42,14 @@ export default class ProjectItem extends React.Component {
     }
 
     showAddScratchPrompt = () => {
-        this.promptData = {
-            instructions: 'Enter a name for new scratch. Has to be unique project-wide.',
-            submitDesc: 'Create',
-            cancelDesc: 'Cancel'
-        };
+        this.promptLabel = 'New';
         this.promptMethods = {
             onSubmit: this.createScratch,
             onCancel: this.hidePrompt,
             validateInput: this.validateScratchName
         };
         this.promptMode = 'input';
-        this.setState({prompt: {show: true}});
+        this.setState({prompt: true, newScratch: true});
     }
 
     validateScratchName = (value) => {
@@ -76,18 +73,15 @@ export default class ProjectItem extends React.Component {
     }
 
     showRenameProjectPrompt = () => {
-        this.promptData = {
-            instructions: 'Enter a new unique name for '+this.props.project+' project.',
-            submitDesc: 'Rename',
-            cancelDesc: 'Cancel'
-        };
+        this.promptLabel = 'Rename';
+        this.promptInitial = this.props.project;
         this.promptMethods = {
             onSubmit: this.renameProject,
             onCancel: this.hidePrompt,
             validateInput: this.validateProjectName
         };
         this.promptMode = 'input';
-        this.setState({prompt: {show: true}});
+        this.setState({prompt: true});
     }
 
     validateProjectName = (value) => {
@@ -110,17 +104,13 @@ export default class ProjectItem extends React.Component {
     }
 
     showRemoveProjectPrompt = () => {
-        this.promptData = {
-            instructions: 'Do you really want to remove project ' + this.props.project + '? This cannot be undone.',
-            submitDesc: 'Remove',
-            cancelDesc: 'Cancel'
-        };
+        this.promptLabel = `Remove ${this.props.project} with children?`;
         this.promptMethods = {
             onSubmit: this.removeProject,
             onCancel: this.hidePrompt,
         };
         this.promptMode = 'prompt';
-        this.setState({prompt: {show: true}});
+        this.setState({prompt: true});
     }
 
     removeProject = () => {
@@ -134,21 +124,21 @@ export default class ProjectItem extends React.Component {
     }
 
     hidePrompt = () => {
-        this.setState({prompt: {show: false}});
+        this.setState({prompt: false, newScratch: false});
     }
 
-    compensateForFilePrompt = (stretch) => {
-        let adjustment = 150;
-        let current = this.computedStyle.maxHeight;
-        this.computedStyle = {maxHeight: stretch ? (this.openHeight + adjustment) + 'px' : this.openHeight + 'px'};
-        this.forceUpdate();
-    }
+    // compensateForFilePrompt = (stretch) => {
+    //     let adjustment = 150;
+    //     let current = this.computedStyle.maxHeight;
+    //     this.computedStyle = {maxHeight: stretch ? (this.openHeight + adjustment) + 'px' : this.openHeight + 'px'};
+    //     this.forceUpdate();
+    // }
 
     componentWillMount() {
         this.scratches = this.props.scratches.map((scratch, i) => {
             let key = (new Date).getTime() + ':' + i;
             return (
-                <FileItem name={scratch} compensateHeight={this.compensateForFilePrompt} data={{ project: this.props.project, scratch: scratch }} key={key} />
+                <FileItem name={scratch} data={{ project: this.props.project, scratch: scratch }} key={key} />
             );
         });
         if(!this.scratches.length)
@@ -161,16 +151,30 @@ export default class ProjectItem extends React.Component {
     }
 
     render() {
-        return (
-            <div className={this.parentClasses.join(' ')}>
+        if (this.state.prompt && !this.state.newScratch) {
+            var labelDisplay = (
+                <Prompt indentLevel="project-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
+            );
+        } else {
+            var labelDisplay = (
                 <div className="project-label" onClick={this.onClick} title={this.props.project}>
                     <span className="sidebar-icon project-label-icon"><ChevronRight width={20} height={20}/></span>
                     <span className="label">{this.props.project}</span>
                     <span className="actions"><ItemActions mode="project" methods={this.actionMethods} /></span>
                 </div>
+            );
+        }
 
-                <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode={this.promptMode} />
+        if (this.state.prompt && this.state.newScratch) {
+            var newScratchPrompt = (
+                <Prompt indentLevel="project-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
+            );
+        }
 
+        return (
+            <div className={this.parentClasses.join(' ')}>
+                {labelDisplay}
+                {newScratchPrompt}
                 <div className="file-items-container" style={this.computedStyle}>
                     {this.scratches}
                 </div>

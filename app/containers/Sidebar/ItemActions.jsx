@@ -29,7 +29,7 @@ export default class ItemActions extends React.Component {
                     <span className="sidebar-icon"><Trash width={20} height={20}/></span>
                 </span>
                 <span className="item-action action-rename" title={'Rename ' + this.props.mode} onClick={(ev) => this.onClick(ev, 'rename')}>
-                <span className="sidebar-icon"><Edit width={20} height={20}/></span>
+                    <span className="sidebar-icon"><Edit width={20} height={20}/></span>
                 </span>
             </span>
         );

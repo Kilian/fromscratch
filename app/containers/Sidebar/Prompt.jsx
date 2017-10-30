@@ -13,7 +13,7 @@ export default class Prompt extends React.Component {
         this.state = {
             validation: {valid: true, message: ''}
         };
-        this.inputValue = '';
+        this.inputValue = props.initialValue ? props.initialValue : '';
     }
 
     onInputChange = (ev) => {
@@ -48,32 +48,36 @@ export default class Prompt extends React.Component {
     }
 
     render() {
-        if(!this.props.show) return null;
 
         if (this.props.mode === 'input'){
             var input = (
-                <div className="prompt-input-wrapper">
-                    <input autoFocus className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/>
-                    <p className="prompt-error">{this.state.validation.message}</p>
-                </div>
+                <input autoFocus className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/>
+            );
+
+            var errorMessage = (
+                <div className="prompt-error">{this.state.validation.message}</div>
+            );
+        } else {
+            var input = (
+                <span className="prompt-input-placeholder"></span>
             );
         }
 
         return (
-            <div className={'prompt ' + (this.state.validation.valid ? '' : 'invalid')}>
-                <p className="prompt-instructions">{this.props.textData.instructions}</p>
+            <div className={'prompt' + (this.state.validation.valid ? '' : ' invalid') + (this.props.indentLevel ? ' ' + this.props.indentLevel : '')}>
+                <span className="prompt-label">{this.props.label}</span>
                 {input}
-                <div className="prompt-footer">
-                    <div className="prompt-button submit" onClick={this.onSubmit}>
+                <span className="actions">
+                    <span className="item-action" onClick={this.onSubmit}>
                         <span className="sidebar-icon"><Checkmark width={20} height={20}/></span>
-                        {this.props.textData.submitDesc}
-                    </div>
-                    <div className="prompt-button cancel" onClick={this.onCancel}>
-                        <span className="sidebar-icon"><Close width={20} height={20}/></span>
-                        {this.props.textData.cancelDesc}
-                    </div>
-                </div>
+                    </span>
+                    <span className="item-action" onClick={this.onCancel}>
+                        <span className="sidebar-icon" ><Close width={20} height={20}/></span>
+                    </span>
+                </span>
+                {errorMessage}
             </div>
+
         );
     }
 }

@@ -19,9 +19,7 @@ export default class FileItem extends React.Component {
         if(!props.dummy){
             this.state = {
                 active: false,
-                prompt: {
-                    show: false
-                }
+                prompt: false
             };
             this.name = props.data.project + '/' + props.data.scratch;
 
@@ -45,19 +43,15 @@ export default class FileItem extends React.Component {
     }
 
     showRenameScratchPrompt = () => {
-        this.promptData = {
-            instructions: 'Enter a new name for '+this.props.data.scratch+' scratch.',
-            submitDesc: 'Rename',
-            cancelDesc: 'Cancel'
-        };
+        this.promptLabel = 'Rename';
+        this.promptInitial = this.props.data.scratch;
         this.promptMethods = {
             onSubmit: this.renameScratch,
             onCancel: this.hidePrompt,
             validateInput: this.validateScratchName
         };
         this.promptMode = 'input';
-        this.setState({prompt: {show: true}});
-        this.props.compensateHeight(true);
+        this.setState({prompt: true});
     }
 
     validateScratchName = (value) => {
@@ -80,18 +74,13 @@ export default class FileItem extends React.Component {
     }
 
     showRemoveScratchPrompt = () => {
-        this.promptData = {
-            instructions: 'Do you really want to remove scratch '+this.props.data.project+'/'+this.props.data.scratch+'? This cannot be undone.',
-            submitDesc: 'Remove',
-            cancelDesc: 'Cancel'
-        };
+        this.promptLabel = `Remove ${this.props.data.project}/${this.props.data.scratch}?`;
         this.promptMethods = {
             onSubmit: this.removeScratch,
             onCancel: this.hidePrompt,
         };
         this.promptMode = 'prompt';
-        this.setState({prompt: {show: true}});
-        this.props.compensateHeight(true);
+        this.setState({prompt: true});
     }
 
     removeScratch = () => {
@@ -103,8 +92,7 @@ export default class FileItem extends React.Component {
     }
 
     hidePrompt = () => {
-        this.setState({prompt: {show: false}});
-        this.props.compensateHeight(false);
+        this.setState({prompt: false});
     }
 
     onClick = (ev) => {
@@ -124,15 +112,18 @@ export default class FileItem extends React.Component {
                 </div>
             );
         } else {
-            return (
-                <div className="file-wrapper">
-                    <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick} title={this.name}>
-                        <span className="sidebar-icon"><Compose width={20} height={20}/></span>
-                        <span className="label">{this.props.name}</span>
-                        <span className="actions"><ItemActions mode="scratch" methods={this.actionMethods} /></span>
-                    </div>
-                    <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode={this.promptMode} />
+            const display = this.state.prompt ? (
+                <Prompt indentLevel="file-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
+            ) : (
+                <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick} title={this.name}>
+                    <span className="sidebar-icon"><Compose width={20} height={20}/></span>
+                    <span className="label">{this.props.name}</span>
+                    <span className="actions"><ItemActions mode="scratch" methods={this.actionMethods} /></span>
                 </div>
+            );
+
+            return (
+                <div className="file-wrapper"> {display} </div>
             );
         }
     }

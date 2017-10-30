@@ -21,9 +21,7 @@ export default class Sidebar extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            prompt: {
-                show: false,
-            },
+            prompt: false,
             open: rootNodeStorage.getItem('sidebar') || false
         };
         projects.refreshProjectsTree();
@@ -81,11 +79,11 @@ export default class Sidebar extends React.Component {
             onCancel: this.hidePrompt,
             validateInput: this.validateProjectName
         };
-        this.setState({prompt: {show: true}});
+        this.setState({prompt: true});
     }
 
     hidePrompt = (ev) => {
-        this.setState({prompt: {show: false}});
+        this.setState({prompt: false});
     }
 
     validateProjectName = (value) => {
@@ -111,10 +109,16 @@ export default class Sidebar extends React.Component {
     }
 
     render() {
+        if (this.state.prompt) {
+            var newProjectPrompt = (
+                <Prompt indentLevel="project-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode="input" />
+            );
+        }
+
         return (
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
                 <DefaultFileItem createNewProject={this.showCreateProjectPrompt}/>
-                <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode="input" />
+                {newProjectPrompt}
                 {this.sidebarItems}
             </div>
         );
