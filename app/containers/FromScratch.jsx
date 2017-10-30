@@ -100,7 +100,6 @@ export default class FromScratch extends React.Component {
     this.state = {
       content: handleContent.read() || props.content,
       fontSize: rootNodeStorage.getItem('fontSize') || 1,
-      lightTheme: rootNodeStorage.getItem('lightTheme') || false,
       folds: (() => {
         const foldItem = nodeStorage.getItem('folds');
         return (foldItem && foldItem.folds) ? foldItem.folds : [];
@@ -203,13 +202,6 @@ export default class FromScratch extends React.Component {
     this.setState({ fontSize: newFontsize });
   }
 
-  updateTheme() {
-    const lightTheme = !this.state.lightTheme;
-
-    rootNodeStorage.setItem('lightTheme', lightTheme);
-    this.setState({ lightTheme });
-  }
-
   handleChange = (newcontent) => {
     this.setState({ content: newcontent });
   }
@@ -228,11 +220,6 @@ export default class FromScratch extends React.Component {
   render() {
     const style = {
       fontSize: `${this.state.fontSize}rem`,
-      ...(this.state.lightTheme ?
-          { filter: 'invert(100%) hue-rotate(90deg) brightness(1.1) grayscale(75%)' }
-          :
-          {}
-      )
     };
     const options = {
       styleActiveLine: true,
