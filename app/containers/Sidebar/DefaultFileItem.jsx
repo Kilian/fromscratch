@@ -1,13 +1,12 @@
 import React from 'react';
 import { Compose, Plus } from 'react-bytesize-icons';
 
-const electron = require('electron');
-const remote   = electron.remote;
-const projects = remote.getGlobal('projects');
-const signals  = remote.getGlobal('signalEmitter');
-const utils    = remote.getGlobal('utils');
-
+const electron     = require('electron');
+const remote       = electron.remote;
+const projects     = remote.getGlobal('projects');
+const utils        = remote.getGlobal('utils');
 const eventEmitter = remote.getGlobal('eventEmitter');
+const ipc          = electron.ipcRenderer;
 let latestVersion;
 
 export default class DefaultFileItem extends React.Component {
@@ -19,35 +18,20 @@ export default class DefaultFileItem extends React.Component {
                 active: false, // user lands at default scratch on start
             };
             this.name = '' + '/' + 'Default';
-            signals.subscribe('adjust-file-item-state', this.onSignal);
         }
     }
 
-    onSignal = (currentActiveName) => {
-        this.setState({active: currentActiveName === this.name});
+    componentDidMount() {
+        ipc.on('adjustFileItemState', (ev, currentActiveName) => this.setState({active: currentActiveName === this.name}));
     }
 
     onClick = (ev) => {
         if (this.state.active)
             return;
-
         projects.setCurrentScratch(undefined, true);
-
-        eventEmitter.send('refreshWorkspace');
-        // this.props.refreshScratch();
-
-
-        signals.dispatch('adjust-file-item-state', this.name);
+        eventEmitter.emit('refreshWorkspace');
+        eventEmitter.emit('adjustFileItemState', this.name);
         this.setState({active: true});
-    }
-
-    componentWillMount(){
-        if(projects.current.project==='' && projects.current.scratch===this.name)
-            signals.dispatch('adjust-file-item-state', this.name);
-    }
-
-    componentWillUnmount() {
-        signals.unsubscribe('adjust-file-item-state', this.onSignal);
     }
 
     render() {

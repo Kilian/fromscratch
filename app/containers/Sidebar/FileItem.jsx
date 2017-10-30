@@ -4,17 +4,12 @@ import { Compose } from 'react-bytesize-icons';
 import Prompt from './Prompt'
 import ItemActions from './ItemActions'
 
-const electron = require('electron');
-
-const ipc = electron.ipcRenderer;
-
-const remote   = electron.remote;
-const projects = remote.getGlobal('projects');
-const signals  = remote.getGlobal('signalEmitter');
-const utils    = remote.getGlobal('utils');
-const limits   = remote.getGlobal('nameLengthTruncLimits');
-
+const electron     = require('electron');
+const remote       = electron.remote;
+const projects     = remote.getGlobal('projects');
+const utils        = remote.getGlobal('utils');
 const eventEmitter = remote.getGlobal('eventEmitter');
+const ipc          = electron.ipcRenderer;
 let latestVersion;
 
 export default class FileItem extends React.Component {
@@ -35,8 +30,11 @@ export default class FileItem extends React.Component {
                 rename: this.showRenameScratchPrompt,
             };
 
-            signals.subscribe('adjust-file-item-state', this.onSignal);
         }
+    }
+
+    componentDidMount() {
+        ipc.on('adjustFileItemState', (ev, currentActiveName) => this.setState({active: currentActiveName === this.name}));
     }
 
     showRenameScratchPrompt = () => {
@@ -94,7 +92,7 @@ export default class FileItem extends React.Component {
         projects.removeScratch(this.props.data.project, this.props.data.scratch);
         this.props.refreshSidebar();
         this.props.refreshScratch();
-        signals.dispatch('adjust-file-item-state', '/Default');
+        eventEmitter.emit('adjustFileItemState', '/Default');
     }
 
     hidePrompt = () => {
@@ -102,41 +100,23 @@ export default class FileItem extends React.Component {
         this.props.compensateHeight(false);
     }
 
-    onSignal = (currentActiveName) => {
-        if(this._mounted)
-            this.setState({active: currentActiveName === this.name});
-    }
-
     onClick = (ev) => {
         if (this.state.active)
             return;
-
         projects.setCurrentScratch(this.props.data);
-        // this.props.refreshScratch();
-
-        eventEmitter.send('refreshWorkspace');
-
-        signals.dispatch('adjust-file-item-state', this.name);
+        eventEmitter.emit('refreshWorkspace');
+        eventEmitter.emit('adjustFileItemState', this.name);
         this.setState({active: true});
     }
 
-    componentDidMount() {
-        this._mounted = true;
-    }
-
-    componentWillUnmount() {
-        signals.unsubscribe('adjust-file-item-state', this.onSignal);
-        this._mounted = false;
-    }
-
     render() {
-        if(this.props.dummy)
+        if(this.props.dummy) {
             return (
                 <div className="file dummy">
                     <span className="label">(empty)</span>
                 </div>
             );
-        else
+        } else {
             return (
                 <div className="file-wrapper">
                     <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick} title={this.name}>
@@ -147,5 +127,6 @@ export default class FileItem extends React.Component {
                     <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode={this.promptMode} />
                 </div>
             );
+        }
     }
 }

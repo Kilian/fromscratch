@@ -11,8 +11,8 @@ const ipc             = electron.ipcRenderer;
 const remote          = electron.remote;
 const rootNodeStorage = remote.getGlobal('rootNodeStorage');
 const projects        = remote.getGlobal('projects');
-const signals         = remote.getGlobal('signalEmitter');
 const utils           = remote.getGlobal('utils');
+const eventEmitter    = remote.getGlobal('eventEmitter');
 let latestVersion;
 
 
@@ -75,35 +75,6 @@ export default class Sidebar extends React.Component {
         this.setState({open: !this.state.open});
     }
 
-    componentDidMount() {
-        const editor = this.editor;
-        ipc.on('executeShortCut', (event, shortcut) => {
-            switch (shortcut) {
-                case 'toggle-sidebar':
-                    this.toggleSidebar();
-                    break;
-                case 'reset-font':
-                    console.log('should reset font'); // TODO: feature
-                //   this.updateFont(0, true);
-                    break;
-                case 'increase-font':
-                    console.log('should reset font'); // TODO: feature
-                    // this.updateFont(0.1);
-                    break;
-                case 'decrease-font':
-                    console.log('should reset font'); // TODO: feature
-                    // this.updateFont(-0.1);
-                    break;
-                case 'toggle-theme':
-                    console.log('should update theme'); // TODO: feature
-                    // this.updateTheme();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
-
     componentWillMount() {
         this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
             let key = (new Date).getTime() + ':' + i;
@@ -112,18 +83,28 @@ export default class Sidebar extends React.Component {
                 <ProjectItem project={project} scratches={projects.tree[project]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} open={open}/>
             );
         });
-        if(!this.sidebarItems.length)
+        if(!this.sidebarItems.length) {
             this.sidebarItems = (
                 <div className="no-projects-message">
                     <p>No projects to show yet.</p>
                 </div>
             );
+        }
+    }
 
-            setTimeout(() => signals.dispatch('adjust-file-item-state', projects.current.project + '/' + projects.current.scratch) , 500);
+    componentDidMount() {
+        eventEmitter.emit('adjustFileItemState', projects.current.project + '/' + projects.current.scratch)
+
+        ipc.on('executeShortCut', (event, shortcut) => {
+            switch (shortcut) {
+                case 'toggle-sidebar':
+                    this.toggleSidebar();
+                    break;
+            }
+        });
     }
 
     render() {
-
         return (
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
                 <DefaultFileItem refreshScratch={this.props.refreshScratch} createNewProject={this.showCreateProjectPrompt}/>

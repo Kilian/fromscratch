@@ -184,7 +184,7 @@ global.handleContent = {
 };
 
 global.eventEmitter = {
-  send: (ev, data) => mainWindow.webContents.send(ev, data)
+  emit: (ev, data) => mainWindow.webContents.send(ev, data)
 };
 
 // simple pub-sub mechanizm

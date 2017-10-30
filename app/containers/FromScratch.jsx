@@ -19,7 +19,7 @@ const remote = electron.remote;
 const shell = electron.shell;
 const handleContent = remote.getGlobal('handleContent');
 const rootNodeStorage = remote.getGlobal('rootNodeStorage');
-let nodeStorage = remote.getGlobal('nodeStorage');
+const nodeStorage = remote.getGlobal('nodeStorage');
 let latestVersion;
 
 const CmdOrCtrl = process.platform === 'darwin' ? 'Cmd-' : 'Ctrl-';
