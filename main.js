@@ -71,13 +71,10 @@ global.nodeStorage = new JSONStorage(storageLocation);
 global.projects = {
   default: { project: '', scratch: 'Default', path: ''},
   current: { project: '', scratch: '', path: '', },
-  tree: {
-    // project-name: [
-    //   'scratch-name',
-    //   ...
-    // ],
-    // another-project-name: [...]
-  },
+  tree: [
+    // {name: 'project-name', scratches: ['scratch-name-1', 'scratch-name-2', ...]},
+    // ...
+  ],
   openProjects: {
     // project-name: true/false,
   },
@@ -87,12 +84,11 @@ global.projects = {
 
     let projectsRaw = dirTree(storageLocation).children.filter(f => f.name === 'projects').shift().children.filter(f => f.type === 'directory');
 
-    this.tree = projectsRaw.reduce((prev, curr, i, arr) => {
-      let projectName = curr.name;
-      let scratches = curr.children.map(data => data.name);
-      prev[projectName] = scratches;
-      return prev;
-    }, {});
+    this.tree = projectsRaw.map((project) => {
+      const scratches = project.children.map(c => c.name);
+      return {name: project.name, scratches: scratches};
+    });
+
   },
   setCurrentScratch(data, reset){
     this.current = reset ? this.default : {

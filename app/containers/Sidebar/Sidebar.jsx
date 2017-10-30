@@ -28,11 +28,18 @@ export default class Sidebar extends React.Component {
     }
 
     componentWillMount() {
-        this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
+        // this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
+        //     let key = (new Date).getTime() + ':' + i;
+        //     let open = projects.openProjects[project];
+        //     return (
+        //         <ProjectItem project={project} scratches={projects.tree[project]} key={key} open={open}/>
+        //     );
+        // });
+        this.sidebarItems = projects.tree.map((project, i) => {
             let key = (new Date).getTime() + ':' + i;
-            let open = projects.openProjects[project];
+            let open = projects.openProjects[project.name];
             return (
-                <ProjectItem project={project} scratches={projects.tree[project]} key={key} open={open}/>
+                <ProjectItem project={project.name} scratches={project.scratches} key={key} open={open}/>
             );
         });
         if(!this.sidebarItems.length) {
@@ -92,7 +99,7 @@ export default class Sidebar extends React.Component {
         if(value === '')
             return { valid: false, message: 'You have to provide SOME name...' };
 
-        let duplicates = Object.keys(projects.tree).filter(p => p === value);
+        let duplicates = projects.tree.filter(p => p.name === value);
         if(duplicates.length)
             return {valid: false, message: 'Project name has to be unique.'};
 

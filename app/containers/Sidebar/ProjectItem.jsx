@@ -55,9 +55,14 @@ export default class ProjectItem extends React.Component {
         if(value === '')
             return { valid: false, message: 'You have to provide SOME name...' };
 
-        let duplicates = projects.tree[this.props.project].filter(s => s === value);
-        if (duplicates.length)
-            return { valid: false, message: 'Scratch name has to be unique project-wide.' };
+        for (const project of projects.tree) {
+            if (project.name === this.props.project) {
+                const duplicates = project.scratches.filter(s => s === value);
+                if (duplicates.length) {
+                    return { valid: false, message: 'Scratch name has to be unique project-wide.' };
+                }
+            }
+        }
 
         return { valid: true, message: '' };
     }
@@ -88,7 +93,7 @@ export default class ProjectItem extends React.Component {
         if(value === this.props.project)
             return { valid: false, message: 'You have to provide a different name...' };
 
-        let duplicates = Object.keys(projects.tree).filter(p => p === value);
+        let duplicates = projects.tree.filter(p => p.name === value);
         if(duplicates.length)
             return {valid: false, message: 'Project name has to be unique.'};
 

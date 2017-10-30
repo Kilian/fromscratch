@@ -59,9 +59,14 @@ export default class FileItem extends React.Component {
         if(value === this.props.data.scratch)
             return { valid: false, message: 'You have to provide a different name...' };
 
-        let duplicates = projects.tree[this.props.data.project].filter(s => s === value);
-        if (duplicates.length)
-            return { valid: false, message: 'Scratch name has to be unique project-wide.' };
+        for (const project of projects.tree) {
+            if (project.name === this.props.data.project) {
+                const duplicates = project.scratches.filter(s => s === value);
+                if (duplicates.length) {
+                    return { valid: false, message: 'Scratch name has to be unique project-wide.' };
+                }
+            }
+        }
 
         return { valid: true, message: '' };
     }
