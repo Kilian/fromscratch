@@ -58,9 +58,9 @@ $sidebarWidth: 300px;
 }
 .sidebar-icon svg {
     padding: 2px;
+    margin-bottom: 3px;
     vertical-align: middle;
 }
-
 .no-projects-message {
     padding: 15px;
     font-size: 14px;
@@ -69,7 +69,6 @@ $sidebarWidth: 300px;
 .no-projects-message p {
     margin-bottom: 10px;
 }
-
 // ------------- Project item -------------
 
 .project {

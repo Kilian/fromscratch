@@ -28,13 +28,6 @@ global.utils = {
   },
 };
 
-// // data saving
-// const storageLocation = path.join(
-//   process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'],
-//   '.fromscratch',
-//   (process.env.NODE_ENV === 'development' ? 'dev' : '')
-// );
-
 const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
   boolean: ['help'],
   string: ['portable'],
@@ -188,6 +181,10 @@ global.handleContent = {
   read() {
     return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
   }
+};
+
+global.eventEmitter = {
+  send: (ev, data) => mainWindow.webContents.send(ev, data)
 };
 
 // simple pub-sub mechanizm

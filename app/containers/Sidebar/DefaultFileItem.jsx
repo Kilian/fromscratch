@@ -6,6 +6,8 @@ const remote   = electron.remote;
 const projects = remote.getGlobal('projects');
 const signals  = remote.getGlobal('signalEmitter');
 const utils    = remote.getGlobal('utils');
+
+const eventEmitter = remote.getGlobal('eventEmitter');
 let latestVersion;
 
 export default class DefaultFileItem extends React.Component {
@@ -30,7 +32,11 @@ export default class DefaultFileItem extends React.Component {
             return;
 
         projects.setCurrentScratch(undefined, true);
-        this.props.refreshScratch();
+
+        eventEmitter.send('refreshWorkspace');
+        // this.props.refreshScratch();
+
+
         signals.dispatch('adjust-file-item-state', this.name);
         this.setState({active: true});
     }

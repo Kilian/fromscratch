@@ -97,8 +97,6 @@ export default class FromScratch extends React.Component {
   constructor(props) {
     super();
 
-    nodeStorage = remote.getGlobal('nodeStorage'); // refresh necessary to correctly read data stored on per-scratch basis
-
     this.state = {
       content: handleContent.read() || props.content,
       fontSize: rootNodeStorage.getItem('fontSize') || 1,
@@ -110,7 +108,6 @@ export default class FromScratch extends React.Component {
       mock: 'nosave',
       update: 'updater'
     };
-
   }
 
   componentDidMount() {

@@ -5,14 +5,40 @@ import Sidebar from './containers/Sidebar/Sidebar';
 import './assets/style/app.scss';
 
 const electron = require('electron');
-const remote = electron.remote;
-const signals = remote.getGlobal('signalEmitter');
-
-function refreshScratch(){
-    ReactDOM.unmountComponentAtNode(document.getElementById('react-root-workspace'));
-    ReactDOM.render(<FromScratch />, document.getElementById('react-root-workspace'));
-}
+const ipc = electron.ipcRenderer;
 
 window.location.hash = '/';
-ReactDOM.render(<Sidebar refreshScratch={refreshScratch}/>, document.getElementById('react-root-sidebar'));
-ReactDOM.render(<FromScratch />, document.getElementById('react-root-workspace'));
+
+
+class MainApp extends React.Component {
+
+    constructor() {
+        super();
+        this.workspaceKey = 1;
+    }
+
+    componentDidMount() {
+        ipc.on('refreshWorkspace', (event) => this.refreshWorkspace() );
+    }
+
+    refreshWorkspace() {
+        this.workspaceKey++;
+        this.forceUpdate();
+    }
+
+    render() {
+        return (
+            <div id="main-container">
+                <div id="sidebar-container">
+                    <Sidebar refreshScratch={this.refreshWorkspace.bind(this)}/>
+                </div>
+                <div id="workspace-container">
+                    <FromScratch key={this.workspaceKey}/>
+                </div>
+            </div>
+        );
+    }
+
+}
+
+ReactDOM.render(<MainApp />, document.getElementById('react-root'));

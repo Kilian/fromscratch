@@ -5,11 +5,16 @@ import Prompt from './Prompt'
 import ItemActions from './ItemActions'
 
 const electron = require('electron');
+
+const ipc = electron.ipcRenderer;
+
 const remote   = electron.remote;
 const projects = remote.getGlobal('projects');
 const signals  = remote.getGlobal('signalEmitter');
 const utils    = remote.getGlobal('utils');
 const limits   = remote.getGlobal('nameLengthTruncLimits');
+
+const eventEmitter = remote.getGlobal('eventEmitter');
 let latestVersion;
 
 export default class FileItem extends React.Component {
@@ -107,7 +112,10 @@ export default class FileItem extends React.Component {
             return;
 
         projects.setCurrentScratch(this.props.data);
-        this.props.refreshScratch();
+        // this.props.refreshScratch();
+
+        eventEmitter.send('refreshWorkspace');
+
         signals.dispatch('adjust-file-item-state', this.name);
         this.setState({active: true});
     }

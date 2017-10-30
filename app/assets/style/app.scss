@@ -39,13 +39,22 @@ body {
   -webkit-user-select: none;
 }
 
-#react-root-sidebar {
+#main-container {
+  position: absolute;
+  display: flex;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+#sidebar-container {
   display: flex;
   flex: 0 0 auto;
   background: $bgDarkerColor;
   color: $textColor;
 }
-#react-root-workspace {
+#workspace-container {
   display: flex;
   flex: 1;
   background: $bgColor;

@@ -100,8 +100,8 @@ export default class Sidebar extends React.Component {
                     break;
                 default:
                     break;
-          }
-       });
+            }
+        });
     }
 
     componentWillMount() {
@@ -115,8 +115,7 @@ export default class Sidebar extends React.Component {
         if(!this.sidebarItems.length)
             this.sidebarItems = (
                 <div className="no-projects-message">
-                    <p>Currently you have no projects.</p>
-                    <p>To create one, use the plus icon in the top left corner.</p>
+                    <p>No projects to show yet.</p>
                 </div>
             );
 
