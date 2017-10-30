@@ -32,8 +32,37 @@ export default class ProjectItem extends React.Component {
         this.parentClasses = ['project'];
     }
 
+    componentWillMount() {
+        this.scratches = this.props.scratches.map((scratch, i) => {
+            let key = (new Date).getTime() + ':' + i;
+            return (
+                <FileItem name={scratch} data={{ project: this.props.project, scratch: scratch }} key={key} />
+            );
+        });
+        if(!this.scratches.length)
+            this.scratches = [(
+                <FileItem dummy={true} key={(new Date).getTime() + ':0'}/>
+            )];
+
+        if(this.props.open === true)
+            this.onClick();
+
+        ipc.on('collapseAllProjects', this.closeProject);
+    }
+
+    componentWillUnmount() {
+        ipc.removeListener('collapseAllProjects', this.closeProject);
+    }
+
     onClick = (ev) => {
-        let shouldOpen = !this.state.open;
+        this.setOpenness(!this.state.open);
+    }
+
+    closeProject = () => {
+        this.setOpenness(false);
+    }
+
+    setOpenness = (shouldOpen) => {
         projects.markProjectOpenness(this.props.project, shouldOpen);
         this.openHeight = this.props.scratches.length ? (this.props.scratches.length * 26) : 26;
         this.parentClasses = shouldOpen ? utils.addClass(this.parentClasses, 'open') : utils.removeClass(this.parentClasses, 'open');
@@ -130,22 +159,6 @@ export default class ProjectItem extends React.Component {
         this.setState({prompt: false, newScratch: false});
         this.promptLabel = null;
         this.promptInitial = null;
-    }
-
-    componentWillMount() {
-        this.scratches = this.props.scratches.map((scratch, i) => {
-            let key = (new Date).getTime() + ':' + i;
-            return (
-                <FileItem name={scratch} data={{ project: this.props.project, scratch: scratch }} key={key} />
-            );
-        });
-        if(!this.scratches.length)
-            this.scratches = [(
-                <FileItem dummy={true} key={(new Date).getTime() + ':0'}/>
-            )];
-
-        if(this.props.open === true)
-            this.onClick();
     }
 
     render() {

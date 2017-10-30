@@ -257,6 +257,7 @@ app.on('ready', () => {
     gsc.register('CmdOrCtrl+r ', () => { });
     gsc.register('CmdOrCtrl+b', () => { dispatchShortcutEvent('toggle-sidebar') });
     gsc.register('CmdOrCtrl+h', () => { dispatchShortcutEvent('search-sidebar') });
+    gsc.register('CmdOrCtrl+u', () => { dispatchShortcutEvent('collapse-all-projects') });
     gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
   };
 

@@ -61,6 +61,9 @@ export default class Sidebar extends React.Component {
 
         ipc.on('executeShortCut', (event, shortcut) => {
             switch (shortcut) {
+                case 'collapse-all-projects':
+                    this.onCollapseAllProjects();
+                    break;
                 case 'toggle-sidebar':
                     this.toggleSidebar();
                     break;
@@ -145,6 +148,10 @@ export default class Sidebar extends React.Component {
         this.setState({open: !this.state.open});
     }
 
+    onCollapseAllProjects() {
+        eventEmitter.emit('collapseAllProjects');
+    }
+
     render() {
         if (this.state.prompt) {
             var newProjectPrompt = (
@@ -160,7 +167,7 @@ export default class Sidebar extends React.Component {
 
         return (
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
-                <DefaultFileItem createNewProject={this.showCreateProjectPrompt} search={this.toggleSearchPrompt}/>
+                <DefaultFileItem createNewProject={this.showCreateProjectPrompt} openSearch={this.toggleSearchPrompt} collapseAll={this.onCollapseAllProjects}/>
                 {searchPrompt}
                 {newProjectPrompt}
                 {this.sidebarItems}
