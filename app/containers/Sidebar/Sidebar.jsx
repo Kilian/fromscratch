@@ -29,6 +29,37 @@ export default class Sidebar extends React.Component {
         projects.refreshProjectsTree();
     }
 
+    componentWillMount() {
+        this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
+            let key = (new Date).getTime() + ':' + i;
+            let open = projects.openProjects[project];
+            return (
+                <ProjectItem project={project} scratches={projects.tree[project]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} open={open}/>
+            );
+        });
+        if(!this.sidebarItems.length) {
+            this.sidebarItems = (
+                <div className="no-projects-message">
+                    <p>No projects to show yet.</p>
+                </div>
+            );
+        }
+    }
+
+    componentDidMount() {
+        eventEmitter.emit('adjustFileItemState', projects.current.project + '/' + projects.current.scratch)
+
+        ipc.on('executeShortCut', (event, shortcut) => {
+            switch (shortcut) {
+                case 'toggle-sidebar':
+                    this.toggleSidebar();
+                    break;
+            }
+        });
+
+        ipc.on('refreshSidebar', () => this.refreshSidebar());
+    }
+
     createProject = (name) => {
         this.hidePrompt();
         projects.createProject(name);
@@ -75,39 +106,10 @@ export default class Sidebar extends React.Component {
         this.setState({open: !this.state.open});
     }
 
-    componentWillMount() {
-        this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
-            let key = (new Date).getTime() + ':' + i;
-            let open = projects.openProjects[project];
-            return (
-                <ProjectItem project={project} scratches={projects.tree[project]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} open={open}/>
-            );
-        });
-        if(!this.sidebarItems.length) {
-            this.sidebarItems = (
-                <div className="no-projects-message">
-                    <p>No projects to show yet.</p>
-                </div>
-            );
-        }
-    }
-
-    componentDidMount() {
-        eventEmitter.emit('adjustFileItemState', projects.current.project + '/' + projects.current.scratch)
-
-        ipc.on('executeShortCut', (event, shortcut) => {
-            switch (shortcut) {
-                case 'toggle-sidebar':
-                    this.toggleSidebar();
-                    break;
-            }
-        });
-    }
-
     render() {
         return (
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
-                <DefaultFileItem refreshScratch={this.props.refreshScratch} createNewProject={this.showCreateProjectPrompt}/>
+                <DefaultFileItem createNewProject={this.showCreateProjectPrompt}/>
                 <Prompt show={this.state.prompt.show} textData={this.promptData} methods={this.promptMethods} mode="input" />
                 {this.sidebarItems}
             </div>

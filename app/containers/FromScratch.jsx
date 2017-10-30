@@ -112,31 +112,7 @@ export default class FromScratch extends React.Component {
 
   componentDidMount() {
     const editor = this.editor;
-    ipc.on('executeShortCut', (event, shortcut) => {
-      switch (shortcut) {
-        case 'save':
-          this.showMockMessage();
-          break;
-        case 'reset-font':
-          this.updateFont(0, true);
-          break;
-        case 'increase-font':
-          this.updateFont(0.1);
-          break;
-        case 'decrease-font':
-          this.updateFont(-0.1);
-          break;
-        case 'toggle-theme':
-          this.updateTheme();
-          break;
-        case 'show-update-msg':
-          latestVersion = remote.getGlobal('latestVersion');
-          this.showUpdateMessage();
-          break;
-        default:
-          break;
-      }
-    });
+    ipc.on('executeShortCut', this.dispatchShortcutCallback);
 
     const cmInstance = editor.getCodeMirror();
     this.applyFolds(cmInstance);
@@ -153,6 +129,36 @@ export default class FromScratch extends React.Component {
   componentDidUpdate() {
     ipc.send('writeContent', this.state.content);
     this.updateFolds();
+  }
+
+  componentWillUnmount() {
+    ipc.removeListener('executeShortCut', this.dispatchShortcutCallback);
+  }
+
+  dispatchShortcutCallback = (ev, shortcut) => {
+    switch (shortcut) {
+      case 'save':
+        this.showMockMessage();
+        break;
+      case 'reset-font':
+        this.updateFont(0, true);
+        break;
+      case 'increase-font':
+        this.updateFont(0.1);
+        break;
+      case 'decrease-font':
+        this.updateFont(-0.1);
+        break;
+      case 'toggle-theme':
+        this.updateTheme();
+        break;
+      case 'show-update-msg':
+        latestVersion = remote.getGlobal('latestVersion');
+        this.showUpdateMessage();
+        break;
+      default:
+        break;
+    }
   }
 
   applyFolds(cm) {

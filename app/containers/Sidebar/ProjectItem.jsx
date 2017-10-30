@@ -5,12 +5,15 @@ import FileItem from './FileItem'
 import Prompt from './Prompt'
 import ItemActions from './ItemActions'
 
-const electron = require('electron');
-const remote   = electron.remote;
-const projects = remote.getGlobal('projects');
-const signals  = remote.getGlobal('signalEmitter');
-const utils    = remote.getGlobal('utils');
-const limits   = remote.getGlobal('nameLengthTruncLimits');
+const electron     = require('electron');
+const remote       = electron.remote;
+const projects     = remote.getGlobal('projects');
+
+const signals      = remote.getGlobal('signalEmitter');
+
+const utils        = remote.getGlobal('utils');
+const eventEmitter = remote.getGlobal('eventEmitter');
+const ipc          = electron.ipcRenderer;
 let latestVersion;
 
 
@@ -70,9 +73,9 @@ export default class ProjectItem extends React.Component {
         this.hidePrompt();
         projects.createScratch(this.props.project, name);
         projects.setCurrentScratch({project: this.props.project, scratch: name});
-        this.props.refreshSidebar();
-        this.props.refreshScratch();
-        setTimeout(()=>signals.dispatch('adjust-file-item-state', this.props.project + '/' + name), 200);
+        eventEmitter.emit('refreshSidebar');
+        eventEmitter.emit('refreshWorkspace');
+        setTimeout(() => eventEmitter.emit('adjustFileItemState', this.props.project + '/' + name), 200);
     }
 
     showRenameProjectPrompt = () => {
@@ -106,7 +109,7 @@ export default class ProjectItem extends React.Component {
     renameProject = (name) => {
         this.hidePrompt();
         projects.renameProject(this.props.project, name);
-        this.props.refreshSidebar();
+        eventEmitter.emit('refreshSidebar');
     }
 
     showRemoveProjectPrompt = () => {
@@ -125,19 +128,16 @@ export default class ProjectItem extends React.Component {
 
     removeProject = () => {
         this.hidePrompt();
-        if(projects.current.project === this.props.project)
-            signals.dispatch('adjust-file-item-state', '/Default');
+        if(projects.current.project === this.props.project) {
+            eventEmitter.emit('adjustFileItemState', '/Default');
+        }
         projects.removeProject(this.props.project);
-        this.props.refreshSidebar();
-        this.props.refreshScratch();
+        eventEmitter.emit('refreshSidebar');
+        eventEmitter.emit('refreshWorkspace');
     }
 
     hidePrompt = () => {
         this.setState({prompt: {show: false}});
-    }
-
-    truncName = (name) => {
-
     }
 
     compensateForFilePrompt = (stretch) => {
@@ -151,9 +151,7 @@ export default class ProjectItem extends React.Component {
         this.scratches = this.props.scratches.map((scratch, i) => {
             let key = (new Date).getTime() + ':' + i;
             return (
-                <FileItem name={scratch} compensateHeight={this.compensateForFilePrompt}
-                    refreshScratch={this.props.refreshScratch} refreshSidebar={this.props.refreshSidebar}
-                    data={{ project: this.props.project, scratch: scratch }} key={key} />
+                <FileItem name={scratch} compensateHeight={this.compensateForFilePrompt} data={{ project: this.props.project, scratch: scratch }} key={key} />
             );
         });
         if(!this.scratches.length)

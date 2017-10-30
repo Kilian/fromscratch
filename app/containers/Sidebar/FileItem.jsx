@@ -29,12 +29,19 @@ export default class FileItem extends React.Component {
                 remove: this.showRemoveScratchPrompt,
                 rename: this.showRenameScratchPrompt,
             };
-
         }
     }
 
     componentDidMount() {
-        ipc.on('adjustFileItemState', (ev, currentActiveName) => this.setState({active: currentActiveName === this.name}));
+        ipc.on('adjustFileItemState', this.setActiveState);
+    }
+
+    componentWillUnmount() {
+        ipc.removeListener('adjustFileItemState', this.setActiveState);
+    }
+
+    setActiveState = (ev, currentActiveName) => {
+        this.setState({active: currentActiveName === this.name});
     }
 
     showRenameScratchPrompt = () => {
@@ -69,7 +76,7 @@ export default class FileItem extends React.Component {
     renameScratch = (name) => {
         this.hidePrompt();
         projects.renameScratch(this.props.data.project, this.props.data.scratch, name);
-        this.props.refreshSidebar();
+        eventEmitter.emit('refreshSidebar');
     }
 
     showRemoveScratchPrompt = () => {
@@ -90,8 +97,8 @@ export default class FileItem extends React.Component {
     removeScratch = () => {
         this.hidePrompt();
         projects.removeScratch(this.props.data.project, this.props.data.scratch);
-        this.props.refreshSidebar();
-        this.props.refreshScratch();
+        eventEmitter.emit('refreshSidebar');
+        eventEmitter.emit('refreshWorkspace');
         eventEmitter.emit('adjustFileItemState', '/Default');
     }
 

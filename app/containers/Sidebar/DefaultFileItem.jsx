@@ -22,7 +22,15 @@ export default class DefaultFileItem extends React.Component {
     }
 
     componentDidMount() {
-        ipc.on('adjustFileItemState', (ev, currentActiveName) => this.setState({active: currentActiveName === this.name}));
+        ipc.on('adjustFileItemState', this.setActiveState);
+    }
+
+    componentWillUnmount() {
+        ipc.removeListener('adjustFileItemState', this.setActiveState);
+    }
+
+    setActiveState = (ev, currentActiveName) => {
+        this.setState({active: currentActiveName === this.name});
     }
 
     onClick = (ev) => {

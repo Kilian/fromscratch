@@ -15,6 +15,8 @@ class MainApp extends React.Component {
     constructor() {
         super();
         this.workspaceKey = 1;
+
+        ipc.setMaxListeners(Infinity); // for 'adjustFileItemState' channel - after all user can have as many scratches as he wishes
     }
 
     componentDidMount() {
