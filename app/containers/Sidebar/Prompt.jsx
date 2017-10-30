@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkmark, Close, Compose, ChevronRight } from 'react-bytesize-icons';
+import { Checkmark, Close, Compose, ChevronRight, Search } from 'react-bytesize-icons';
 let latestVersion;
 
 
@@ -18,7 +18,7 @@ export default class Prompt extends React.Component {
 
     onInputChange = (ev) => {
         this.inputValue = ev.target.value;
-        this.setState({validation: this.props.methods.validateInput(this.inputValue)});
+        this.setState({validation: this.props.methods.validateInput(ev.target.value)});
     }
 
     onCancel = (ev) => {
@@ -34,7 +34,7 @@ export default class Prompt extends React.Component {
                 return;
             }
             this.props.methods.onSubmit(this.inputValue);
-            this.inputValue = '';
+            if (!this.props.search) this.inputValue = '';
         } else {
             this.props.methods.onSubmit();
         }
@@ -48,14 +48,11 @@ export default class Prompt extends React.Component {
     }
 
     render() {
-        let input, errorMessage, label, levelIcon;
+        let input, errorMessage, label, levelIcon, actions;
 
         if (this.props.mode === 'input'){
-            input = (
-                <input autoFocus className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/>
-            );
-
-            errorMessage = ( <div className="prompt-error">{this.state.validation.message}</div> );
+            input = ( <input autoFocus className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/> );
+            // errorMessage = ( <div className="prompt-error">{this.state.validation.message}</div> );
         }
 
         if (this.props.label) {
@@ -68,11 +65,8 @@ export default class Prompt extends React.Component {
             levelIcon = ( <span className="sidebar-icon"><Compose width={20} height={20}/></span> );
         }
 
-        return (
-            <div className={'prompt' + (this.state.validation.valid ? '' : ' invalid') + (this.props.level ? ' ' + this.props.level : '')}>
-                {levelIcon}
-                {label}
-                {input}
+        if (!this.props.search) {
+            actions = (
                 <span className="actions">
                     <span className="item-actions">
                         <span className="item-action" onClick={this.onSubmit}>
@@ -83,6 +77,29 @@ export default class Prompt extends React.Component {
                         </span>
                     </span>
                 </span>
+            );
+        } else {
+            actions = (
+                <span className="actions">
+                    <span className="item-actions">
+                        <span className="item-action" onClick={this.onSubmit}>
+                            <span className="sidebar-icon submit-button"><Checkmark width={20} height={20}/></span>
+                        </span>
+                    </span>
+                </span>
+            );
+        }
+
+        if (this.props.search === true) {
+            levelIcon = ( <span className="sidebar-icon"><Search width={20} height={20}/></span> );
+        }
+
+        return (
+            <div className={'prompt' + (this.state.validation.valid ? '' : ' invalid') + (this.props.level ? ' ' + this.props.level : '')}>
+                {levelIcon}
+                {label}
+                {input}
+                {actions}
                 {/* {errorMessage} */}
             </div>
         );

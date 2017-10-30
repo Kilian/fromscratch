@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compose, Plus } from 'react-bytesize-icons';
+import { Compose, Plus, Search } from 'react-bytesize-icons';
 
 const electron     = require('electron');
 const remote       = electron.remote;
@@ -50,6 +50,9 @@ export default class DefaultFileItem extends React.Component {
                     <span className="label">Default workspace</span>
                     <span className="actions">
                         <span className="item-actions">
+                            <span className="item-action action-search" title={'Search projects / scratches'} onClick={this.props.search}>
+                                <span className="sidebar-icon"><Search width={20} height={20}/></span>
+                            </span>
                             <span className="item-action action-add" title={'Add new scratch'} onClick={this.props.createNewProject}>
                                 <span className="sidebar-icon"><Plus width={20} height={20}/></span>
                             </span>

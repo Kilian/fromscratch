@@ -22,20 +22,24 @@ export default class Sidebar extends React.Component {
         super();
         this.state = {
             prompt: false,
+            search: false,
+            searchValue: null,
             open: rootNodeStorage.getItem('sidebar') || false
         };
         projects.refreshProjectsTree();
     }
 
     componentWillMount() {
-        // this.sidebarItems = Object.keys(projects.tree).map((project, i) => {
-        //     let key = (new Date).getTime() + ':' + i;
-        //     let open = projects.openProjects[project];
-        //     return (
-        //         <ProjectItem project={project} scratches={projects.tree[project]} key={key} open={open}/>
-        //     );
-        // });
-        this.sidebarItems = projects.tree.map((project, i) => {
+
+        // if state.filterValue not null, filter items
+        console.log(this.state.searchValue);
+        let filteredProjects = this.state.searchValue === null || this.state.searchValue === '' ? projects.tree :
+            projects.tree.slice().map(p => {
+                p.scratches = p.scratches.filter(s => s.toLowerCase().includes(this.state.searchValue));
+                return p;
+            }).filter(p => p.scratches.length || p.name.toLowerCase().includes(this.state.searchValue));
+
+        this.sidebarItems = filteredProjects.map((project, i) => {
             let key = (new Date).getTime() + ':' + i;
             let open = projects.openProjects[project.name];
             return (
@@ -76,11 +80,7 @@ export default class Sidebar extends React.Component {
     }
 
     showCreateProjectPrompt = () => {
-        this.promptData = {
-            instructions: 'Enter a unique name for new project',
-            submitDesc: 'Create',
-            cancelDesc: 'Cancel'
-        };
+        this.hidePrompt();
         this.promptMethods = {
             onSubmit: this.createProject,
             onCancel: this.hidePrompt,
@@ -90,9 +90,11 @@ export default class Sidebar extends React.Component {
     }
 
     hidePrompt = (ev) => {
-        this.setState({prompt: false});
+        this.setState({prompt: false, search: false, searchValue: null});
         this.promptLabel = null;
         this.promptInitial = null;
+        this.promptMethods = {};
+        setTimeout(() => this.refreshSidebar(), 200);
     }
 
     validateProjectName = (value) => {
@@ -104,6 +106,25 @@ export default class Sidebar extends React.Component {
             return {valid: false, message: 'Project name has to be unique.'};
 
         return {valid: true, message: ''};
+    }
+
+    toggleSearchPrompt = () => {
+        if (this.state.search === true) {
+            this.hidePrompt();
+        } else {
+            this.hidePrompt();
+            this.promptMethods = {
+                validateInput: (val) => ({valid: true}),
+                onSubmit: this.filterItems
+            };
+            this.setState({search: true});
+        }
+    }
+
+    filterItems = (value) => {
+        this.state.searchValue = value.toLowerCase();
+        this.componentWillMount();
+        this.forceUpdate();
     }
 
     refreshSidebar = () => {
@@ -124,9 +145,16 @@ export default class Sidebar extends React.Component {
             );
         }
 
+        if (this.state.search) {
+            var searchPrompt = (
+                <Prompt level="project-level" search={true} methods={this.promptMethods} mode="input" />
+            );
+        }
+
         return (
             <div className={'sidebar ' + (this.state.open ? 'open' : 'closed')}>
-                <DefaultFileItem createNewProject={this.showCreateProjectPrompt}/>
+                <DefaultFileItem createNewProject={this.showCreateProjectPrompt} search={this.toggleSearchPrompt}/>
+                {searchPrompt}
                 {newProjectPrompt}
                 {this.sidebarItems}
             </div>
