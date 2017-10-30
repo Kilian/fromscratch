@@ -31,6 +31,8 @@ $sidebarWidth: 300px;
     max-width: 0px;
 }
 
+// ------------- Scroll -------------
+
 .sidebar::-webkit-scrollbar-track {
 	background-color: transparent;
 }
@@ -51,6 +53,8 @@ $sidebarWidth: 300px;
 }
 
 
+// ------------- Icons -------------
+
 .sidebar-icon {
     fill: $textColor;
     margin-right: 5px;
@@ -61,14 +65,15 @@ $sidebarWidth: 300px;
     margin-bottom: 3px;
     vertical-align: middle;
 }
+
+
 .no-projects-message {
     padding: 15px;
     font-size: 14px;
     text-align: center;
 }
-.no-projects-message p {
-    margin-bottom: 10px;
-}
+
+
 // ------------- Project item -------------
 
 .project {
@@ -85,6 +90,7 @@ $sidebarWidth: 300px;
 }
 
 .project-label {
+    display: flex;
     cursor: pointer;
     line-height: $itemHeight;
     height: $itemHeight;
@@ -92,12 +98,9 @@ $sidebarWidth: 300px;
     white-space: nowrap;
     background-color: transparent;
     transition: background-color .2s ease;
-
-    display: flex;
 }
 .project-label .label {
     flex: 1 0;
-
     display: inline-block;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -152,6 +155,7 @@ $sidebarWidth: 300px;
 
 // ------------- Item actions -------------
 
+.prompt .item-actions,
 .project-label .actions,
 .file .actions {
     flex: 0 0;
@@ -185,6 +189,7 @@ $sidebarWidth: 300px;
 .action-remove:hover .sidebar-icon {fill: $errorColor;}
 .action-rename:hover .sidebar-icon {fill: $primaryColor;}
 
+.prompt .item-actions,
 .file:hover .item-actions,
 .project-label:hover .item-actions {
     max-width: 100%;
@@ -193,58 +198,49 @@ $sidebarWidth: 300px;
 
 // ------------- Prompt -------------
 
-// .prompt {
-//     background-color: $bgFadedColor;
-//     overflow: hidden;
-//     text-align: center;
-// }
-
-// .prompt-instructions {
-//     padding: 15px;
-// }
-
-// .prompt-input {
-//     margin: 0 15px 5px 15px;
-//     width: calc(100% - 40px);
-//     background-color: $bgFadedColor;
-//     color: $textColor;
-//     outline: none;
-//     border: 0;
-//     font-size: 16px;
-//     border-bottom: 1px solid $inputColor;
-//     transition: border-color .2s ease;
-// }
-// .prompt-input:focus {
-//     border-bottom: 1px solid $dimmedTextColor;
-// }
-// .prompt-error {
-//     color: $errorColor;
-//     font-size: 14px;
-// }
-
-// .prompt-button {
-//     display: inline-block;
-//     width: 50%;
-//     text-align: center;
-//     line-height: 40px;
-//     cursor: pointer;
-//     background-color: $bgFadedColor;
-//     vertical-align: middle;
-//     color: $textColor;
-//     transition: color .2s ease;
-// }
-// .prompt-button .sidebar-icon {
-//     top: 4px;
-// }
-
-// .prompt.invalid .prompt-input {
-//     border-bottom: 1px solid $errorColor;
-// }
-// .prompt.invalid .prompt-button.submit {
-//     pointer-events: none;
-//     color: $dimmedTextColor;
-// }
-// .prompt.invalid .prompt-button.submit .sidebar-icon {
-//     fill: $dimmedTextColor;
-// }
-
+.prompt {
+    display: flex;
+    flex: 1 0;
+    line-height: $itemHeight;
+    height: $itemHeight;
+    background-color: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color .2s ease;
+}
+.prompt.project-level {
+    padding: 0 0 0 10px;
+}
+.prompt.file-level {
+    padding: 0 0 0 35px;
+}
+.prompt-label,
+.prompt-input,
+.prompt-input-placeholder {
+    flex: 1 0;
+}
+.prompt-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.prompt-input {
+    background-color: transparent;
+    color: $textColor;
+    outline: none;
+    border: 0;
+    font-size: 16px;
+    font-family: 'Roboto';
+    border-bottom: 1px solid $inputColor;
+    transition: border-color .2s ease;
+}
+.prompt-input:focus {
+    border-bottom: 1px solid $dimmedTextColor;
+}
+.prompt.invalid .prompt-input {
+    border-bottom: 1px solid $errorColor;
+}
+.prompt.invalid .submit-button {
+    pointer-events: none;
+    color: $dimmedTextColor;
+}

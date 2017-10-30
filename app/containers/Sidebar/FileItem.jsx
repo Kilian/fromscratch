@@ -43,7 +43,6 @@ export default class FileItem extends React.Component {
     }
 
     showRenameScratchPrompt = () => {
-        this.promptLabel = 'Rename';
         this.promptInitial = this.props.data.scratch;
         this.promptMethods = {
             onSubmit: this.renameScratch,
@@ -93,6 +92,8 @@ export default class FileItem extends React.Component {
 
     hidePrompt = () => {
         this.setState({prompt: false});
+        this.promptLabel = null;
+        this.promptInitial = null;
     }
 
     onClick = (ev) => {
@@ -113,7 +114,7 @@ export default class FileItem extends React.Component {
             );
         } else {
             const display = this.state.prompt ? (
-                <Prompt indentLevel="file-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
+                <Prompt level="file-level" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
             ) : (
                 <div className={'file ' + (this.state.active ? 'active' : '')} onClick={this.onClick} title={this.name}>
                     <span className="sidebar-icon"><Compose width={20} height={20}/></span>

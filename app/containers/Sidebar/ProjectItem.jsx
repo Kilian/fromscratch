@@ -42,7 +42,6 @@ export default class ProjectItem extends React.Component {
     }
 
     showAddScratchPrompt = () => {
-        this.promptLabel = 'New';
         this.promptMethods = {
             onSubmit: this.createScratch,
             onCancel: this.hidePrompt,
@@ -73,7 +72,6 @@ export default class ProjectItem extends React.Component {
     }
 
     showRenameProjectPrompt = () => {
-        this.promptLabel = 'Rename';
         this.promptInitial = this.props.project;
         this.promptMethods = {
             onSubmit: this.renameProject,
@@ -125,14 +123,9 @@ export default class ProjectItem extends React.Component {
 
     hidePrompt = () => {
         this.setState({prompt: false, newScratch: false});
+        this.promptLabel = null;
+        this.promptInitial = null;
     }
-
-    // compensateForFilePrompt = (stretch) => {
-    //     let adjustment = 150;
-    //     let current = this.computedStyle.maxHeight;
-    //     this.computedStyle = {maxHeight: stretch ? (this.openHeight + adjustment) + 'px' : this.openHeight + 'px'};
-    //     this.forceUpdate();
-    // }
 
     componentWillMount() {
         this.scratches = this.props.scratches.map((scratch, i) => {
@@ -153,7 +146,7 @@ export default class ProjectItem extends React.Component {
     render() {
         if (this.state.prompt && !this.state.newScratch) {
             var labelDisplay = (
-                <Prompt indentLevel="project-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
+                <Prompt level="project-level" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
             );
         } else {
             var labelDisplay = (
@@ -167,7 +160,7 @@ export default class ProjectItem extends React.Component {
 
         if (this.state.prompt && this.state.newScratch) {
             var newScratchPrompt = (
-                <Prompt indentLevel="project-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
+                <Prompt level="file-level" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode={this.promptMode} />
             );
         }
 

@@ -84,6 +84,8 @@ export default class Sidebar extends React.Component {
 
     hidePrompt = (ev) => {
         this.setState({prompt: false});
+        this.promptLabel = null;
+        this.promptInitial = null;
     }
 
     validateProjectName = (value) => {
@@ -111,7 +113,7 @@ export default class Sidebar extends React.Component {
     render() {
         if (this.state.prompt) {
             var newProjectPrompt = (
-                <Prompt indentLevel="project-indent" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode="input" />
+                <Prompt level="project-level" label={this.promptLabel} initialValue={this.promptInitial} methods={this.promptMethods} mode="input" />
             );
         }
 

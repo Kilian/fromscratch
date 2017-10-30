@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkmark, Close } from 'react-bytesize-icons';
+import { Checkmark, Close, Compose, ChevronRight } from 'react-bytesize-icons';
 let latestVersion;
 
 
@@ -41,43 +41,50 @@ export default class Prompt extends React.Component {
     }
 
     handleKey = (ev) => {
-        if(ev.keyCode == 13 && this.state.validation.valid)
+        if(ev.keyCode === 13 && this.state.validation.valid)
             this.onSubmit();
         else if(ev.keyCode === 27)
             this.onCancel();
     }
 
     render() {
+        let input, errorMessage, label, levelIcon;
 
         if (this.props.mode === 'input'){
-            var input = (
+            input = (
                 <input autoFocus className="prompt-input" type="text" value={this.inputValue} onChange={this.onInputChange} onKeyUp={this.handleKey}/>
             );
 
-            var errorMessage = (
-                <div className="prompt-error">{this.state.validation.message}</div>
-            );
-        } else {
-            var input = (
-                <span className="prompt-input-placeholder"></span>
-            );
+            errorMessage = ( <div className="prompt-error">{this.state.validation.message}</div> );
+        }
+
+        if (this.props.label) {
+            label = ( <span className="prompt-label">{this.props.label}</span> );
+        }
+
+        if (this.props.level === 'project-level') {
+            levelIcon = ( <span className="sidebar-icon project-label-icon"><ChevronRight width={20} height={20}/></span> );
+        } else if (this.props.level === 'file-level') {
+            levelIcon = ( <span className="sidebar-icon"><Compose width={20} height={20}/></span> );
         }
 
         return (
-            <div className={'prompt' + (this.state.validation.valid ? '' : ' invalid') + (this.props.indentLevel ? ' ' + this.props.indentLevel : '')}>
-                <span className="prompt-label">{this.props.label}</span>
+            <div className={'prompt' + (this.state.validation.valid ? '' : ' invalid') + (this.props.level ? ' ' + this.props.level : '')}>
+                {levelIcon}
+                {label}
                 {input}
                 <span className="actions">
-                    <span className="item-action" onClick={this.onSubmit}>
-                        <span className="sidebar-icon"><Checkmark width={20} height={20}/></span>
-                    </span>
-                    <span className="item-action" onClick={this.onCancel}>
-                        <span className="sidebar-icon" ><Close width={20} height={20}/></span>
+                    <span className="item-actions">
+                        <span className="item-action" onClick={this.onSubmit}>
+                            <span className="sidebar-icon submit-button"><Checkmark width={20} height={20}/></span>
+                        </span>
+                        <span className="item-action" onClick={this.onCancel}>
+                            <span className="sidebar-icon" ><Close width={20} height={20}/></span>
+                        </span>
                     </span>
                 </span>
-                {errorMessage}
+                {/* {errorMessage} */}
             </div>
-
         );
     }
 }
