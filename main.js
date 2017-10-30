@@ -256,6 +256,7 @@ app.on('ready', () => {
     gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
     gsc.register('CmdOrCtrl+r ', () => { });
     gsc.register('CmdOrCtrl+b', () => { dispatchShortcutEvent('toggle-sidebar') });
+    gsc.register('CmdOrCtrl+h', () => { dispatchShortcutEvent('search-sidebar') });
     gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
   };
 

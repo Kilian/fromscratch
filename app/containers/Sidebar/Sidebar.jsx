@@ -31,8 +31,6 @@ export default class Sidebar extends React.Component {
 
     componentWillMount() {
 
-        // if state.filterValue not null, filter items
-        console.log(this.state.searchValue);
         let filteredProjects = this.state.searchValue === null || this.state.searchValue === '' ? projects.tree :
             projects.tree.slice().map(p => {
                 p.scratches = p.scratches.filter(s => s.toLowerCase().includes(this.state.searchValue));
@@ -53,6 +51,7 @@ export default class Sidebar extends React.Component {
                 </div>
             );
         }
+
     }
 
     componentDidMount() {
@@ -63,6 +62,11 @@ export default class Sidebar extends React.Component {
                 case 'toggle-sidebar':
                     this.toggleSidebar();
                     break;
+                case 'search-sidebar':
+                    this.toggleSearchPrompt();
+                    break;
+                default:
+                    break;
             }
         });
 
@@ -71,6 +75,7 @@ export default class Sidebar extends React.Component {
 
     componentWillUnmount() {
         ipc.removeListener('refreshSidebar', this.refreshSidebar);
+        ipc.removeListener('executeShortCut', this.refreshSidebar);
     }
 
     createProject = (name) => {
