@@ -33,13 +33,15 @@ export default class Sidebar extends React.Component {
 
         let filteredProjects = this.state.searchValue === null || this.state.searchValue === '' ? projects.tree :
             projects.tree.slice().map(p => {
-                p.scratches = p.scratches.filter(s => s.toLowerCase().includes(this.state.searchValue));
-                return p;
-            }).filter(p => p.scratches.length || p.name.toLowerCase().includes(this.state.searchValue));
+                if (!p.name.toLowerCase().includes(this.state.searchValue)) {
+                    p.scratches = p.scratches.filter(s => s.toLowerCase().includes(this.state.searchValue));
+                }
+                return p.scratches.length ? p : null;
+            }).filter(p => p !== null);
 
         this.sidebarItems = filteredProjects.map((project, i) => {
             let key = (new Date).getTime() + ':' + i;
-            let open = projects.openProjects[project.name];
+            let open = this.state.search === true ? true : projects.openProjects[project.name];
             return (
                 <ProjectItem project={project.name} scratches={project.scratches} key={key} open={open}/>
             );
