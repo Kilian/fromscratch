@@ -32,7 +32,7 @@ class MainApp extends React.Component {
         return (
             <div id="main-container">
                 <div id="sidebar-container">
-                    <Sidebar refreshScratch={this.refreshWorkspace.bind(this)}/>
+                    <Sidebar/>
                 </div>
                 <div id="workspace-container">
                     <FromScratch key={this.workspaceKey}/>

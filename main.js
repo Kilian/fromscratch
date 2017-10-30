@@ -64,9 +64,6 @@ const getDataLocation = () => {
 
 const storageLocation = getDataLocation();
 
-global.nodeStorage = new JSONStorage(storageLocation);
-
-
 global.rootNodeStorage = new JSONStorage(storageLocation);
 global.nodeStorage = new JSONStorage(storageLocation);
 
@@ -172,7 +169,6 @@ global.projects = {
   }
 }
 
-
 global.handleContent = {
   filename: global.projects.retrieveSavedState(),
   write(content) {
@@ -185,30 +181,6 @@ global.handleContent = {
 
 global.eventEmitter = {
   emit: (ev, data) => mainWindow.webContents.send(ev, data),
-};
-
-
-// simple pub-sub mechanizm
-global.signalEmitter = {
-  _events: {
-    // eventName: [callback1, callback2, ...],
-    // ...
-  },
-  dispatch(event, data){
-    if(!this._events[event]) return; // no one is listening to this ev
-    for (var i = 0; i < this._events[event].length; i++)
-      this._events[event][i](data);
-  },
-  subscribe(event, callback){
-    if(!this._events[event]) this._events[event] = []; // new ev
-    this._events[event].push(callback);
-  },
-  unsubscribe(event, callback){
-    if(!this._events[event]) return; // can't unsubscribe from not existing ev
-    for(var i = 0; i < this._events[event].length; i++)
-      if(this._events[event][i] === callback)
-        this._events[event].splice(i, 1);
-  }
 };
 
 const installExtensions = () => {

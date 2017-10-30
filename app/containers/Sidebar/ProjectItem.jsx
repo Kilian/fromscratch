@@ -8,9 +8,6 @@ import ItemActions from './ItemActions'
 const electron     = require('electron');
 const remote       = electron.remote;
 const projects     = remote.getGlobal('projects');
-
-const signals      = remote.getGlobal('signalEmitter');
-
 const utils        = remote.getGlobal('utils');
 const eventEmitter = remote.getGlobal('eventEmitter');
 const ipc          = electron.ipcRenderer;

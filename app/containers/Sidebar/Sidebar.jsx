@@ -34,7 +34,7 @@ export default class Sidebar extends React.Component {
             let key = (new Date).getTime() + ':' + i;
             let open = projects.openProjects[project];
             return (
-                <ProjectItem project={project} scratches={projects.tree[project]} refreshScratch={this.props.refreshScratch} refreshSidebar={this.refreshSidebar} key={key} open={open}/>
+                <ProjectItem project={project} scratches={projects.tree[project]} key={key} open={open}/>
             );
         });
         if(!this.sidebarItems.length) {
@@ -57,7 +57,11 @@ export default class Sidebar extends React.Component {
             }
         });
 
-        ipc.on('refreshSidebar', () => this.refreshSidebar());
+        ipc.on('refreshSidebar', this.refreshSidebar);
+    }
+
+    componentWillUnmount() {
+        ipc.removeListener('refreshSidebar', this.refreshSidebar);
     }
 
     createProject = (name) => {
