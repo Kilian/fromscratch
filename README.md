@@ -89,7 +89,7 @@ Prints help information
 *Where is my data saved?*
 
 Your data is saved in a plain text file content.txt. On Mac and Linux, this file is saved in ~/.fromscratch. On Windows
-this file is saved in a directory called ".fromscratch" in your userprofile directory.  
+this file is saved in a directory called ".fromscratch" in your userprofile directory.
 
 *Can my data be saved in an alternate directory?*
 

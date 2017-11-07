@@ -18,6 +18,7 @@ const ipc = electron.ipcRenderer;
 const remote = electron.remote;
 const shell = electron.shell;
 const handleContent = remote.getGlobal('handleContent');
+const rootNodeStorage = remote.getGlobal('rootNodeStorage');
 const nodeStorage = remote.getGlobal('nodeStorage');
 let latestVersion;
 
@@ -98,8 +99,7 @@ export default class FromScratch extends React.Component {
 
     this.state = {
       content: handleContent.read() || props.content,
-      fontSize: nodeStorage.getItem('fontSize') || 1,
-      lightTheme: nodeStorage.getItem('lightTheme') || false,
+      fontSize: rootNodeStorage.getItem('fontSize') || 1,
       folds: (() => {
         const foldItem = nodeStorage.getItem('folds');
         return (foldItem && foldItem.folds) ? foldItem.folds : [];
@@ -111,31 +111,7 @@ export default class FromScratch extends React.Component {
 
   componentDidMount() {
     const editor = this.editor;
-    ipc.on('executeShortCut', (event, shortcut) => {
-      switch (shortcut) {
-        case 'save':
-          this.showMockMessage();
-          break;
-        case 'reset-font':
-          this.updateFont(0, true);
-          break;
-        case 'increase-font':
-          this.updateFont(0.1);
-          break;
-        case 'decrease-font':
-          this.updateFont(-0.1);
-          break;
-        case 'toggle-theme':
-          this.updateTheme();
-          break;
-        case 'show-update-msg':
-          latestVersion = remote.getGlobal('latestVersion');
-          this.showUpdateMessage();
-          break;
-        default:
-          break;
-      }
-    });
+    ipc.on('executeShortCut', this.dispatchShortcutCallback);
 
     const cmInstance = editor.getCodeMirror();
     this.applyFolds(cmInstance);
@@ -152,6 +128,36 @@ export default class FromScratch extends React.Component {
   componentDidUpdate() {
     ipc.send('writeContent', this.state.content);
     this.updateFolds();
+  }
+
+  componentWillUnmount() {
+    ipc.removeListener('executeShortCut', this.dispatchShortcutCallback);
+  }
+
+  dispatchShortcutCallback = (ev, shortcut) => {
+    switch (shortcut) {
+      case 'save':
+        this.showMockMessage();
+        break;
+      case 'reset-font':
+        this.updateFont(0, true);
+        break;
+      case 'increase-font':
+        this.updateFont(0.1);
+        break;
+      case 'decrease-font':
+        this.updateFont(-0.1);
+        break;
+      case 'toggle-theme':
+        this.updateTheme();
+        break;
+      case 'show-update-msg':
+        latestVersion = remote.getGlobal('latestVersion');
+        this.showUpdateMessage();
+        break;
+      default:
+        break;
+    }
   }
 
   applyFolds(cm) {
@@ -182,7 +188,7 @@ export default class FromScratch extends React.Component {
   }
 
   showUpdateMessage() {
-    const hideMessageFor = nodeStorage.getItem('hideUpdateMessage');
+    const hideMessageFor = rootNodeStorage.getItem('hideUpdateMessage');
     const hideVersion = hideMessageFor ? hideMessageFor.version : false;
 
     if (latestVersion !== hideVersion) {
@@ -192,15 +198,8 @@ export default class FromScratch extends React.Component {
 
   updateFont(diff, reset) {
     const newFontsize = reset ? 1 : Math.min(Math.max(this.state.fontSize + diff, 0.5), 2.5);
-    nodeStorage.setItem('fontSize', newFontsize);
+    rootNodeStorage.setItem('fontSize', newFontsize);
     this.setState({ fontSize: newFontsize });
-  }
-
-  updateTheme() {
-    const lightTheme = !this.state.lightTheme;
-
-    nodeStorage.setItem('lightTheme', lightTheme);
-    this.setState({ lightTheme });
   }
 
   handleChange = (newcontent) => {
@@ -214,18 +213,13 @@ export default class FromScratch extends React.Component {
 
   hideUpdateMessage = (e) => {
     e.stopPropagation();
-    nodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
+    rootNodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
     this.setState({ update: 'updater' });
   }
 
   render() {
     const style = {
       fontSize: `${this.state.fontSize}rem`,
-      ...(this.state.lightTheme ?
-          { filter: 'invert(100%) hue-rotate(20deg) brightness(1.1) grayscale(50%)' }
-          :
-          {}
-      )
     };
     const options = {
       styleActiveLine: true,
@@ -248,13 +242,15 @@ export default class FromScratch extends React.Component {
       extraKeys,
     };
     return (
-      <div style={style} data-platform={process.platform}>
+      <div style={style} data-platform={process.platform} className="from-scratch-root">
+
         <Codemirror
           value={this.state.content}
           ref={(c) => { this.editor = c; }}
           onChange={this.handleChange}
           options={options}
         />
+
         <div className={this.state.mock}>Already saved! ;)</div>
 
         <div onClick={this.openDownloadPage} className={this.state.update}>

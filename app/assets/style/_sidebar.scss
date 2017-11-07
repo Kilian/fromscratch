@@ -1,0 +1,246 @@
+
+// measures
+$itemHeight: 26px;
+$sidebarWidth: 300px;
+
+@font-face {
+    font-family: 'Roboto-local';
+    src: url(../font/Roboto-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+// ------------- General -------------
+
+.sidebar {
+    font-family: 'Roboto';
+    font-weight: normal;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    height: 100%;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: overlay;
+    transition: max-width .2s ease;
+}
+.sidebar.open {
+    max-width: 350px;
+    width: 350px;
+}
+.sidebar.closed {
+    max-width: 0px;
+}
+
+// ------------- Scroll -------------
+
+.sidebar::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+.sidebar::-webkit-scrollbar {
+	width: 6px;
+    background-color: transparent;
+    transition: width .2s ease;
+}
+.sidebar::-webkit-scrollbar:hover {
+	width: 9px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: $bgFadedColor;
+    transition: background-color .2s ease;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: $highlightColor;
+}
+
+
+// ------------- Icons -------------
+
+.sidebar-icon {
+    fill: $textColor;
+    margin-right: 5px;
+    transition: fill .2s ease;
+}
+.sidebar-icon svg {
+    padding: 2px;
+    margin-bottom: 3px;
+    vertical-align: middle;
+}
+
+
+.no-projects-message {
+    padding: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+// ------------- Project item -------------
+
+.project {
+    overflow: hidden;
+    word-break: break-all;
+    width: 100%;
+}
+.file-items-container {
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .2s ease;
+    // max-height adjustment handled in component click method
+}
+
+.project-label {
+    display: flex;
+    cursor: pointer;
+    line-height: $itemHeight;
+    height: $itemHeight;
+    padding: 0 0 0 10px;
+    white-space: nowrap;
+    background-color: transparent;
+    transition: background-color .2s ease;
+}
+.project-label .label {
+    flex: 1 0;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.project-label:hover {
+    background-color: $bgFadedColor;
+}
+.project-label-icon svg {
+    transform: rotate(0deg);
+    transition: transform .2s ease;
+    will-change: transform;
+}
+.project.open .project-label-icon svg {
+    transform: translateX(2px) rotate(90deg);
+}
+
+// ------------- File item -------------
+
+.file {
+    display: flex;
+    flex: 1 0;
+    line-height: $itemHeight;
+    height: $itemHeight;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0 0 0 35px;
+    white-space: nowrap;
+    transition: background-color .2s ease;
+}
+.file:hover { background-color: $bgFadedColor; }
+.file.active { background-color: $bgColor; }
+
+.file .label {
+    flex: 1 0;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.file.dummy { pointer-events: none; }
+.file.dummy .label { font-size: 12px; }
+
+.file.default {
+    padding: 0 0 0 10px;
+}
+.file.default .sidebar-icon {
+    margin-left: 2px;
+    margin-right: 3px;
+}
+
+// ------------- Item actions -------------
+
+.prompt .item-actions,
+.project-label .actions,
+.file .actions {
+    flex: 0 0;
+}
+
+.item-actions {
+    opacity: 0;
+    padding: 0 5px;
+    transition: opacity .2s ease;
+    will-change: opacity;
+    line-height: $itemHeight;
+    height: $itemHeight;
+    white-space: nowrap;
+    width: 100%;
+    max-width: 0;
+    display: inline-block;
+}
+.item-action {
+    width: 2ch;
+    background-color: transparent;
+    overflow: hidden;
+    opacity: 0.7;
+    transition: opacity .2s ease;
+    will-change: opacity;
+}
+.item-action:hover {
+    opacity: 1;
+}
+
+.action-add:hover .sidebar-icon {fill: $okColor;}
+.action-remove:hover .sidebar-icon {fill: $errorColor;}
+.action-rename:hover .sidebar-icon {fill: $primaryColor;}
+
+.prompt .item-actions,
+.file:hover .item-actions,
+.project-label:hover .item-actions {
+    max-width: 100%;
+    opacity: 1;
+}
+
+// ------------- Prompt -------------
+
+.prompt {
+    display: flex;
+    flex: 1 0;
+    line-height: $itemHeight;
+    height: $itemHeight;
+    background-color: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color .2s ease;
+}
+.prompt.project-level {
+    padding: 0 0 0 10px;
+}
+.prompt.file-level {
+    padding: 0 0 0 35px;
+}
+.prompt-label,
+.prompt-input,
+.prompt-input-placeholder {
+    flex: 1 0;
+}
+.prompt-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.prompt-input {
+    background-color: transparent;
+    color: $textColor;
+    outline: none;
+    border: 0;
+    font-size: 16px;
+    font-family: 'Roboto';
+    border-bottom: 1px solid $inputColor;
+    transition: border-color .2s ease;
+}
+.prompt-input:focus {
+    border-bottom: 1px solid $dimmedTextColor;
+}
+.prompt.invalid .prompt-input {
+    border-bottom: 1px solid $errorColor;
+}
+.prompt.invalid .submit-button {
+    pointer-events: none;
+    color: $dimmedTextColor;
+}

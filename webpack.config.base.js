@@ -8,12 +8,16 @@ module.exports = {
       exclude: /node_modules/
     },
     {
-      test: /\.(otf)/,
+      test: /\.(otf|ttf)/,
       loader: 'url-loader'
     },
     {
       test: /\.scss$/,
       loaders: ['style', 'css', 'sass']
+    },
+    {
+      test: /\.css$/,
+      loaders: ['style', 'css']
     }]
   },
   output: {

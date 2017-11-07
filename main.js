@@ -1,6 +1,8 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
-const fs = require('fs');
+const fs = require('fs-extra');
+const path = require('path');
+const dirTree = require('directory-tree');
 const JSONStorage = require('node-localstorage').JSONStorage;
 const APPVERSION = require('./package.json').version;
 const https = require('https');
@@ -12,6 +14,19 @@ const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
 }
+
+// common util
+global.utils = {
+  addClass(list, name){
+    list.push(name);
+    return list;
+  },
+  removeClass(list, name){
+    let i = list.indexOf(name);
+    if(i > -1) list.splice(i, 1);
+    return list;
+  },
+};
 
 const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
   boolean: ['help'],
@@ -49,16 +64,119 @@ const getDataLocation = () => {
 
 const storageLocation = getDataLocation();
 
+global.rootNodeStorage = new JSONStorage(storageLocation);
 global.nodeStorage = new JSONStorage(storageLocation);
 
+// a set of data structures and methods related to management of projects/scratches directory hierarchy
+global.projects = {
+  default: { project: '', scratch: 'Default', path: ''},
+  current: { project: '', scratch: '', path: '', },
+  tree: [
+    // {name: 'project-name', scratches: ['scratch-name-1', 'scratch-name-2', ...]},
+    // ...
+  ],
+  openProjects: {
+    // project-name: true/false,
+  },
+  refreshProjectsTree(){ // load directory tree from local storage
+    let rootPath = path.join(storageLocation, 'projects');
+    if(!fs.existsSync(rootPath)) fs.mkdirSync(rootPath);
+
+    let projectsRaw = dirTree(storageLocation).children.filter(f => f.name === 'projects').shift().children.filter(f => f.type === 'directory');
+
+    this.tree = projectsRaw.map((project) => {
+      const scratches = project.children.map(c => c.name);
+      return {name: project.name, scratches: scratches};
+    });
+
+  },
+  setCurrentScratch(data, reset){
+    this.current = reset ? this.default : {
+      path: path.join('projects', data.project, data.scratch),
+      scratch: data.scratch,
+      project: data.project
+    };
+    global.rootNodeStorage.setItem('current', this.current);
+    global.handleContent.filename = path.join(storageLocation, this.current.path, 'content.txt');
+    global.nodeStorage = new JSONStorage(path.join(storageLocation, this.current.path));
+
+    if(!global.handleContent.read())
+      global.handleContent.write(
+        !reset
+        ? 'Scratch for ' + data.project + ': ' + data.scratch
+        : 'Default workspace'
+      );
+  },
+  retrieveSavedState(){
+    this.openProjects = global.rootNodeStorage.getItem('openProjects') || {};
+
+    let data = global.rootNodeStorage.getItem('current');
+    this.current = data ? data : this.default;
+
+    let scratchPath = path.join(storageLocation, this.current.path);
+    global.nodeStorage = new JSONStorage(scratchPath);
+    return path.join(scratchPath, 'content.txt');
+  },
+  createProject(project){
+    if(project === '') throw 'A new project has to have a valid name.';
+    let projectPath = path.join(storageLocation, 'projects', project);
+    fs.mkdirSync(projectPath);
+  },
+  createScratch(project, scratch){
+    if(project==='' || scratch==='') throw 'Both project and scratch names are needed to create new scratch.';
+    let scratchPath = path.join(storageLocation, 'projects', project, scratch);
+    fs.mkdirSync(scratchPath);
+  },
+  removeProject(project){
+    if(project === '') throw 'To remove a project, the name has to be specified';
+    let projectPath = path.join(storageLocation, 'projects', project);
+    fs.removeSync(projectPath);
+    if(this.current.project === project)
+      this.setCurrentScratch(undefined, true);
+  },
+  removeScratch(project, scratch){
+    if(project==='' || scratch==='') throw 'To remove a scratch, the name and containing project have to be specified';
+    let scratchPath = path.join(storageLocation, 'projects', project, scratch);
+    fs.removeSync(scratchPath);
+    if(this.current.project===project && this.current.scratch===scratch)
+      this.setCurrentScratch(undefined, true);
+  },
+  renameProject(project, newName){
+    if(project==='' || newName==='' || project===newName) throw 'New project name has to be non empty and different than the current one.'
+    let rootPath = path.join(storageLocation, 'projects');
+    fs.renameSync(path.join(rootPath, project), path.join(rootPath, newName));
+    this.markProjectOpenness(project, false);
+    if(this.current.project===project)
+      this.setCurrentScratch(undefined, true);
+  },
+  renameScratch(project, scratch, newName){
+    if(project==='' || scratch==='' || newName==='' || scratch===newName) throw 'New scratch name has to be non empty and different than the current one.'
+    let rootPath = path.join(storageLocation, 'projects', project);
+    fs.renameSync(path.join(rootPath, scratch), path.join(rootPath, newName));
+    if(this.current.project===project && this.current.scratch===scratch)
+      this.setCurrentScratch(undefined, true);
+  },
+  markProjectOpenness(project, open){
+    if(open)
+      this.openProjects[project] = true;
+    else
+      delete this.openProjects[project];
+    global.rootNodeStorage.setItem('openProjects', this.openProjects);
+  }
+}
+
 global.handleContent = {
-  filename: storageLocation + '/content.txt',
+  filename: global.projects.retrieveSavedState(),
   write(content) {
     fs.writeFileSync(this.filename, content, 'utf8');
   },
   read() {
     return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
   }
+};
+
+global.eventEmitter = {
+  emit: (ev, data) => mainWindow.webContents.send(ev, data),
 };
 
 const installExtensions = () => {
@@ -87,7 +205,7 @@ app.on('ready', () => {
 
   let windowState = {};
   try {
-    windowState = global.nodeStorage.getItem('windowstate') || {};
+    windowState = global.rootNodeStorage.getItem('windowstate') || {};
   } catch (err) {
     console.log('empty window state file, creating new one.');
   }
@@ -137,6 +255,9 @@ app.on('ready', () => {
     gsc.register('CmdOrCtrl+w', () => { app.quit(); });
     gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
     gsc.register('CmdOrCtrl+r ', () => { });
+    gsc.register('CmdOrCtrl+b', () => { dispatchShortcutEvent('toggle-sidebar') });
+    gsc.register('CmdOrCtrl+h', () => { dispatchShortcutEvent('search-sidebar') });
+    gsc.register('CmdOrCtrl+u', () => { dispatchShortcutEvent('collapse-all-projects') });
     gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
   };
 
@@ -156,7 +277,7 @@ app.on('ready', () => {
       // only update bounds if the window isn't currently maximized
       windowState.bounds = mainWindow.getBounds();
     }
-    global.nodeStorage.setItem('windowstate', windowState);
+    global.rootNodeStorage.setItem('windowstate', windowState);
   };
 
   ['resize', 'move', 'close'].forEach((e) => {
@@ -293,4 +414,5 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();
   }
+
 });
