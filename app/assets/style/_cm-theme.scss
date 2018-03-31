@@ -77,6 +77,24 @@
   }
 }
 
+[data-platform=darwin] .cm-s-fromscratch {
+  &.CodeMirror {
+    background:transparent;
+  }
+
+  div.CodeMirror-selected {
+    background: transparentize(lighten($bgColor, 5%),0.5);
+  }
+
+  .CodeMirror-activeline-background {
+    background: linear-gradient(
+                90deg, transparentize($textColor, 1) 0%,
+                transparentize(lighten($bgColor, 1%), 0.5) 4%,
+                transparentize(lighten($bgColor, 1%),0.5) 60%,
+                transparentize($bgColor,1) 100%);
+  }
+}
+
 .CodeMirror-scroll {
   overflow-x: hidden !important;
 }
@@ -99,6 +117,9 @@
   color: lighten($textColor, 20%);
 }
 
+[data-platform=darwin] .cm-searching {
+  background: transparentize(lighten($bgColor, 4%), 0.5);
+}
 .CodeMirror-dialog {
   z-index: 6;
   background: rgba(255, 255, 255, 0.1);
@@ -115,6 +136,7 @@
 
 [data-platform=darwin] .CodeMirror-dialog {
   padding-top: 2rem;
+  background:transparent;
 }
 
 .CodeMirror-dialog-top {

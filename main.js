@@ -105,10 +105,21 @@ app.on('ready', () => {
     width: (windowState.bounds && windowState.bounds.width) || 550,
     height: (windowState.bounds && windowState.bounds.height) || 450,
     darkTheme: true,
-    backgroundColor: '#002b36',
     titleBarStyle: 'hidden',
     autoHideMenuBar: true
   };
+
+  if (process.platform === 'darwin') {
+    ipc.on('setVibrancy', (event, lightTheme) => {
+      if (lightTheme) {
+        mainWindow.setVibrancy('medium-light');
+      } else {
+        mainWindow.setVibrancy('ultra-dark');
+      }
+    });
+  } else {
+    windowSettings.backgroundColor = '#002b36';
+  }
 
   mainWindow = new BrowserWindow(windowSettings);
   mainWindow.loadURL('file://' + __dirname + '/app/app.html');

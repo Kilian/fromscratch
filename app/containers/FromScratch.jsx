@@ -147,6 +147,9 @@ export default class FromScratch extends React.Component {
     cmInstance.on('unfold', () => {
       this.updateFolds();
     });
+
+    document.body.dataset.platform = process.platform;
+    ipc.send('setVibrancy', this.state.lightTheme);
   }
 
   componentDidUpdate() {
@@ -200,6 +203,8 @@ export default class FromScratch extends React.Component {
     const lightTheme = !this.state.lightTheme;
 
     nodeStorage.setItem('lightTheme', lightTheme);
+
+    ipc.send('setVibrancy', lightTheme);
     this.setState({ lightTheme });
   }
 
