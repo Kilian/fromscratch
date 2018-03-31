@@ -10,6 +10,13 @@ $textColor: rgba(130, 150, 150, 1);
   font-style: normal;
 }
 
+@font-face {
+  font-family: "FiraCode-Retina";
+  src: url(../font/FiraCode-Retina.otf) format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 html {
   box-sizing: border-box;
   height: 100%;
@@ -41,6 +48,7 @@ body {
 }
 body[data-platform=darwin] {
   background:transparent;
+  font-family: "FiraCode-Retina";
 }
 
 #react-root,
