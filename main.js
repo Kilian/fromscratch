@@ -218,7 +218,26 @@ app.on('ready', () => {
         accelerator: 'CmdOrCtrl+Q',
         click() { app.quit(); }
       }]
-  }];
+    }, {
+      label: 'View',
+      submenu: [{
+        label: 'Toggle Theme',
+        accelerator: 'CmdOrCtrl+i',
+        click() { dispatchShortcutEvent('toggle-theme'); }
+      }, {
+        label: 'Increase Font Size',
+        accelerator: 'CmdorCtrl+Plus',
+        click() { dispatchShortcutEvent('increase-font'); }
+      }, {
+        label: 'Decrease Font Size',
+        accelerator: 'CmdorCtrl+-',
+        click() { dispatchShortcutEvent('decrease-font'); }
+      }, {
+        label: 'Reset Font size',
+        accelerator: 'CmdorCtrl+0',
+        click() { dispatchShortcutEvent('reset-font'); }
+      }]
+    }];
 
   if (process.platform === 'darwin') {
     template = [{
@@ -266,33 +285,52 @@ app.on('ready', () => {
       label: 'Edit',
       submenu: [{
         label: 'Undo',
-        accelerator: 'CmdOrCtrl+Z',
+        accelerator: 'CmdOrCtrl+z',
         selector: 'undo:'
       }, {
         label: 'Redo',
-        accelerator: 'Shift+CmdOrCtrl+Z',
+        accelerator: 'Shift+CmdOrCtrl+z',
         selector: 'redo:'
       }, {
         type: 'separator'
       }, {
         label: 'Cut',
-        accelerator: 'CmdOrCtrl+X',
+        accelerator: 'CmdOrCtrl+c',
         selector: 'cut:'
       }, {
         label: 'Copy',
-        accelerator: 'CmdOrCtrl+C',
+        accelerator: 'CmdOrCtrl+c',
         selector: 'copy:'
       }, {
         label: 'Paste',
-        accelerator: 'CmdOrCtrl+V',
+        accelerator: 'CmdOrCtrl+v',
         selector: 'paste:'
       }, {
         label: 'Select All',
-        accelerator: 'CmdOrCtrl+A',
+        accelerator: 'CmdOrCtrl+a',
         selector: 'selectAll:'
       }]
+    }, {
+      label: 'View',
+      submenu: [{
+        label: 'Toggle theme',
+        accelerator: 'CmdOrCtrl+i',
+        click() { dispatchShortcutEvent('toggle-theme'); }
+      }, {
+        label: 'Increase font size',
+        accelerator: 'CmdorCtrl+Plus',
+        click() { dispatchShortcutEvent('increase-font'); }
+      }, {
+        label: 'Decrease font size',
+        accelerator: 'CmdorCtrl+-',
+        click() { dispatchShortcutEvent('decrease-font'); }
+      }, {
+        label: 'Reset Font size',
+        accelerator: 'CmdorCtrl+0',
+        click() { dispatchShortcutEvent('reset-font'); }
+      }],
     }];
-  }
+}
 
   const menuBar = menu.buildFromTemplate(template);
   menu.setApplicationMenu(menuBar);
