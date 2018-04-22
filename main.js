@@ -138,6 +138,8 @@ app.on('ready', () => {
     mainWindow.webContents.send('executeShortCut', ev);
   };
 
+  mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
+
   const registerShortcuts = () => {
     gsc.register('CmdOrCtrl+0', () => { dispatchShortcutEvent('reset-font'); });
     gsc.register('CmdOrCtrl+-', () => { dispatchShortcutEvent('decrease-font'); });
