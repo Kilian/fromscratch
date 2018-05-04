@@ -152,7 +152,7 @@ export default class FromScratch extends React.Component {
     ipc.send('setVibrancy', this.state.lightTheme);
 
     document.addEventListener('dragover', event => event.preventDefault())
-    document.addEventListener('drop', event => {console.log("lol"), event.preventDefault()})
+    document.addEventListener('drop', event => e.preventDefault())
   }
 
   componentDidUpdate() {
