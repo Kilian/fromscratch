@@ -2,6 +2,8 @@ import React from 'react';
 import Codemirror from 'react-codemirror';
 import CodeMirror from '../../node_modules/codemirror/';
 
+import Shortcuts from '../components/Shortcuts';
+
 require('../../node_modules/codemirror/addon/scroll/simplescrollbars.js');
 require('../../node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/codemirror/addon/fold/indent-fold.js');
@@ -13,10 +15,7 @@ require('../../node_modules/codemirror/addon/search/matchesonscrollbar.js');
 
 require('../../node_modules/codemirror/keymap/sublime.js');
 
-const electron = require('electron');
-const ipc = electron.ipcRenderer;
-const remote = electron.remote;
-const shell = electron.shell;
+const { ipcRenderer: ipc, remote, shell } = require('electron');
 const handleContent = remote.getGlobal('handleContent');
 const nodeStorage = remote.getGlobal('nodeStorage');
 let latestVersion;
@@ -105,7 +104,8 @@ export default class FromScratch extends React.Component {
         return (foldItem && foldItem.folds) ? foldItem.folds : [];
       })(),
       mock: 'nosave',
-      update: 'updater'
+      update: 'updater',
+      shortcutsVisible: false,
     };
   }
 
@@ -127,6 +127,9 @@ export default class FromScratch extends React.Component {
           break;
         case 'toggle-theme':
           this.updateTheme();
+          break;
+        case 'toggle-shortcuts':
+          this.toggleShortcutsVisible();
           break;
         case 'show-update-msg':
           latestVersion = remote.getGlobal('latestVersion');
@@ -226,6 +229,10 @@ export default class FromScratch extends React.Component {
     this.setState({ update: 'updater' });
   }
 
+  toggleShortcutsVisible = () => {
+    this.setState({shortcutsVisible: !this.state.shortcutsVisible})
+  }
+
   render() {
     const style = {
       fontSize: `${this.state.fontSize}rem`,
@@ -273,6 +280,8 @@ export default class FromScratch extends React.Component {
         </div>
 
         <div className="titlebar" />
+
+        <Shortcuts visible={this.state.shortcutsVisible} toggleShortcutsVisible={this.toggleShortcutsVisible} />
       </div>
     );
   }

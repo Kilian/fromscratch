@@ -106,6 +106,9 @@ app.on('ready', () => {
     darkTheme: true,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
+    webPreferences: {
+      blinkFeatures: 'OverlayScrollbars',
+    },
   };
 
   if (process.platform === 'darwin') {
@@ -180,6 +183,9 @@ app.on('ready', () => {
     });
     gsc.register('esc', () => {
       exitFullScreen();
+    });
+    gsc.register('f1', () => {
+      dispatchShortcutEvent('toggle-shortcuts');
     });
   };
 
@@ -305,6 +311,13 @@ app.on('ready', () => {
           accelerator: 'f11',
           click() {
             toggleFullscreen();
+          },
+        },
+        {
+          label: 'Show all shortcuts',
+          accelerator: 'f1',
+          click() {
+            dispatchShortcutEvent('toggle-shortcuts');
           },
         },
       ],
@@ -443,6 +456,13 @@ app.on('ready', () => {
             accelerator: 'f11',
             click() {
               toggleFullscreen();
+            },
+          },
+          {
+            label: 'Show all shortcuts',
+            accelerator: 'f1',
+            click() {
+              dispatchShortcutEvent('toggle-shortcuts');
             },
           },
         ],

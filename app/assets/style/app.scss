@@ -201,6 +201,83 @@ body[data-platform=darwin] {
   padding-top: 2rem;
 }
 
+.shortcuts {
+  position:absolute;
+  left:2rem;
+  top:2rem;
+  width:calc(100vw - 4rem);
+  height:calc(100vh - 4rem);
+  background:$bgColor;
+  padding:1rem 1rem 0;
+  color:$textColor;
+  z-index:99;
+  box-shadow: 0 0 3rem 3rem rgba(0, 0, 0, 0.3);
+  overflow:auto;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s ease opacity;
+
+  &.visible {
+    opacity:1;
+    pointer-events:all;
+  }
+
+  h3 {
+    margin:0 0 1rem;
+    font-size:1.5rem;
+  }
+
+  button {
+    line-height: 1.6rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: block;
+    position: fixed;
+    right: 2.5rem;
+    top: 2.5rem;
+    border-radius: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    vertical-align: middle;
+    border:0;
+    outline:none;
+
+    &:hover,
+    &:focus {
+      background: rgba(0, 0, 0, 0.5);
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  li {
+    list-style:none;
+    line-height:1.5;
+    display:flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom:1rem;
+
+    span:first-child {
+      width:11rem;
+    }
+    span:last-child {
+      flex:1;
+    }
+  }
+  li, kbd {
+    font-size:1rem;
+    font-family:inherit;
+  }
+
+  kbd {
+    display:inline-block;
+    background:rgba(0,0,0,0.5);
+    padding:2px 4px;
+    border-radius:2px;
+  }
+}
+
 @import "../../../node_modules/codemirror/lib/codemirror.css";
 @import "../../../node_modules/codemirror/addon/scroll/simplescrollbars.css";
 @import "../../../node_modules/codemirror/addon/fold/foldgutter.css";
