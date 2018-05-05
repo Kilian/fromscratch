@@ -4,6 +4,7 @@ import CodeMirror from '../../node_modules/codemirror/';
 
 import Shortcuts from '../components/Shortcuts';
 
+require('../../node_modules/codemirror/addon/scroll/scrollpastend.js');
 require('../../node_modules/codemirror/addon/scroll/simplescrollbars.js');
 require('../../node_modules/codemirror/addon/selection/active-line.js');
 require('../../node_modules/codemirror/addon/fold/indent-fold.js');
@@ -252,6 +253,7 @@ export default class FromScratch extends React.Component {
       indentUnit: 4,
       tabSize: 4,
       indentWithTabs: true,
+      scrollPastEnd: true,
       cursorScrollMargin: 40,
       foldOptions: {
         rangeFinder: CodeMirror.fold.indent,
