@@ -1,7 +1,7 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
 const fs = require('fs');
-const JSONStorage = require('node-localstorage').JSONStorage;
+const { JSONStorage } = require('node-localstorage');
 const APPVERSION = require('./package.json').version;
 const https = require('https');
 const compareVersions = require('compare-versions');
@@ -35,9 +35,10 @@ Optional arguments:
 
 // get data location
 const getDataLocation = () => {
-  let location = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
-    + '/.fromscratch'
-    + (process.env.NODE_ENV === 'development' ? '/dev' : '');
+  let location =
+    process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'] +
+    '/.fromscratch' +
+    (process.env.NODE_ENV === 'development' ? '/dev' : '');
 
   if (typeof argv.portable !== 'undefined') {
     location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
@@ -58,21 +59,19 @@ global.handleContent = {
   },
   read() {
     return fs.existsSync(this.filename) ? fs.readFileSync(this.filename, 'utf8') : false;
-  }
+  },
 };
 
 const installExtensions = () => {
   if (process.env.NODE_ENV === 'development') {
     const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
-    const extensions = [
-      'REACT_DEVELOPER_TOOLS'
-    ];
+    const extensions = ['REACT_DEVELOPER_TOOLS'];
     const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-    for (const name of extensions) {
+    extensions.forEach(name => {
       try {
         installer.default(installer[name], forceDownload);
       } catch (e) {} // eslint-disable-line
-    }
+    });
   }
 };
 
@@ -106,7 +105,7 @@ app.on('ready', () => {
     height: (windowState.bounds && windowState.bounds.height) || 450,
     darkTheme: true,
     titleBarStyle: 'hidden',
-    autoHideMenuBar: true
+    autoHideMenuBar: true,
   };
 
   if (process.platform === 'darwin') {
@@ -136,33 +135,52 @@ app.on('ready', () => {
 
   const toggleFullscreen = () => {
     mainWindow.setFullScreen(!mainWindow.isFullScreen());
-  }
+  };
 
   const exitFullScreen = () => {
     if (mainWindow.isFullScreen()) {
       mainWindow.setFullScreen(false);
     }
-  }
+  };
 
-
-  const dispatchShortcutEvent = (ev) => {
+  const dispatchShortcutEvent = ev => {
     mainWindow.webContents.send('executeShortCut', ev);
   };
 
   mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
 
   const registerShortcuts = () => {
-    gsc.register('CmdOrCtrl+0', () => { dispatchShortcutEvent('reset-font'); });
-    gsc.register('CmdOrCtrl+-', () => { dispatchShortcutEvent('decrease-font'); });
-    gsc.register('CmdOrCtrl+=', () => { dispatchShortcutEvent('increase-font'); });
-    gsc.register('CmdOrCtrl+Plus', () => { dispatchShortcutEvent('increase-font'); });
-    gsc.register('CmdOrCtrl+i', () => { dispatchShortcutEvent('toggle-theme'); });
-    gsc.register('CmdOrCtrl+s', () => { dispatchShortcutEvent('save'); });
-    gsc.register('CmdOrCtrl+w', () => { app.quit(); });
-    gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
-    gsc.register('CmdOrCtrl+r ', () => { });
-    gsc.register('f11', () => { toggleFullscreen(); });
-    gsc.register('esc', () => { exitFullScreen(); });
+    gsc.register('CmdOrCtrl+0', () => {
+      dispatchShortcutEvent('reset-font');
+    });
+    gsc.register('CmdOrCtrl+-', () => {
+      dispatchShortcutEvent('decrease-font');
+    });
+    gsc.register('CmdOrCtrl+=', () => {
+      dispatchShortcutEvent('increase-font');
+    });
+    gsc.register('CmdOrCtrl+Plus', () => {
+      dispatchShortcutEvent('increase-font');
+    });
+    gsc.register('CmdOrCtrl+i', () => {
+      dispatchShortcutEvent('toggle-theme');
+    });
+    gsc.register('CmdOrCtrl+s', () => {
+      dispatchShortcutEvent('save');
+    });
+    gsc.register('CmdOrCtrl+w', () => {
+      app.quit();
+    });
+    gsc.register('CmdOrCtrl+q ', () => {
+      app.quit();
+    });
+    gsc.register('CmdOrCtrl+r ', () => {});
+    gsc.register('f11', () => {
+      toggleFullscreen();
+    });
+    gsc.register('esc', () => {
+      exitFullScreen();
+    });
   };
 
   registerShortcuts();
@@ -184,183 +202,253 @@ app.on('ready', () => {
     global.nodeStorage.setItem('windowstate', windowState);
   };
 
-  ['resize', 'move', 'close'].forEach((e) => {
+  ['resize', 'move', 'close'].forEach(e => {
     mainWindow.on(e, () => {
       storeWindowState();
     });
   });
 
   const checkForUpdates = () => {
-    https.get('https://fromscratch.rocks/latest.json?current=' + APPVERSION, (res) => {
-      let json = '';
-      res.on('data', (d) => {
-        json += d;
-      });
+    https
+      .get('https://fromscratch.rocks/latest.json?current=' + APPVERSION, res => {
+        let json = '';
+        res.on('data', d => {
+          json += d;
+        });
 
-      res.on('end', () => {
-        const latestVersion = JSON.parse(json).version;
-        if (compareVersions(latestVersion, APPVERSION) === 1) {
-          global.latestVersion = latestVersion;
-          dispatchShortcutEvent('show-update-msg');
-        }
+        res.on('end', () => {
+          const latestVersion = JSON.parse(json).version;
+          if (compareVersions(latestVersion, APPVERSION) === 1) {
+            global.latestVersion = latestVersion;
+            dispatchShortcutEvent('show-update-msg');
+          }
+        });
+      })
+      .on('error', e => {
+        console.error(e);
       });
-    }).on('error', (e) => {
-      console.error(e);
-    });
   };
 
-  let template = [{
-    label: app.getName(),
-    submenu: [
-      {
-        label: 'Website',
-        click() { shell.openExternal('https://fromscratch.rocks'); }
-      },
-      {
-        label: 'Support',
-        click() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
-      },
-      {
-        label: 'Check for updates (current: ' + APPVERSION + ')',
-        click() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Quit',
-        accelerator: 'CmdOrCtrl+Q',
-        click() { app.quit(); }
-      }]
-  }, {
-    label: 'View',
-      submenu: [{
-        label: 'Toggle theme',
-        accelerator: 'CmdOrCtrl+i',
-        click() { dispatchShortcutEvent('toggle-theme'); }
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Increase font size',
-        accelerator: 'CmdorCtrl+Plus',
-        click() { dispatchShortcutEvent('increase-font'); }
-      }, {
-        label: 'Decrease font size',
-        accelerator: 'CmdorCtrl+-',
-        click() { dispatchShortcutEvent('decrease-font'); }
-      }, {
-        label: 'Reset Font size',
-        accelerator: 'CmdorCtrl+0',
-        click() { dispatchShortcutEvent('reset-font'); }
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Toggle fullscreen',
-        accelerator: 'f11',
-        click() { toggleFullscreen(); }
-      }]
-    }];
-
-  if (process.platform === 'darwin') {
-    template = [{
+  let template = [
+    {
       label: app.getName(),
       submenu: [
         {
-          label: 'About ' + app.getName(),
-          click() { shell.openExternal('https://fromscratch.rocks'); }
+          label: 'Website',
+          click() {
+            shell.openExternal('https://fromscratch.rocks');
+          },
         },
         {
           label: 'Support',
-          click() { shell.openExternal('https://github.com/Kilian/fromscratch/issues'); }
+          click() {
+            shell.openExternal('https://github.com/Kilian/fromscratch/issues');
+          },
         },
         {
           label: 'Check for updates (current: ' + APPVERSION + ')',
-          click() { shell.openExternal('https://github.com/Kilian/fromscratch/releases'); }
+          click() {
+            shell.openExternal('https://github.com/Kilian/fromscratch/releases');
+          },
         },
         {
-          type: 'separator'
-        },
-        {
-          label: 'Hide ' + app.getName(),
-          accelerator: 'Command+H',
-          role: 'hide'
-        },
-        {
-          label: 'Hide Others',
-          accelerator: 'Command+Alt+H',
-          role: 'hideothers'
-        },
-        {
-          label: 'Show All',
-          role: 'unhide'
-        },
-        {
-          type: 'separator'
+          type: 'separator',
         },
         {
           label: 'Quit',
-          accelerator: 'Command+Q',
-          click() { app.quit(); }
-        }
-      ]
-    }, {
-      label: 'Edit',
-      submenu: [{
-        label: 'Undo',
-        accelerator: 'CmdOrCtrl+z',
-        selector: 'undo:'
-      }, {
-        label: 'Redo',
-        accelerator: 'Shift+CmdOrCtrl+z',
-        selector: 'redo:'
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Cut',
-        accelerator: 'CmdOrCtrl+c',
-        selector: 'cut:'
-      }, {
-        label: 'Copy',
-        accelerator: 'CmdOrCtrl+c',
-        selector: 'copy:'
-      }, {
-        label: 'Paste',
-        accelerator: 'CmdOrCtrl+v',
-        selector: 'paste:'
-      }, {
-        label: 'Select All',
-        accelerator: 'CmdOrCtrl+a',
-        selector: 'selectAll:'
-      }]
-    }, {
+          accelerator: 'CmdOrCtrl+Q',
+          click() {
+            app.quit();
+          },
+        },
+      ],
+    },
+    {
       label: 'View',
-      submenu: [{
-        label: 'Toggle theme',
-        accelerator: 'CmdOrCtrl+i',
-        click() { dispatchShortcutEvent('toggle-theme'); }
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Increase font size',
-        accelerator: 'CmdorCtrl+Plus',
-        click() { dispatchShortcutEvent('increase-font'); }
-      }, {
-        label: 'Decrease font size',
-        accelerator: 'CmdorCtrl+-',
-        click() { dispatchShortcutEvent('decrease-font'); }
-      }, {
-        label: 'Reset Font size',
-        accelerator: 'CmdorCtrl+0',
-        click() { dispatchShortcutEvent('reset-font'); }
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Toggle fullscreen',
-        accelerator: 'f11',
-        click() { toggleFullscreen(); }
-      }],
-    }];
-}
+      submenu: [
+        {
+          label: 'Toggle theme',
+          accelerator: 'CmdOrCtrl+i',
+          click() {
+            dispatchShortcutEvent('toggle-theme');
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Increase font size',
+          accelerator: 'CmdorCtrl+Plus',
+          click() {
+            dispatchShortcutEvent('increase-font');
+          },
+        },
+        {
+          label: 'Decrease font size',
+          accelerator: 'CmdorCtrl+-',
+          click() {
+            dispatchShortcutEvent('decrease-font');
+          },
+        },
+        {
+          label: 'Reset Font size',
+          accelerator: 'CmdorCtrl+0',
+          click() {
+            dispatchShortcutEvent('reset-font');
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Toggle fullscreen',
+          accelerator: 'f11',
+          click() {
+            toggleFullscreen();
+          },
+        },
+      ],
+    },
+  ];
+
+  if (process.platform === 'darwin') {
+    template = [
+      {
+        label: app.getName(),
+        submenu: [
+          {
+            label: 'About ' + app.getName(),
+            click() {
+              shell.openExternal('https://fromscratch.rocks');
+            },
+          },
+          {
+            label: 'Support',
+            click() {
+              shell.openExternal('https://github.com/Kilian/fromscratch/issues');
+            },
+          },
+          {
+            label: 'Check for updates (current: ' + APPVERSION + ')',
+            click() {
+              shell.openExternal('https://github.com/Kilian/fromscratch/releases');
+            },
+          },
+          {
+            type: 'separator',
+          },
+          {
+            label: 'Hide ' + app.getName(),
+            accelerator: 'Command+H',
+            role: 'hide',
+          },
+          {
+            label: 'Hide Others',
+            accelerator: 'Command+Alt+H',
+            role: 'hideothers',
+          },
+          {
+            label: 'Show All',
+            role: 'unhide',
+          },
+          {
+            type: 'separator',
+          },
+          {
+            label: 'Quit',
+            accelerator: 'Command+Q',
+            click() {
+              app.quit();
+            },
+          },
+        ],
+      },
+      {
+        label: 'Edit',
+        submenu: [
+          {
+            label: 'Undo',
+            accelerator: 'CmdOrCtrl+z',
+            selector: 'undo:',
+          },
+          {
+            label: 'Redo',
+            accelerator: 'Shift+CmdOrCtrl+z',
+            selector: 'redo:',
+          },
+          {
+            type: 'separator',
+          },
+          {
+            label: 'Cut',
+            accelerator: 'CmdOrCtrl+c',
+            selector: 'cut:',
+          },
+          {
+            label: 'Copy',
+            accelerator: 'CmdOrCtrl+c',
+            selector: 'copy:',
+          },
+          {
+            label: 'Paste',
+            accelerator: 'CmdOrCtrl+v',
+            selector: 'paste:',
+          },
+          {
+            label: 'Select All',
+            accelerator: 'CmdOrCtrl+a',
+            selector: 'selectAll:',
+          },
+        ],
+      },
+      {
+        label: 'View',
+        submenu: [
+          {
+            label: 'Toggle theme',
+            accelerator: 'CmdOrCtrl+i',
+            click() {
+              dispatchShortcutEvent('toggle-theme');
+            },
+          },
+          {
+            type: 'separator',
+          },
+          {
+            label: 'Increase font size',
+            accelerator: 'CmdorCtrl+Plus',
+            click() {
+              dispatchShortcutEvent('increase-font');
+            },
+          },
+          {
+            label: 'Decrease font size',
+            accelerator: 'CmdorCtrl+-',
+            click() {
+              dispatchShortcutEvent('decrease-font');
+            },
+          },
+          {
+            label: 'Reset Font size',
+            accelerator: 'CmdorCtrl+0',
+            click() {
+              dispatchShortcutEvent('reset-font');
+            },
+          },
+          {
+            type: 'separator',
+          },
+          {
+            label: 'Toggle fullscreen',
+            accelerator: 'f11',
+            click() {
+              toggleFullscreen();
+            },
+          },
+        ],
+      },
+    ];
+  }
 
   const menuBar = menu.buildFromTemplate(template);
   menu.setApplicationMenu(menuBar);
