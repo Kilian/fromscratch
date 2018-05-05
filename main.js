@@ -134,6 +134,17 @@ app.on('ready', () => {
     checkForUpdates();
   });
 
+  const toggleFullscreen = () => {
+    mainWindow.setFullScreen(!mainWindow.isFullScreen());
+  }
+
+  const exitFullScreen = () => {
+    if (mainWindow.isFullScreen()) {
+      mainWindow.setFullScreen(false);
+    }
+  }
+
+
   const dispatchShortcutEvent = (ev) => {
     mainWindow.webContents.send('executeShortCut', ev);
   };
@@ -150,7 +161,8 @@ app.on('ready', () => {
     gsc.register('CmdOrCtrl+w', () => { app.quit(); });
     gsc.register('CmdOrCtrl+q ', () => { app.quit(); });
     gsc.register('CmdOrCtrl+r ', () => { });
-    gsc.register('f11', () => { mainWindow.setFullScreen(!mainWindow.isFullScreen()); });
+    gsc.register('f11', () => { toggleFullscreen(); });
+    gsc.register('esc', () => { exitFullScreen(); });
   };
 
   registerShortcuts();
@@ -220,24 +232,32 @@ app.on('ready', () => {
         accelerator: 'CmdOrCtrl+Q',
         click() { app.quit(); }
       }]
-    }, {
-      label: 'View',
+  }, {
+    label: 'View',
       submenu: [{
-        label: 'Toggle Theme',
+        label: 'Toggle theme',
         accelerator: 'CmdOrCtrl+i',
         click() { dispatchShortcutEvent('toggle-theme'); }
       }, {
-        label: 'Increase Font Size',
+        type: 'separator'
+      }, {
+        label: 'Increase font size',
         accelerator: 'CmdorCtrl+Plus',
         click() { dispatchShortcutEvent('increase-font'); }
       }, {
-        label: 'Decrease Font Size',
+        label: 'Decrease font size',
         accelerator: 'CmdorCtrl+-',
         click() { dispatchShortcutEvent('decrease-font'); }
       }, {
         label: 'Reset Font size',
         accelerator: 'CmdorCtrl+0',
         click() { dispatchShortcutEvent('reset-font'); }
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Toggle fullscreen',
+        accelerator: 'f11',
+        click() { toggleFullscreen(); }
       }]
     }];
 
@@ -319,6 +339,8 @@ app.on('ready', () => {
         accelerator: 'CmdOrCtrl+i',
         click() { dispatchShortcutEvent('toggle-theme'); }
       }, {
+        type: 'separator'
+      }, {
         label: 'Increase font size',
         accelerator: 'CmdorCtrl+Plus',
         click() { dispatchShortcutEvent('increase-font'); }
@@ -330,6 +352,12 @@ app.on('ready', () => {
         label: 'Reset Font size',
         accelerator: 'CmdorCtrl+0',
         click() { dispatchShortcutEvent('reset-font'); }
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Toggle fullscreen',
+        accelerator: 'f11',
+        click() { toggleFullscreen(); }
       }],
     }];
 }
