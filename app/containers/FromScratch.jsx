@@ -17,6 +17,7 @@ require('../../node_modules/codemirror/addon/search/matchesonscrollbar.js');
 require('../../node_modules/codemirror/keymap/sublime.js');
 
 const { ipcRenderer: ipc, remote, shell } = require('electron');
+
 const handleContent = remote.getGlobal('handleContent');
 const nodeStorage = remote.getGlobal('nodeStorage');
 let latestVersion;

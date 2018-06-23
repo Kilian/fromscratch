@@ -1,0 +1,27 @@
+{
+  "name": "FromScratch",
+  "version": "1.4.0",
+  "description": "simple autosaving scratchpad",
+  "main": "main.prod.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kilian/fromscratch/"
+  },
+  "author": {
+    "name": "Kilian Valkhof",
+    "email": "kilian@kilianvalkhof.com",
+    "url": "https://kilianvalkhof.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kilian/fromscratch/issues"
+  },
+  "keywords": [
+    "electron",
+    "react",
+    "webpack",
+    "scratchpad",
+    "codemirror"
+  ],
+  "homepage": "https://github.com/kilian/fromscratch"
+}

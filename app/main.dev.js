@@ -1,6 +1,7 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
 const fs = require('fs');
+const path = require('path')
 const { JSONStorage } = require('node-localstorage');
 const APPVERSION = require('./package.json').version;
 const https = require('https');
@@ -98,7 +99,7 @@ app.on('ready', () => {
   const windowSettings = {
     show: false,
     title: app.getName(),
-    icon: __dirname + '/app/assets/img/icon.png',
+    icon: path.join(__dirname, 'assets/img/icon.png'),
     x: (windowState.bounds && windowState.bounds.x) || undefined,
     y: (windowState.bounds && windowState.bounds.y) || undefined,
     width: (windowState.bounds && windowState.bounds.width) || 550,
@@ -110,6 +111,8 @@ app.on('ready', () => {
       blinkFeatures: 'OverlayScrollbars',
     },
   };
+
+  console.log("ICON:", windowSettings.icon);
 
   if (process.platform === 'darwin') {
     ipc.on('setVibrancy', (event, lightTheme) => {
@@ -124,9 +127,11 @@ app.on('ready', () => {
   }
 
   mainWindow = new BrowserWindow(windowSettings);
-  mainWindow.loadURL('file://' + __dirname + '/app/app.html');
+  mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   mainWindow.on('ready-to-show', () => {
+
+
     mainWindow.show();
     // Restore maximised state if it is set. not possible via options so we do it here
     if (windowState.isMaximized) {

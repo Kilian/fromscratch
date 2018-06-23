@@ -51,7 +51,7 @@ body[data-platform=darwin] {
   font-family: "FiraCode-Retina";
 }
 
-#react-root,
+#root,
 .ReactCodeMirror {
   position: absolute;
   top: 0;
@@ -63,16 +63,20 @@ body[data-platform=darwin] {
 }
 
 [data-platform=darwin] {
-  #react-root {
+  #root {
     background:transparent;
   }
   .ReactCodeMirror {
       background:transparentize($bgColor, 0.65);
   }
-
 }
-#react-root > div {
+
+#root > div {
   transition:0.4s ease filter;
+}
+
+.CodeMirror-sizer {
+  margin-left:0 !important;
 }
 
 .CodeMirror {

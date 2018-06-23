@@ -1,34 +1,77 @@
-var path = require('path');
+/**
+ * Base webpack config used across other specific configs
+ */
 
-module.exports = {
+import path from 'path';
+import webpack from 'webpack';
+import fs from 'fs';
+import { dependencies as externals } from './app/package.json';
+import { dependencies as possibleExternals } from './package.json';
+
+// Find all the dependencies without a `main` property and add them as webpack externals
+function filterDepWithoutEntryPoints(dep: string): boolean {
+  // Return true if we want to add a dependency to externals
+  try {
+    // If the root of the dependency has an index.js, return true
+    if (fs.existsSync(path.join(__dirname, `node_modules/${dep}/index.js`))) {
+      return false;
+    }
+    const pgkString = fs
+      .readFileSync(path.join(__dirname, `node_modules/${dep}/package.json`))
+      .toString();
+    const pkg = JSON.parse(pgkString);
+    const fields = ['main', 'module', 'jsnext:main', 'browser'];
+    return !fields.some(field => field in pkg);
+  } catch (e) {
+    console.log(e);
+    return true;
+  }
+}
+
+export default {
+  externals: [
+    ...Object.keys(externals || {}),
+    ...Object.keys(possibleExternals || {}).filter(filterDepWithoutEntryPoints)
+  ],
+
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      loaders: ['babel-loader'],
-      exclude: /node_modules/
-    },
-    {
-      test: /\.(otf)/,
-      loader: 'url-loader'
-    },
-    {
-      test: /\.scss$/,
-      loaders: ['style', 'css', 'sass']
-    }]
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true
+          }
+        }
+      },
+      {
+        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
+        use: 'url-loader'
+     }
+    ]
   },
+
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: path.join(__dirname, 'app'),
+    // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2'
   },
-  resolve: {
-    extensions: ['', '.js', '.jsx'],
-    packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
-  },
-  plugins: [
 
-  ],
-  externals: [
-    // put your node 3rd party libraries which can't be built with webpack here (mysql, mongodb, and so on..)
+  /**
+   * Determine the array of extensions that should be used to resolve modules.
+   */
+  resolve: {
+    extensions: ['.js', '.jsx', '.json'],
+    modules: [path.join(__dirname, 'app'), 'node_modules']
+  },
+
+  plugins: [
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production'
+    }),
+
+    new webpack.NamedModulesPlugin()
   ]
 };

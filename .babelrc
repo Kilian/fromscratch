@@ -1,17 +1,23 @@
 {
-  "presets": ["es2015", "stage-0", "react"],
+  "presets": [
+    ["env", {
+      "targets": { "node": 7 },
+      "useBuiltIns": true
+    }],
+    "stage-0",
+    "react"
+  ],
   "plugins": ["add-module-exports"],
   "env": {
-		"production": {
-			"presets": ["react-optimize"],
-			"plugins": [
-				"babel-plugin-transform-remove-console",
-				"babel-plugin-transform-remove-debugger",
-				"babel-plugin-dev-expression"
-			]
-		},
-		"development": {
-			"presets": ["react-hmre"]
-		}
+    "production": {
+      "presets": ["react-optimize"],
+      "plugins": ["dev-expression"]
+    },
+    "development": {
+      "plugins": [
+        "transform-class-properties",
+        "transform-es2015-classes"
+      ]
+    }
   }
 }
