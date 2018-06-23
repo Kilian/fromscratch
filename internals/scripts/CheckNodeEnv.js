@@ -1,4 +1,3 @@
-// @flow
 import chalk from 'chalk';
 
 export default function CheckNodeEnv(expectedEnv: string) {

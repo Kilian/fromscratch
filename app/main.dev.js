@@ -99,7 +99,7 @@ app.on('ready', () => {
   const windowSettings = {
     show: false,
     title: app.getName(),
-    icon: path.join(__dirname, 'assets/img/icon.png'),
+    icon: path.join(__dirname, './assets/img/icon.png'),
     x: (windowState.bounds && windowState.bounds.x) || undefined,
     y: (windowState.bounds && windowState.bounds.y) || undefined,
     width: (windowState.bounds && windowState.bounds.width) || 550,

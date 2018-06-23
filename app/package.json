@@ -2,7 +2,7 @@
   "name": "FromScratch",
   "version": "1.4.0",
   "description": "simple autosaving scratchpad",
-  "main": "main.prod.js",
+  "main": "./main.prod.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/kilian/fromscratch/"
