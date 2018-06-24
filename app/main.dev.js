@@ -1,21 +1,19 @@
 /* eslint no-path-concat: 0, func-names:0 */
-const electron = require('electron');
-const fs = require('fs');
-const path = require('path');
-const { JSONStorage } = require('node-localstorage');
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+import electron from 'electron';
+import {JSONStorage} from 'node-localstorage';
+import compareVersions from 'compare-versions';
+import minimist from 'minimist';
+
 const APPVERSION = require('./package.json').version;
-const https = require('https');
-const compareVersions = require('compare-versions');
-const minimist = require('minimist');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
-
-
 const isDev = process.env.NODE_ENV === 'development';
-
 let mainWindow = null;
 
-const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+const isSecondInstance = app.makeSingleInstance(() => {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
@@ -58,7 +56,7 @@ Optional arguments:
       (isDev ? '/dev' : '');
 
     if (typeof argv.portable !== 'undefined') {
-      location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
+      location = argv.portable !== '' ? argv.portable : `${process.cwd()}/userdata`;
       app.setPath('userData', location);
     }
 
@@ -70,7 +68,7 @@ Optional arguments:
   global.nodeStorage = new JSONStorage(storageLocation);
 
   global.handleContent = {
-    filename: storageLocation + '/content.txt',
+    filename: `${storageLocation}/content.txt`,
     write(content) {
       fs.writeFileSync(this.filename, content, 'utf8');
     },
@@ -232,7 +230,7 @@ Optional arguments:
 
     const checkForUpdates = () => {
       https
-        .get('https://fromscratch.rocks/latest.json?current=' + APPVERSION, res => {
+        .get(`https://fromscratch.rocks/latest.json?current=${APPVERSION}`, res => {
           let json = '';
           res.on('data', d => {
             json += d;
@@ -268,7 +266,7 @@ Optional arguments:
             },
           },
           {
-            label: 'Check for updates (current: ' + APPVERSION + ')',
+            label: `Check for updates (current: ${APPVERSION})`,
             click() {
               shell.openExternal('https://github.com/Kilian/fromscratch/releases');
             },
@@ -346,7 +344,7 @@ Optional arguments:
           label: app.getName(),
           submenu: [
             {
-              label: 'About ' + app.getName(),
+              label: `About ${app.getName()}`,
               click() {
                 shell.openExternal('https://fromscratch.rocks');
               },
@@ -358,7 +356,7 @@ Optional arguments:
               },
             },
             {
-              label: 'Check for updates (current: ' + APPVERSION + ')',
+              label: `Check for updates (current: ${APPVERSION})`,
               click() {
                 shell.openExternal('https://github.com/Kilian/fromscratch/releases');
               },
