@@ -112,8 +112,6 @@ app.on('ready', () => {
     },
   };
 
-  console.log("ICON:", windowSettings.icon);
-
   if (process.platform === 'darwin') {
     ipc.on('setVibrancy', (event, lightTheme) => {
       if (lightTheme) {
