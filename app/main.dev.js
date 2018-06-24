@@ -1,7 +1,7 @@
 /* eslint no-path-concat: 0, func-names:0 */
 const electron = require('electron');
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
 const { JSONStorage } = require('node-localstorage');
 const APPVERSION = require('./package.json').version;
 const https = require('https');
@@ -9,6 +9,20 @@ const compareVersions = require('compare-versions');
 const minimist = require('minimist');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
+
+let mainWindow = null;
+
+const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.focus()
+  }
+})
+
+if (isSecondInstance) {
+  app.quit()
+} else {
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')(); // eslint-disable-line global-require
@@ -77,7 +91,6 @@ const installExtensions = () => {
 };
 
 // app init
-let mainWindow = null;
 app.on('window-all-closed', () => {
   app.quit();
 });
@@ -128,8 +141,6 @@ app.on('ready', () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   mainWindow.on('ready-to-show', () => {
-
-
     mainWindow.show();
     // Restore maximised state if it is set. not possible via options so we do it here
     if (windowState.isMaximized) {
@@ -484,3 +495,4 @@ app.on('ready', () => {
     mainWindow.openDevTools();
   }
 });
+}
