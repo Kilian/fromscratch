@@ -10,6 +10,9 @@ const minimist = require('minimist');
 
 const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
 
+
+const isDev = process.env.NODE_ENV === 'development';
+
 let mainWindow = null;
 
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
@@ -23,11 +26,11 @@ const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) 
 if (isSecondInstance) {
   app.quit();
 } else {
-  if (process.env.NODE_ENV === 'development') {
+  if (isDev) {
     require('electron-debug')(); // eslint-disable-line global-require
   }
 
-  const argv = minimist(process.argv.slice(process.env.NODE_ENV === 'development' ? 2 : 1), {
+  const argv = minimist(process.argv.slice(isDev ? 2 : 1), {
     boolean: ['help'],
     string: ['portable'],
     alias: {
@@ -52,7 +55,7 @@ Optional arguments:
     let location =
       process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'] +
       '/.fromscratch' +
-      (process.env.NODE_ENV === 'development' ? '/dev' : '');
+      (isDev ? '/dev' : '');
 
     if (typeof argv.portable !== 'undefined') {
       location = argv.portable !== '' ? argv.portable : process.cwd() + '/userdata';
@@ -77,7 +80,7 @@ Optional arguments:
   };
 
   const installExtensions = () => {
-    if (process.env.NODE_ENV === 'development') {
+    if (isDev) {
       const installer = require('electron-devtools-installer'); // eslint-disable-line global-require
       const extensions = ['REACT_DEVELOPER_TOOLS'];
       const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
@@ -490,7 +493,7 @@ Optional arguments:
       mainWindow = null;
     });
 
-    if (process.env.NODE_ENV === 'development') {
+    if (isDev) {
       mainWindow.openDevTools();
     }
   });
