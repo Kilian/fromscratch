@@ -20,7 +20,7 @@
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./app/main.dev.js",
     "start-renderer-dev": "cross-env NODE_ENV=development node --trace-warnings -r babel-register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config webpack.config.renderer.dev.js"
   },
-  "browserslist": "electron 2.0",
+  "browserslist": "electron 1.8",
   "build": {
     "productName": "FromScratch",
     "appId": "org.kilianvalkhof.FromScratch",
@@ -109,7 +109,7 @@
     "cross-spawn": "^6.0.5",
     "css-loader": "^0.28.11",
     "detect-port": "^1.2.3",
-    "electron": "^2.0.2",
+    "electron": "^1.8.0",
     "electron-builder": "20.14.7",
     "electron-devtools-installer": "^2.2.4",
     "electron-rebuild": "^1.7.3",
