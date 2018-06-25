@@ -127,11 +127,7 @@ Optional arguments:
 
     if (process.platform === 'darwin') {
       ipc.on('setVibrancy', (event, lightTheme) => {
-        if (lightTheme) {
-          mainWindow.setVibrancy('medium-light');
-        } else {
-          mainWindow.setVibrancy('ultra-dark');
-        }
+          mainWindow.setVibrancy(lightTheme ? 'medium-light' : 'ultra-dark');
       });
     } else {
       windowSettings.backgroundColor = '#002b36';
