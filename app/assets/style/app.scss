@@ -207,11 +207,11 @@ body[data-platform=darwin] {
 
 .shortcuts {
   position:absolute;
-  left:2rem;
-  top:2rem;
-  width:calc(100vw - 4rem);
-  height:calc(100vh - 4rem);
-  background:$bgColor;
+  left:1rem;
+  top:1rem;
+  width:calc(100vw - 2rem);
+  height:calc(100vh - 2rem);
+  background:transparentize($bgColor,0.05);
   padding:1rem 1rem 0;
   color:$textColor;
   z-index:99;
@@ -220,6 +220,7 @@ body[data-platform=darwin] {
   opacity:0;
   pointer-events:none;
   transition:.3s ease opacity;
+  border-radius:4px;
 
   &.visible {
     opacity:1;
@@ -246,7 +247,13 @@ body[data-platform=darwin] {
     vertical-align: middle;
     border:0;
     outline:none;
+    transition:.15s ease all;
 
+    span {
+    position: relative;
+    display: block;
+    transform:translateY(-1px);
+    }
     &:hover,
     &:focus {
       background: rgba(0, 0, 0, 0.5);
