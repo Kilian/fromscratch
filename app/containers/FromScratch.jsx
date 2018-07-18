@@ -254,7 +254,6 @@ export default class FromScratch extends React.Component {
       indentUnit: 4,
       tabSize: 4,
       indentWithTabs: true,
-      scrollPastEnd: true,
       cursorScrollMargin: 40,
       foldOptions: {
         rangeFinder: CodeMirror.fold.indent,
