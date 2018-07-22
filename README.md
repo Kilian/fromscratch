@@ -14,11 +14,14 @@ FromScratch is a little app that you can use as a quick note taking or todo app.
 * Use checkboxes to keep track of your TODO's
 * Powerful keyboard control
 * Replaces common syntax with symbols, such as arrows
+* Dark and Light theme
+* Portable mode support
 * Free
 
 
 ### Shortcuts
 
+* <kbd>f1</kbd> - show/hide shortcut overview
 * <kbd>cmd/ctrl+up</kbd> - move current line up
 * <kbd>cmd/ctrl+down</kbd> - move current line down
 * <kbd>cmd/ctrl+d</kbd> - delete current line
