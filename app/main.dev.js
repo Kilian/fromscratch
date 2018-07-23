@@ -404,7 +404,7 @@ Optional arguments:
             },
             {
               label: 'Cut',
-              accelerator: 'CmdOrCtrl+c',
+              accelerator: 'CmdOrCtrl+x',
               selector: 'cut:',
             },
             {
