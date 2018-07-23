@@ -56,8 +56,7 @@ git clone https://github.com/kilian/fromscratch.git
 cd fromscratch && npm install
 
 # build and run
-npm build
-electron main.js
+npm start
 
 # or run dev version
 npm run dev
