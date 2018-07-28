@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 
+const CmdOrCtrl = process.platform === 'darwin' ? 'Cmd' : 'Ctrl';
+
 export default class Shortcuts extends PureComponent {
   render() {
     const classNames = `shortcuts ${this.props.visible ? 'visible' : ''}`;
@@ -15,73 +17,73 @@ export default class Shortcuts extends PureComponent {
         <ul>
           <li>
             <span>
-              <kbd>cmd/ctrl+up</kbd>
+              <kbd>{CmdOrCtrl}+up</kbd>
             </span>
             <span>move current line up</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+down</kbd>
+              <kbd>{CmdOrCtrl}+down</kbd>
             </span>
             <span>move current line down</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+d</kbd>
+              <kbd>{CmdOrCtrl}+d</kbd>
             </span>
             <span>delete current line</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+w/q</kbd>
+              <kbd>{CmdOrCtrl}+w/q</kbd>
             </span>
             <span>close application</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl +/=</kbd>
+              <kbd>{CmdOrCtrl} +/=</kbd>
             </span>
             <span>zoom text in</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl -</kbd>
+              <kbd>{CmdOrCtrl} -</kbd>
             </span>
             <span>zoom text out</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+0</kbd>
+              <kbd>{CmdOrCtrl}+0</kbd>
             </span>
             <span>reset text size</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+]/[</kbd>
+              <kbd>{CmdOrCtrl}+]/[/k</kbd>
             </span>
             <span>fold note collapsing</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+f</kbd>
+              <kbd>{CmdOrCtrl}+f</kbd>
             </span>
             <span>search (you can also use regular expressions, by starting and ending with a /)</span>
           </li>
           <li>
             <span>
-              <kbd>shift+cmd/ctrl+f</kbd>
+              <kbd>shift+{CmdOrCtrl}+f</kbd>
             </span>
             <span>replace</span>
           </li>
           <li>
             <span>
-              <kbd>shift+cmd/ctrl+r</kbd>
+              <kbd>shift+{CmdOrCtrl}+r</kbd>
             </span>
             <span>replace all</span>
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+g</kbd>
+              <kbd>{CmdOrCtrl}+g</kbd>
             </span>
             <span>
               jump to line (you can also use &lt;line&gt;:&lt;character&gt; notation, or go relative lines with
@@ -90,7 +92,7 @@ export default class Shortcuts extends PureComponent {
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+/</kbd>
+              <kbd>{CmdOrCtrl}+/</kbd> or <kbd>{CmdOrCtrl}+l</kbd>
             </span>
             <span>Add or toggle a checkbox</span>
           </li>
@@ -102,7 +104,7 @@ export default class Shortcuts extends PureComponent {
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+i</kbd>
+              <kbd>{CmdOrCtrl}+i</kbd>
             </span>
             <span>Toggle between light and dark theme</span>
           </li>
@@ -114,7 +116,7 @@ export default class Shortcuts extends PureComponent {
           </li>
           <li>
             <span>
-              <kbd>cmd/ctrl+s</kbd>
+              <kbd>{CmdOrCtrl}+s</kbd>
             </span>
             <span>...this does nothing.</span>
           </li>

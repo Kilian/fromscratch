@@ -32,12 +32,15 @@ const extraKeys = {
   [CmdOrCtrl + 'Up']: 'swapLineUp',
   [CmdOrCtrl + 'Down']: 'swapLineDown',
 
+  [CmdOrCtrl + 'K']: (cm) => { cm.foldCode(cm.getCursor()); },
   [CmdOrCtrl + '[']: (cm) => { cm.foldCode(cm.getCursor()); },
   [CmdOrCtrl + ']']: (cm) => { cm.foldCode(cm.getCursor()); },
   [CmdOrCtrl + 'F']: 'findPersistent',
   ['Shift-' + CmdOrCtrl + 'F']: 'replace',
   ['Shift-' + CmdOrCtrl + 'R']: 'replaceAll',
   [CmdOrCtrl + 'G']: 'jumpToLine',
+
+  [CmdOrCtrl + 'L']: (cm) => { checkboxSupport(cm); },
   [CmdOrCtrl + '/']: (cm) => { checkboxSupport(cm); },
 };
 const checkboxSupport = (cm) => {
