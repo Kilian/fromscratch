@@ -25,7 +25,12 @@
   .CodeMirror-gutters {
     background: transparent;
     border: 0;
-    left: 1rem !important;
+    left: 0;
+    width:5vw;
+
+    .CodeMirror-gutter {
+      width:5vw;
+    }
   }
 
   .CodeMirror-guttermarker-subtle,
