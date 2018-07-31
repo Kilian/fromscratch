@@ -1,6 +1,6 @@
 {
   "name": "FromScratch",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "simple autosaving scratchpad",
   "main": "./main.prod.js",
   "repository": {

@@ -63,7 +63,7 @@ npm run dev
 ```
 ### Command Line Arguments
 **Portable Mode**
-`-p, --portable`
+`--portable`
 
 Lets you store all the files FromScratch generates in a specified location, such as a USB-stick or
 other portable storage device. In this mode both the configuration files as well as your text content will be stored in

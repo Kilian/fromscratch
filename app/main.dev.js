@@ -33,7 +33,6 @@ if (isSecondInstance) {
     string: ['portable'],
     alias: {
       help: 'h',
-      portable: 'p',
     },
   });
 
@@ -41,7 +40,7 @@ if (isSecondInstance) {
     console.log(`Usage: fromscratch [OPTION]...
 
 Optional arguments:
-  -p, --portable [DIRECTORY] run in portable mode, saving data in executable directory, or in alternate path
+  --portable [DIRECTORY] run in portable mode, saving data in executable directory, or in alternate path
   -h, --help                 show this usage text.
   `);
 

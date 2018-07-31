@@ -1,7 +1,7 @@
 {
   "name": "fromscratch",
   "productName": "FromScratch",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "simple autosaving scratchpad",
   "scripts": {
     "build": "concurrently \"npm run build-main\" \"npm run build-renderer\"",
@@ -36,7 +36,7 @@
     ],
     "dmg": {
       "icon": "resources/icon.icns",
-      "window" : {
+      "window": {
         "width": 540,
         "height": 380
       },
