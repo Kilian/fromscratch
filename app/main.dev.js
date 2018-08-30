@@ -119,6 +119,7 @@ Optional arguments:
       darkTheme: true,
       titleBarStyle: 'hidden',
       autoHideMenuBar: true,
+      transparent: true,
       webPreferences: {
         blinkFeatures: 'OverlayScrollbars',
       },
@@ -486,8 +487,8 @@ Optional arguments:
       mainWindow = null;
     });
 
-    if (isDev) {
+    //if (isDev) {
       mainWindow.openDevTools();
-    }
+    //}
   });
 }
