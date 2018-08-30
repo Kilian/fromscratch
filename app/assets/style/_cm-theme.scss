@@ -25,17 +25,20 @@
   .CodeMirror-gutters {
     background: transparent;
     border: 0;
-    left: 0;
-    width:5vw;
+    left: calc(5vw - 0.7em) !important;
+    pointer-events: none;
+  }
+  .CodeMirror-gutter-elt {
+    left: calc(5vw - 0.7em) !important;
+  }
 
-    .CodeMirror-gutter {
-      width:5vw;
-    }
+  .CodeMirror-activeline-gutter {
+    pointer-events: none;
   }
 
   .CodeMirror-guttermarker-subtle,
   .CodeMirror-foldmarker {
-    color: lighten($bgColor, 8%);
+    color: lighten($bgColor, 10%);
     cursor: pointer;
   }
 
@@ -64,10 +67,6 @@
 
   .CodeMirror-foldgutter-open::after {
     margin-left: -1px;
-  }
-
-  .CodeMirror-gutter-elt {
-    left: 2.8vw !important;
   }
 
   .CodeMirror-overlayscroll-vertical div {
