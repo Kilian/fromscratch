@@ -487,8 +487,8 @@ Optional arguments:
       mainWindow = null;
     });
 
-    //if (isDev) {
+    if (isDev) {
       mainWindow.openDevTools();
-    //}
+    }
   });
 }
