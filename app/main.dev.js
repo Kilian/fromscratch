@@ -13,17 +13,19 @@ const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell
 const isDev = process.env.NODE_ENV === 'development';
 let mainWindow = null;
 
-const isSecondInstance = app.makeSingleInstance(() => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
+const gotTheLock = app.requestSingleInstanceLock();
 
-if (isSecondInstance) {
+if (!gotTheLock) {
   app.quit();
 } else {
+  app.on('second-instance', () => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  })
+
   if (isDev) {
     require('electron-debug')(); // eslint-disable-line global-require
   }
@@ -108,6 +110,8 @@ Optional arguments:
       global.handleContent.write(arg);
     });
 
+    const currentLightTheme = nodeStorage.getItem('lightTheme') || false;
+
     const windowSettings = {
       show: false,
       title: app.getName(),
@@ -120,8 +124,10 @@ Optional arguments:
       titleBarStyle: 'hidden',
       autoHideMenuBar: true,
       transparent: true,
+      resizable: true,
       webPreferences: {
         blinkFeatures: 'OverlayScrollbars',
+        nodeIntegration: true
       },
     };
 
@@ -129,6 +135,7 @@ Optional arguments:
       ipc.on('setVibrancy', (event, lightTheme) => {
           mainWindow.setVibrancy(lightTheme ? 'medium-light' : 'ultra-dark');
       });
+      windowSettings.backgroundColor = currentLightTheme ? '#00ffffff' : '#00002b36';
     } else {
       windowSettings.backgroundColor = '#002b36';
     }
@@ -137,6 +144,7 @@ Optional arguments:
     mainWindow.loadURL(`file://${__dirname}/app.html`);
 
     mainWindow.on('ready-to-show', () => {
+      mainWindow.setVibrancy(currentLightTheme ? 'medium-light' :'ultra-dark');
       mainWindow.show();
       // Restore maximised state if it is set. not possible via options so we do it here
       if (windowState.isMaximized) {

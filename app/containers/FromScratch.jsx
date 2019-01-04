@@ -242,7 +242,7 @@ export default class FromScratch extends React.Component {
     const style = {
       fontSize: `${this.state.fontSize}rem`,
       ...(this.state.lightTheme ?
-          { filter: 'invert(100%) hue-rotate(20deg) brightness(1.1) grayscale(50%)' }
+          { filter: 'invert(100%) hue-rotate(20deg) brightness(1.1) contrast(1.4) grayscale(20%)' }
           :
           {}
       )

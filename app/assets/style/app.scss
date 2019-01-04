@@ -72,6 +72,7 @@ body[data-platform=darwin] {
 }
 
 #root > div {
+  height:100%;
   transition:0.4s ease filter;
 }
 
