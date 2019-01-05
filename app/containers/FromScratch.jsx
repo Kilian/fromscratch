@@ -55,7 +55,7 @@ const checkboxSupport = (cm) => {
       const trimmedLine = currentLine.trimLeft();
 
       const checkbox = {
-        checked: '[x] ',
+        checked: '[✓] ',
         unchecked: '[ ] '
       };
 
