@@ -205,6 +205,9 @@ Optional arguments:
       gsc.register('f1', () => {
         dispatchShortcutEvent('toggle-shortcuts');
       });
+      gsc.register('CmdOrCtrl+/', () => {
+        dispatchShortcutEvent('toggle-shortcuts');
+      });
     };
 
     registerShortcuts();
@@ -478,7 +481,7 @@ Optional arguments:
             },
             {
               label: 'Show all shortcuts',
-              accelerator: 'f1',
+              accelerator: 'CmdOrCtrl+/',
               click() {
                 dispatchShortcutEvent('toggle-shortcuts');
               },
