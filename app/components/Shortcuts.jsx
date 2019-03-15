@@ -10,7 +10,7 @@ export default class Shortcuts extends PureComponent {
       <div className={classNames}>
         <h3>Shortcuts</h3>
 
-        <button title="Close shortcuts" onClick={this.props.toggleShortcutsVisible}>
+        <button type="button" title="Close shortcuts" onClick={this.props.toggleShortcutsVisible}>
           <span>×</span>
         </button>
 

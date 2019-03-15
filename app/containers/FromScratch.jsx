@@ -1,6 +1,6 @@
 import React from 'react';
 import Codemirror from 'react-codemirror';
-import CodeMirror from '../../node_modules/codemirror/';
+import CodeMirror from '../../node_modules/codemirror';
 
 import Shortcuts from '../components/Shortcuts';
 
@@ -29,22 +29,32 @@ const extraKeys = {
   'Alt-G': false,
 
   // from sublime.js package
-  [CmdOrCtrl + 'Up']: 'swapLineUp',
-  [CmdOrCtrl + 'Down']: 'swapLineDown',
+  [`${CmdOrCtrl}Up`]: 'swapLineUp',
+  [`${CmdOrCtrl}Down`]: 'swapLineDown',
 
-  [CmdOrCtrl + 'K']: (cm) => { cm.foldCode(cm.getCursor()); },
-  [CmdOrCtrl + '[']: (cm) => { cm.foldCode(cm.getCursor()); },
-  [CmdOrCtrl + ']']: (cm) => { cm.foldCode(cm.getCursor()); },
-  [CmdOrCtrl + 'F']: 'findPersistent',
-  ['Shift-' + CmdOrCtrl + 'F']: 'replace',
-  ['Shift-' + CmdOrCtrl + 'R']: 'replaceAll',
-  [CmdOrCtrl + 'G']: 'jumpToLine',
+  [`${CmdOrCtrl}K`]: cm => {
+    cm.foldCode(cm.getCursor());
+  },
+  [`${CmdOrCtrl}[`]: cm => {
+    cm.foldCode(cm.getCursor());
+  },
+  [`${CmdOrCtrl}]`]: cm => {
+    cm.foldCode(cm.getCursor());
+  },
+  [`${CmdOrCtrl}F`]: 'findPersistent',
+  [`Shift-${CmdOrCtrl}F`]: 'replace',
+  [`Shift-${CmdOrCtrl}R`]: 'replaceAll',
+  [`${CmdOrCtrl}G`]: 'jumpToLine',
 
-  [CmdOrCtrl + 'L']: (cm) => { checkboxSupport(cm); },
-  [CmdOrCtrl + '/']: (cm) => { checkboxSupport(cm); },
+  [`${CmdOrCtrl}L`]: cm => {
+    checkboxSupport(cm);
+  },
+  [`${CmdOrCtrl}/`]: cm => {
+    checkboxSupport(cm);
+  },
 };
-const checkboxSupport = (cm) => {
-  cm.listSelections().forEach((selection) => {
+const checkboxSupport = cm => {
+  cm.listSelections().forEach(selection => {
     const firstLine = Math.min(selection.anchor.line, selection.head.line);
     const lastLine = Math.max(selection.anchor.line, selection.head.line);
     let currentLineNumber;
@@ -56,18 +66,18 @@ const checkboxSupport = (cm) => {
 
       const checkbox = {
         checked: '[x] ',
-        unchecked: '[ ] '
+        unchecked: '[ ] ',
       };
 
       const pos = {
         from: {
           line: currentLineNumber,
-          ch: 0 + stringPadding
+          ch: 0 + stringPadding,
         },
         to: {
           line: currentLineNumber,
-          ch: 4 + stringPadding
-        }
+          ch: 4 + stringPadding,
+        },
       };
 
       if (trimmedLine.trim() === '') {
@@ -89,13 +99,14 @@ const checkboxSupport = (cm) => {
 
 export default class FromScratch extends React.Component {
   static defaultProps = {
-    content: '|> Welcome to FromScratch.\n\n\n'
-            + 'This app saves everything you type automatically, there\'s no need to save manually.'
-            + '\n\nYou can type neat arrows like these: '
-            + '->, -->, ->> and =>, courtesy of the font "Fira Code".\n\n'
-            + '\tFromScratch also does automatic indenting\n'
-            + '\tand more. So delete this text & let\'s go!',
-  }
+    content:
+      '|> Welcome to FromScratch.\n\n\n' +
+      "This app saves everything you type automatically, there's no need to save manually." +
+      '\n\nYou can type neat arrows like these: ' +
+      '->, -->, ->> and =>, courtesy of the font "Fira Code".\n\n' +
+      '\tFromScratch also does automatic indenting\n' +
+      "\tand more. So delete this text & let's go!",
+  };
 
   constructor(props) {
     super();
@@ -108,7 +119,7 @@ export default class FromScratch extends React.Component {
       lightTheme: nodeStorage.getItem('lightTheme') || false,
       folds: (() => {
         const foldItem = nodeStorage.getItem('folds');
-        return (foldItem && foldItem.folds) ? foldItem.folds : [];
+        return foldItem && foldItem.folds ? foldItem.folds : [];
       })(),
       mock: 'nosave',
       update: 'updater',
@@ -117,7 +128,7 @@ export default class FromScratch extends React.Component {
   }
 
   componentDidMount() {
-    const editor = this.editor;
+    const { editor } = this;
     ipc.on('executeShortCut', (event, shortcut) => {
       switch (shortcut) {
         case 'save':
@@ -161,8 +172,8 @@ export default class FromScratch extends React.Component {
     document.body.dataset.platform = process.platform;
     ipc.send('setVibrancy', this.state.lightTheme);
 
-    document.addEventListener('dragover', event => event.preventDefault())
-    document.addEventListener('drop', event => e.preventDefault())
+    document.addEventListener('dragover', event => event.preventDefault());
+    document.addEventListener('drop', event => event.preventDefault());
   }
 
   componentDidUpdate() {
@@ -171,17 +182,19 @@ export default class FromScratch extends React.Component {
   }
 
   applyFolds(cm) {
-    this.state.folds.forEach((fold) => {
+    this.state.folds.forEach(fold => {
       cm.foldCode(CodeMirror.Pos.apply(this, fold));
     });
   }
 
   updateFolds() {
-    const editor = this.editor;
-    const newFolds = editor.getCodeMirror().getAllMarks()
+    const { editor } = this;
+    const newFolds = editor
+      .getCodeMirror()
+      .getAllMarks()
       .filter(mark => mark.collapsed && mark.type === 'range')
       .reverse()
-      .map((mark) => {
+      .map(mark => {
         const pos = mark.find().from;
         return [pos.line, pos.ch];
       });
@@ -221,33 +234,31 @@ export default class FromScratch extends React.Component {
     this.setState({ lightTheme });
   }
 
-  handleChange = (newcontent) => {
+  handleChange = newcontent => {
     this.setState({ content: newcontent });
-  }
+  };
 
   openDownloadPage = () => {
     shell.openExternal('https://fromscratch.rocks');
     this.setState({ update: 'updater' });
-  }
+  };
 
-  hideUpdateMessage = (e) => {
+  hideUpdateMessage = e => {
     e.stopPropagation();
     nodeStorage.setItem('hideUpdateMessage', { version: latestVersion });
     this.setState({ update: 'updater' });
-  }
+  };
 
   toggleShortcutsVisible = () => {
-    this.setState({shortcutsVisible: !this.state.shortcutsVisible})
-  }
+    this.setState({ shortcutsVisible: !this.state.shortcutsVisible });
+  };
 
   render() {
     const style = {
       fontSize: `${this.state.fontSize}rem`,
-      ...(this.state.lightTheme ?
-          { filter: 'invert(100%) hue-rotate(20deg) brightness(1.1) contrast(1.4) grayscale(20%)' }
-          :
-          {}
-      )
+      ...(this.state.lightTheme
+        ? { filter: 'invert(100%) hue-rotate(20deg) brightness(1.1) contrast(1.4) grayscale(20%)' }
+        : {}),
     };
     const options = {
       styleActiveLine: true,
@@ -273,7 +284,9 @@ export default class FromScratch extends React.Component {
       <div style={style} data-platform={process.platform}>
         <Codemirror
           value={this.state.content}
-          ref={(c) => { this.editor = c; }}
+          ref={c => {
+            this.editor = c;
+          }}
           onChange={this.handleChange}
           options={options}
         />

@@ -4,10 +4,7 @@
     "sourceType": "module",
     "allowImportExportEverywhere": true
   },
-  "extends": [
-    "airbnb",
-    "prettier"
-  ],
+  "extends": ["airbnb", "prettier"],
   "env": {
     "browser": true,
     "node": true
@@ -28,19 +25,19 @@
     "promise/always-return": "error",
     "promise/catch-or-return": "error",
     "promise/no-native": "off",
-    "react/sort-comp": ["error", {
-      "order": ["type-annotations", "static-methods", "lifecycle", "everything-else", "render"]
-    }],
+    "react/sort-comp": [
+      "error",
+      {
+        "order": ["type-annotations", "static-methods", "lifecycle", "everything-else", "render"]
+      }
+    ],
     "react/jsx-no-bind": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }],
-    "react/prefer-stateless-function": "off"
+    "react/prefer-stateless-function": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "react/destructuring-assignment": "off"
   },
-  "plugins": [
-    "import",
-    "promise",
-    "compat",
-    "react"
-  ],
+  "plugins": ["import", "promise", "compat", "react"],
   "settings": {
     "import/resolver": {
       "webpack": {
