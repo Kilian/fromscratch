@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 import electron from 'electron';
-import {JSONStorage} from 'node-localstorage';
+import { JSONStorage } from 'node-localstorage';
 import compareVersions from 'compare-versions';
 import minimist from 'minimist';
 
@@ -24,7 +24,7 @@ if (!gotTheLock) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.focus();
     }
-  })
+  });
 
   if (isDev) {
     require('electron-debug')(); // eslint-disable-line global-require
@@ -51,10 +51,9 @@ Optional arguments:
 
   // get data location
   const getDataLocation = () => {
-    let location =
-      process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'] +
-      '/.fromscratch' +
-      (isDev ? '/dev' : '');
+    let location = `${process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']}/.fromscratch${
+      isDev ? '/dev' : ''
+    }`;
 
     if (typeof argv.portable !== 'undefined') {
       location = argv.portable !== '' ? argv.portable : `${process.cwd()}/userdata`;
@@ -110,7 +109,7 @@ Optional arguments:
       global.handleContent.write(arg);
     });
 
-    const currentLightTheme = nodeStorage.getItem('lightTheme') || false;
+    const currentLightTheme = global.nodeStorage.getItem('lightTheme') || false;
 
     const windowSettings = {
       show: false,
@@ -127,13 +126,13 @@ Optional arguments:
       resizable: true,
       webPreferences: {
         blinkFeatures: 'OverlayScrollbars',
-        nodeIntegration: true
+        nodeIntegration: true,
       },
     };
 
     if (process.platform === 'darwin') {
       ipc.on('setVibrancy', (event, lightTheme) => {
-          mainWindow.setVibrancy(lightTheme ? 'medium-light' : 'ultra-dark');
+        mainWindow.setVibrancy(lightTheme ? 'medium-light' : 'ultra-dark');
       });
       windowSettings.backgroundColor = currentLightTheme ? '#00ffffff' : '#00002b36';
     } else {
@@ -144,7 +143,7 @@ Optional arguments:
     mainWindow.loadURL(`file://${__dirname}/app.html`);
 
     mainWindow.on('ready-to-show', () => {
-      mainWindow.setVibrancy(currentLightTheme ? 'medium-light' :'ultra-dark');
+      mainWindow.setVibrancy(currentLightTheme ? 'medium-light' : 'ultra-dark');
       mainWindow.show();
       // Restore maximised state if it is set. not possible via options so we do it here
       if (windowState.isMaximized) {
@@ -369,7 +368,7 @@ Optional arguments:
               type: 'separator',
             },
             {
-              label: 'Hide ' + app.getName(),
+              label: `Hide ${app.getName()}`,
               accelerator: 'Command+H',
               role: 'hide',
             },
