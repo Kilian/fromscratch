@@ -122,8 +122,7 @@ Optional arguments:
       darkTheme: true,
       titleBarStyle: 'hidden',
       autoHideMenuBar: true,
-      transparent: true,
-      resizable: true,
+      transparent:  process.platform === 'darwin',
       webPreferences: {
         blinkFeatures: 'OverlayScrollbars',
         nodeIntegration: true,
