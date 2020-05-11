@@ -190,9 +190,11 @@ Optional arguments:
       gsc.register('CmdOrCtrl+w', () => {
         app.quit();
       });
-      gsc.register('CmdOrCtrl+q ', () => {
-        app.quit();
-      });
+      if ( process.platform !== 'darwin' ) {
+        gsc.register('CmdOrCtrl+q ', () => {
+          app.quit();
+        });
+      }
       gsc.register('CmdOrCtrl+r ', () => {});
       gsc.register('f11', () => {
         toggleFullscreen();
