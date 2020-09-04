@@ -137,7 +137,7 @@
     "file-loader": "^1.1.11",
     "husky": "^0.14.3",
     "identity-obj-proxy": "^3.0.0",
-    "node-sass": "^4.9.0",
+    "node-sass": "^4.13.1",
     "npm-logical-tree": "^1.2.1",
     "prettier": "^1.12.1",
     "rimraf": "^2.6.3",
