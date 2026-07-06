@@ -10,12 +10,12 @@
     "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.renderer.prod.js --colors",
     "dev": "cross-env START_HOT=1 npm run start-renderer-dev",
     "electron-rebuild": "electron-rebuild --parallel --force --types prod,dev,optional --module-dir app",
-    "package": "npm run build && build --publish never",
-    "package-all": "npm run build && build -mwl",
-    "package-macos": "npm run build && build -m",
-    "package-linux": "npm run build && build --linux",
-    "package-win": "npm run build && build --win --x64",
-    "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && npm run build-dll && electron-builder install-app-deps && node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
+    "package": "npm run build && electron-builder --publish never",
+    "package-all": "npm run build && electron-builder -mwl",
+    "package-macos": "npm run build && electron-builder -m",
+    "package-linux": "npm run build && electron-builder --linux",
+    "package-win": "npm run build && electron-builder --win --x64",
+    "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && npm run build-dll && electron-builder install-app-deps",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./app/main.dev.js",
@@ -114,10 +114,10 @@
     "cross-spawn": "^6.0.5",
     "css-loader": "^0.28.11",
     "detect-port": "^1.2.3",
-    "electron": "^4.0.0",
-    "electron-builder": "^20.38.4",
-    "electron-devtools-installer": "^2.2.4",
-    "electron-rebuild": "^1.8.2",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "electron-devtools-installer": "^3.2.0",
+    "@electron/rebuild": "^3.6.0",
     "eslint": "^5.0.0",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-config-erb": "0.0.2",
@@ -137,7 +137,7 @@
     "file-loader": "^1.1.11",
     "husky": "^0.14.3",
     "identity-obj-proxy": "^3.0.0",
-    "node-sass": "^4.9.0",
+    "sass": "^1.77.0",
     "npm-logical-tree": "^1.2.1",
     "prettier": "^1.12.1",
     "rimraf": "^2.6.3",
@@ -155,6 +155,7 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
+    "@electron/remote": "^2.1.2",
     "compare-versions": "^3.4.0",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
@@ -166,10 +167,5 @@
     "react-dom": "^16.4.0",
     "react-hot-loader": "^4.2.0",
     "source-map-support": "^0.5.6"
-  },
-  "devEngines": {
-    "node": ">=7.x",
-    "npm": ">=4.x",
-    "yarn": ">=0.21.3"
   }
 }

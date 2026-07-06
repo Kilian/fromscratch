@@ -28,9 +28,7 @@
     left: calc(5vw - 0.7em) !important;
     pointer-events: none;
   }
-  .CodeMirror-gutter-elt {
-    left: calc(5vw - 0.7em) !important;
-  }
+
 
   .CodeMirror-activeline-gutter {
     pointer-events: none;
@@ -55,14 +53,21 @@
     vertical-align: top;
   }
 
-  .CodeMirror-guttermarker-subtle {
+  .CodeMirror-guttermarker-subtle,
+  .CodeMirror-foldgutter-open {
     opacity: 0;
     transition: 0.3s ease opacity;
+  }
 
-    &:hover,
-    &.CodeMirror-foldgutter-folded {
+  .CodeMirror:hover {
+    .CodeMirror-guttermarker-subtle,
+    .CodeMirror-foldgutter-open {
       opacity: 1;
     }
+  }
+
+  .CodeMirror-foldgutter-folded {
+    opacity: 1 !important;
   }
 
   .CodeMirror-foldgutter-open::after {

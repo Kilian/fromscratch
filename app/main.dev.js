@@ -8,8 +8,9 @@ import compareVersions from 'compare-versions';
 import minimist from 'minimist';
 
 const APPVERSION = require('./package.json').version;
+require('@electron/remote/main').initialize();
 
-const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell } = electron;
+const { app, BrowserWindow, ipcMain: ipc, Menu: menu, globalShortcut: gsc, shell, nativeTheme } = electron;
 const isDev = process.env.NODE_ENV === 'development';
 let mainWindow = null;
 
@@ -123,26 +124,34 @@ Optional arguments:
       titleBarStyle: 'hidden',
       autoHideMenuBar: true,
       transparent:  process.platform === 'darwin',
+      vibrancy: process.platform === 'darwin' ? 'under-window' : undefined,
+      visualEffectState: process.platform === 'darwin' ? 'active' : undefined,
       webPreferences: {
         blinkFeatures: 'OverlayScrollbars',
         nodeIntegration: true,
+        contextIsolation: false,
       },
     };
 
     if (process.platform === 'darwin') {
       ipc.on('setVibrancy', (event, lightTheme) => {
-        mainWindow.setVibrancy(lightTheme ? 'medium-light' : 'ultra-dark');
+        nativeTheme.themeSource = lightTheme ? 'light' : 'dark';
+        mainWindow.setVibrancy('under-window');
       });
-      windowSettings.backgroundColor = currentLightTheme ? '#00ffffff' : '#00002b36';
+      windowSettings.backgroundColor = '#00000000';
+      nativeTheme.themeSource = currentLightTheme ? 'light' : 'dark';
     } else {
       windowSettings.backgroundColor = '#002b36';
     }
 
     mainWindow = new BrowserWindow(windowSettings);
+    require('@electron/remote/main').enable(mainWindow.webContents);
     mainWindow.loadURL(`file://${__dirname}/app.html`);
 
     mainWindow.on('ready-to-show', () => {
-      mainWindow.setVibrancy(currentLightTheme ? 'medium-light' : 'ultra-dark');
+      if (process.platform === 'darwin') {
+        mainWindow.setVibrancy('under-window');
+      }
       mainWindow.show();
       // Restore maximised state if it is set. not possible via options so we do it here
       if (windowState.isMaximized) {
@@ -165,8 +174,6 @@ Optional arguments:
     const dispatchShortcutEvent = ev => {
       mainWindow.webContents.send('executeShortCut', ev);
     };
-
-    mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
 
     const registerShortcuts = () => {
       gsc.register('CmdOrCtrl+0', () => {
